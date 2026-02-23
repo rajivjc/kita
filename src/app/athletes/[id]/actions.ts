@@ -17,13 +17,15 @@ export async function addCoachNote(athleteId: string, content: string): Promise<
     .single()
   if (callerUser?.role === 'caregiver') return { error: 'Caregivers cannot add notes' }
 
-  await supabase.from('coach_notes').insert({
+  const { error } = await adminClient.from('coach_notes').insert({
     athlete_id: athleteId,
     coach_user_id: user.id,
     content,
     note_type: 'general',
     visibility: 'all',
   })
+
+  if (error) return { error: error.message }
   revalidatePath(`/athletes/${athleteId}`)
   return {}
 }
@@ -195,6 +197,7 @@ export async function saveCues(
     .single()
 
   if (error) return { error: error.message }
+  revalidatePath(`/athletes/${athleteId}`)
   return { data }
 }
 
@@ -243,6 +246,61 @@ export async function deleteCoachNote(
   return {}
 }
 
+export async function updateSessionFeel(
+  sessionId: string,
+  data: { feel: number | null; note: string | null }
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const { error } = await adminClient
+    .from('sessions')
+    .update({
+      feel: data.feel as 1 | 2 | 3 | 4 | 5 | null,
+      note: data.note,
+    })
+    .eq('id', sessionId)
+
+  if (error) return { error: error.message }
+
+  if (data.feel !== null && (data.feel === 1 || data.feel === 2)) {
+    const { data: existing } = await adminClient
+      .from('notifications')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('type', 'low_feel_alert')
+      .contains('payload', { session_id: sessionId })
+      .limit(1)
+
+    if (!existing || existing.length === 0) {
+      const { data: session } = await adminClient
+        .from('sessions')
+        .select('athlete_id, feel, athlete:athletes(name)')
+        .eq('id', sessionId)
+        .single()
+      if (session) {
+        await adminClient.from('notifications').insert({
+          user_id: user.id,
+          type: 'low_feel_alert',
+          channel: 'in_app',
+          payload: {
+            session_id: sessionId,
+            athlete_id: session.athlete_id,
+            feel: session.feel,
+            athlete_name: (session as any).athlete?.name ?? 'An athlete',
+            message: `${(session as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
+          },
+          read: false,
+        })
+      }
+    }
+  }
+
+  revalidatePath('/athletes')
+  return {}
+}
+
 export async function updateManualSession(
   sessionId: string,
   data: {
@@ -271,27 +329,39 @@ export async function updateManualSession(
 
   if (error) return { error: error.message }
 
-  // Fetch the session to get athlete_id for revalidation and low-feel notification
+  // Fetch the session to get athlete_id for revalidation
   const { data: updatedSession } = await adminClient
     .from('sessions')
     .select('athlete_id, feel, athlete:athletes(name)')
     .eq('id', sessionId)
     .single()
 
-  if (data.feel !== null && (data.feel === 1 || data.feel === 2) && updatedSession) {
-    await adminClient.from('notifications').insert({
-      user_id: user.id,
-      type: 'low_feel_alert',
-      channel: 'in_app',
-      payload: {
-        session_id: sessionId,
-        athlete_id: updatedSession.athlete_id,
-        feel: updatedSession.feel,
-        athlete_name: (updatedSession as any).athlete?.name ?? 'An athlete',
-        message: `${(updatedSession as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
-      },
-      read: false,
-    })
+  if (data.feel !== null && (data.feel === 1 || data.feel === 2)) {
+    const { data: existing } = await adminClient
+      .from('notifications')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('type', 'low_feel_alert')
+      .contains('payload', { session_id: sessionId })
+      .limit(1)
+
+    if (!existing || existing.length === 0) {
+      if (updatedSession) {
+        await adminClient.from('notifications').insert({
+          user_id: user.id,
+          type: 'low_feel_alert',
+          channel: 'in_app',
+          payload: {
+            session_id: sessionId,
+            athlete_id: updatedSession.athlete_id,
+            feel: updatedSession.feel,
+            athlete_name: (updatedSession as any).athlete?.name ?? 'An athlete',
+            message: `${(updatedSession as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
+          },
+          read: false,
+        })
+      }
+    }
   }
 
   revalidatePath(`/athletes/${updatedSession?.athlete_id ?? ''}`)

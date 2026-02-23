@@ -143,6 +143,40 @@ export async function checkAndAwardMilestones(
       console.warn('Milestone email notification failed:', emailErr)
     }
 
+    // 6. Create milestone notifications for the coach
+    if (coachUserId) {
+      const { data: athleteRow } = await adminClient
+        .from('athletes')
+        .select('name')
+        .eq('id', athleteId)
+        .single()
+
+      const athleteName = athleteRow?.name ?? 'An athlete'
+
+      const notificationInserts = toAward.map((def: any) => ({
+        user_id: coachUserId,
+        type: 'milestone' as const,
+        channel: 'in_app' as const,
+        payload: {
+          athlete_id: athleteId,
+          athlete_name: athleteName,
+          session_id: sessionId,
+          milestone_label: def.label,
+          milestone_icon: def.icon,
+          message: `${athleteName} earned a milestone: ${def.label}!`,
+        },
+        read: false,
+      }))
+
+      const { error: notifError } = await adminClient
+        .from('notifications')
+        .insert(notificationInserts)
+
+      if (notifError) {
+        console.error('Failed to insert milestone notifications:', notifError)
+      }
+    }
+
     return toAward.length
   } catch (err) {
     console.error('checkAndAwardMilestones error:', err)

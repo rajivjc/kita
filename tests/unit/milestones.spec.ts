@@ -264,6 +264,80 @@ describe('checkAndAwardMilestones', () => {
     expect(count).toBe(0)
   })
 
+  it('creates milestone notifications for the coach', async () => {
+    const insertedMilestones: unknown[] = []
+    const insertedNotifications: unknown[] = []
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'milestone_definitions') {
+        return chainable([
+          { id: 'def-10', label: '10 Sessions', icon: '🔟', condition: { metric: 'session_count', threshold: 2 } },
+        ])
+      }
+      if (table === 'milestones') {
+        const obj: Record<string, unknown> = {}
+        const handler: ProxyHandler<Record<string, unknown>> = {
+          get(_target, prop) {
+            if (prop === 'then') {
+              return (resolve: (v: unknown) => void) => resolve({ data: [], error: null })
+            }
+            if (prop === 'insert') {
+              return (rows: unknown[]) => {
+                insertedMilestones.push(...rows)
+                return new Proxy(obj, handler)
+              }
+            }
+            return (..._args: unknown[]) => new Proxy(obj, handler)
+          },
+        }
+        return new Proxy(obj, handler)
+      }
+      if (table === 'sessions') {
+        return chainable([
+          { id: 'session-a', date: '2026-01-01', distance_km: 2 },
+          { id: sessionId, date: '2026-01-08', distance_km: 3 },
+        ])
+      }
+      if (table === 'athletes') {
+        return chainable({ name: 'Ali' })
+      }
+      if (table === 'notifications') {
+        const obj: Record<string, unknown> = {}
+        const handler: ProxyHandler<Record<string, unknown>> = {
+          get(_target, prop) {
+            if (prop === 'then') {
+              return (resolve: (v: unknown) => void) => resolve({ data: [], error: null })
+            }
+            if (prop === 'insert') {
+              return (rows: unknown[]) => {
+                insertedNotifications.push(...rows)
+                return new Proxy(obj, handler)
+              }
+            }
+            return (..._args: unknown[]) => new Proxy(obj, handler)
+          },
+        }
+        return new Proxy(obj, handler)
+      }
+      return chainable([])
+    })
+
+    const count = await checkAndAwardMilestones(athleteId, sessionId, coachId)
+    expect(count).toBe(1)
+    expect(insertedMilestones).toHaveLength(1)
+    expect(insertedNotifications).toHaveLength(1)
+
+    const notif = insertedNotifications[0] as Record<string, unknown>
+    expect(notif.user_id).toBe(coachId)
+    expect(notif.type).toBe('milestone')
+    expect(notif.read).toBe(false)
+    const payload = notif.payload as Record<string, unknown>
+    expect(payload.athlete_name).toBe('Ali')
+    expect(payload.milestone_label).toBe('10 Sessions')
+    expect(payload.message).toContain('Ali')
+    expect(payload.message).toContain('10 Sessions')
+  })
+
   it('handles errors gracefully and returns 0', async () => {
     mockFrom.mockImplementation(() => {
       throw new Error('DB connection failed')
