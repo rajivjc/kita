@@ -26,6 +26,8 @@ function relativeTime(dateStr: string): string {
 
 function getNotificationMessage(n: Notification): string {
   switch (n.type) {
+    case 'milestone':
+      return n.payload.message ?? 'An athlete earned a milestone!'
     case 'feel_prompt':
       return n.payload.message ?? 'How did the run go? Add a feel score.'
     case 'low_feel_alert':
@@ -41,6 +43,7 @@ function getNotificationMessage(n: Notification): string {
 
 function getNotificationIcon(type: string): string {
   switch (type) {
+    case 'milestone': return '🏅'
     case 'feel_prompt': return '💬'
     case 'low_feel_alert': return '⚠️'
     case 'unmatched_run': return '🔗'
