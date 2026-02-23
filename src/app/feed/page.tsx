@@ -134,9 +134,31 @@ export default async function FeedPage() {
     ? await adminClient.from('athletes').select('id, name').in('id', myAthleteIds)
     : { data: [] }
 
+  // Caregiver card data — fetch their linked athlete's recent activity
+  let caregiverAthlete: { id: string; name: string } | null = null
+  let caregiverRecentSessions: any[] = []
+  if (isReadOnly && user) {
+    const { data: linkedAthlete } = await adminClient
+      .from('athletes')
+      .select('id, name')
+      .eq('caregiver_user_id', user.id)
+      .maybeSingle()
+    if (linkedAthlete) {
+      caregiverAthlete = linkedAthlete
+      const { data: recentSessions } = await adminClient
+        .from('sessions')
+        .select('id, date, distance_km, feel')
+        .eq('athlete_id', linkedAthlete.id)
+        .eq('status', 'completed')
+        .gte('date', monthStart)
+        .order('date', { ascending: false })
+      caregiverRecentSessions = recentSessions ?? []
+    }
+  }
+
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
-  const coachFirstName = (userRow as any)?.name?.split(' ')[0] ?? 'Coach'
+  const firstName = (userRow as any)?.name?.split(' ')[0] ?? (isReadOnly ? 'there' : 'Coach')
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6 pb-32">
@@ -144,7 +166,7 @@ export default async function FeedPage() {
       {!isReadOnly && (
         <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
           <p className="text-lg font-bold text-gray-900 mb-1">
-            {greeting}, {coachFirstName}
+            {greeting}, {firstName}
           </p>
           {myMonthSessions?.length === 0 ? (
             <p className="text-sm text-teal-700">
@@ -180,6 +202,54 @@ export default async function FeedPage() {
                 })}
               </div>
             </>
+          )}
+        </div>
+      )}
+
+      {/* Caregiver greeting card */}
+      {isReadOnly && (
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
+          <p className="text-lg font-bold text-gray-900 mb-1">
+            {greeting}, {firstName}
+          </p>
+          {caregiverAthlete ? (
+            caregiverRecentSessions.length === 0 ? (
+              <p className="text-sm text-amber-700">
+                No runs logged for {caregiverAthlete.name} this month yet — stay tuned!
+              </p>
+            ) : (
+              <>
+                <p className="text-sm text-amber-700 mb-3">
+                  Here&apos;s how {caregiverAthlete.name} is doing this month
+                </p>
+                <div className="flex items-center gap-4 bg-white/50 rounded-lg px-4 py-3">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-900">{caregiverRecentSessions.length}</p>
+                    <p className="text-xs text-amber-600 font-medium">run{caregiverRecentSessions.length !== 1 ? 's' : ''}</p>
+                  </div>
+                  <div className="w-px h-8 bg-amber-200"></div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-900">
+                      {caregiverRecentSessions.reduce((sum: number, s: any) => sum + (s.distance_km ?? 0), 0).toFixed(1)}
+                    </p>
+                    <p className="text-xs text-amber-600 font-medium">km</p>
+                  </div>
+                  <div className="w-px h-8 bg-amber-200"></div>
+                  <div className="text-center">
+                    <div className="flex items-center gap-0.5 justify-center">
+                      {caregiverRecentSessions.slice(0, 5).map((s: any, i: number) => (
+                        <span key={i} className="text-lg">{s.feel ? FEEL_EMOJI[s.feel] : '—'}</span>
+                      ))}
+                    </div>
+                    <p className="text-xs text-amber-600 font-medium">recent feels</p>
+                  </div>
+                </div>
+              </>
+            )
+          ) : (
+            <p className="text-sm text-amber-700">
+              Welcome to the SOSG Running Club! Your athlete hasn&apos;t been linked yet — please ask a coach.
+            </p>
           )}
         </div>
       )}
