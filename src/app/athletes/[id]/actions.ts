@@ -116,7 +116,7 @@ export async function createManualSession(
         .single()
       await adminClient.from('notifications').insert({
         user_id: user.id,
-        type: 'low_feel_alert' as any,
+        type: 'low_feel_alert' as unknown as 'feel_prompt',
         channel: 'in_app',
         payload: {
           session_id: newSession.id,
@@ -248,7 +248,7 @@ export async function updateManualSession(
     if (updatedSession) {
       await adminClient.from('notifications').insert({
         user_id: user.id,
-        type: 'low_feel_alert' as any,
+        type: 'low_feel_alert' as unknown as 'feel_prompt',
         channel: 'in_app',
         payload: {
           session_id: sessionId,
