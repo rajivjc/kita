@@ -28,7 +28,9 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, userId }
   const [loading, setLoading] = useState(false)
 
   async function fetchNotifications() {
+    console.log('[notifications] fetching for userId:', userId)
     const result = await fetchUnreadNotifications(userId)
+    console.log('[notifications] result:', result.count, result.notifications.length)
     setUnreadCount(result.count)
     setNotifications(result.notifications)
   }
@@ -67,10 +69,13 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, userId }
                 <button
                   className="absolute top-1 left-1/2 -translate-x-1/2 translate-x-2 flex items-center justify-center min-w-[16px] h-[16px] px-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full leading-none z-10"
                   onClick={async () => {
+                    console.log('[notifications] badge tapped, loading...')
                     setLoading(true)
                     await fetchNotifications()
+                    console.log('[notifications] fetch done, opening panel, panelOpen will be true')
                     setLoading(false)
                     setPanelOpen(true)
+                    console.log('[notifications] setPanelOpen(true) called')
                   }}
                   aria-label="Open notifications"
                 >
