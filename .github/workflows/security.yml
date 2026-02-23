@@ -42,6 +42,7 @@ jobs:
           severity: "CRITICAL,HIGH"
           exit-code: "1"
           format: "table"
+          trivyignores: ".trivyignore"
 
       - name: Run Trivy config scan
         uses: aquasecurity/trivy-action@master
@@ -71,4 +72,39 @@ jobs:
         run: npm ci
 
       - name: Run npm audit (production)
-        run: npm audit --omit=dev --audit-level=high
+        shell: bash
+        run: |
+          # Run audit in JSON mode (exits non-zero when vulns found, so || true)
+          npm audit --omit=dev --json > /tmp/audit.json 2>/dev/null || true
+
+          # Check for high/critical vulns not in the allowlist.
+          # Advisories with no fix in Next.js 14.x (require 15+ upgrade):
+          #   GHSA-9g9p-9gw9-jx7f  Image Optimizer DoS
+          #   GHSA-h25m-26qc-wcjf  HTTP deserialization DoS
+          # TODO: Remove allowlist entries after upgrading to Next.js 15.
+          cat > /tmp/audit-check.js << 'AUDIT_SCRIPT'
+          const audit = JSON.parse(require('fs').readFileSync('/tmp/audit.json', 'utf8'));
+          const allowlist = new Set([
+            'GHSA-9g9p-9gw9-jx7f',
+            'GHSA-h25m-26qc-wcjf',
+          ]);
+          const vulns = Object.entries(audit.vulnerabilities || {});
+          const blocked = vulns.filter(([name, v]) => {
+            const advisories = v.via.filter(ref => typeof ref === 'object');
+            return advisories.some(a =>
+              (a.severity === 'high' || a.severity === 'critical') &&
+              !allowlist.has((a.url || '').split('/').pop())
+            );
+          });
+          if (blocked.length > 0) {
+            console.error('High/critical vulnerabilities found:');
+            blocked.forEach(([name]) => console.error('  -', name));
+            process.exit(1);
+          }
+          const allowed = vulns.length - blocked.length;
+          if (allowed > 0) {
+            console.log(allowed + ' known advisory(ies) allowlisted (pending Next.js 15 upgrade)');
+          }
+          console.log('npm audit passed');
+          AUDIT_SCRIPT
+          node /tmp/audit-check.js
