@@ -8,6 +8,14 @@ const FEEL_EMOJI: Record<number, string> = {
   1: '😰', 2: '😐', 3: '🙂', 4: '😊', 5: '🔥',
 }
 
+const FEEL_BORDER: Record<number, string> = {
+  1: 'border-l-red-400',
+  2: 'border-l-orange-400',
+  3: 'border-l-yellow-400',
+  4: 'border-l-green-400',
+  5: 'border-l-teal-500',
+}
+
 function groupByDate(sessions: any[]) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -17,16 +25,16 @@ function groupByDate(sessions: any[]) {
   weekAgo.setDate(today.getDate() - 7)
 
   const groups: Record<string, any[]> = {
-    'TODAY': [], 'YESTERDAY': [], 'THIS WEEK': [], 'EARLIER': [],
+    'Today': [], 'Yesterday': [], 'This week': [], 'Earlier': [],
   }
 
   for (const s of sessions) {
     const d = new Date(s.date)
     d.setHours(0, 0, 0, 0)
-    if (d.getTime() === today.getTime()) groups['TODAY'].push(s)
-    else if (d.getTime() === yesterday.getTime()) groups['YESTERDAY'].push(s)
-    else if (d >= weekAgo) groups['THIS WEEK'].push(s)
-    else groups['EARLIER'].push(s)
+    if (d.getTime() === today.getTime()) groups['Today'].push(s)
+    else if (d.getTime() === yesterday.getTime()) groups['Yesterday'].push(s)
+    else if (d >= weekAgo) groups['This week'].push(s)
+    else groups['Earlier'].push(s)
   }
   return groups
 }
@@ -161,7 +169,7 @@ export default async function FeedPage() {
   const firstName = (userRow as any)?.name?.split(' ')[0] ?? (isReadOnly ? 'there' : 'Coach')
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-6 pb-32">
+    <main className="max-w-2xl mx-auto px-4 py-6 pb-28">
       {/* Coach greeting card */}
       {!isReadOnly && (
         <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
@@ -191,7 +199,7 @@ export default async function FeedPage() {
                         <span className="text-xs text-teal-600 font-medium">{sessionCount} run{sessionCount !== 1 ? 's' : ''}</span>
                         <div className="flex items-center gap-0.5">
                           {lastFeels.map((emoji, i) => (
-                            <span key={i} className="text-sm" title={`Feel score`}>
+                            <span key={i} className="text-sm" title="Feel score">
                               {emoji}
                             </span>
                           ))}
@@ -227,14 +235,14 @@ export default async function FeedPage() {
                     <p className="text-2xl font-bold text-gray-900">{caregiverRecentSessions.length}</p>
                     <p className="text-xs text-amber-600 font-medium">run{caregiverRecentSessions.length !== 1 ? 's' : ''}</p>
                   </div>
-                  <div className="w-px h-8 bg-amber-200"></div>
+                  <div className="w-px self-stretch bg-amber-200/60" />
                   <div className="text-center">
                     <p className="text-2xl font-bold text-gray-900">
                       {caregiverRecentSessions.reduce((sum: number, s: any) => sum + (s.distance_km ?? 0), 0).toFixed(1)}
                     </p>
                     <p className="text-xs text-amber-600 font-medium">km</p>
                   </div>
-                  <div className="w-px h-8 bg-amber-200"></div>
+                  <div className="w-px self-stretch bg-amber-200/60" />
                   <div className="text-center">
                     <div className="flex items-center gap-0.5 justify-center">
                       {caregiverRecentSessions.slice(0, 5).map((s: any, i: number) => (
@@ -285,17 +293,13 @@ export default async function FeedPage() {
         if (items.length === 0) return null
         return (
           <div key={label} className="mb-6">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-1">{label}</p>
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3 mt-1">{label}</p>
             <div className="space-y-3">
               {items.map((s: any) => {
                 const hasMilestone = (milestonesBySession[s.id] ?? []).length > 0
-                const feelColor = s.feel === 1 ? 'border-l-red-400'
-                  : s.feel === 2 ? 'border-l-orange-400'
-                  : s.feel === 4 ? 'border-l-green-400'
-                  : s.feel === 5 ? 'border-l-teal-500'
-                  : 'border-l-gray-200'
+                const feelColor = s.feel ? (FEEL_BORDER[s.feel] ?? 'border-l-gray-200') : 'border-l-gray-200'
                 const badges = milestonesBySession[s.id] ?? []
-                const cardBg = hasMilestone ? 'bg-amber-50/50' : 'bg-white'
+                const cardBg = hasMilestone ? 'bg-amber-50/40' : 'bg-white'
                 const card = (
                   <div className={`${cardBg} rounded-xl border border-gray-100 shadow-sm px-4 py-4 border-l-4 ${feelColor} hover:shadow-md transition-shadow`}>
                     {/* Header: coach + athlete */}
@@ -325,7 +329,7 @@ export default async function FeedPage() {
                     {s.note && (
                       <p className="text-sm text-gray-500 italic mt-2 line-clamp-2">&ldquo;{s.note}&rdquo;</p>
                     )}
-                    {/* Milestone badges */}
+                    {/* Milestone badges — unified amber style */}
                     {badges.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-3">
                         {badges.map((m, i) => (
