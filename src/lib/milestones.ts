@@ -102,14 +102,17 @@ export async function checkAndAwardMilestones(
       return 0
     }
 
+    // Fetch athlete once for both email and notification use
+    const { data: athlete } = await adminClient
+      .from('athletes')
+      .select('name, caregiver_user_id')
+      .eq('id', athleteId)
+      .single()
+
+    const athleteName = athlete?.name ?? 'An athlete'
+
     // Send milestone email to caregiver (if athlete has one linked)
     try {
-      const { data: athlete } = await adminClient
-        .from('athletes')
-        .select('name, caregiver_user_id')
-        .eq('id', athleteId)
-        .single()
-
       if (athlete?.caregiver_user_id) {
         const { data: { users: authUsers } } = await adminClient.auth.admin.listUsers()
         const caregiverAuth = authUsers?.find(u => u.id === athlete.caregiver_user_id)
@@ -125,9 +128,9 @@ export async function checkAndAwardMilestones(
             })
             await sendEmail({
               to: caregiverAuth.email,
-              subject: `${athlete.name} achieved a milestone: ${def.label}!`,
+              subject: `${athleteName} achieved a milestone: ${def.label}!`,
               html: milestoneEmail({
-                athleteName: athlete.name,
+                athleteName,
                 milestoneLabel: def.label,
                 milestoneIcon: (def as any).icon ?? '🏆',
                 coachName: coach?.name ?? null,
@@ -145,14 +148,6 @@ export async function checkAndAwardMilestones(
 
     // 6. Create milestone notifications for the coach
     if (coachUserId) {
-      const { data: athleteRow } = await adminClient
-        .from('athletes')
-        .select('name')
-        .eq('id', athleteId)
-        .single()
-
-      const athleteName = athleteRow?.name ?? 'An athlete'
-
       const notificationInserts = toAward.map((def: any) => ({
         user_id: coachUserId,
         type: 'milestone' as const,

@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { adminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
@@ -7,12 +8,17 @@ interface PageProps {
   params: { id: string }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { data: milestone } = await adminClient
+const getMilestone = cache(async (id: string) => {
+  const { data } = await adminClient
     .from('milestones')
     .select('*, athletes(name), milestone_definitions(icon, label)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
+  return data
+})
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const milestone = await getMilestone(params.id)
 
   if (!milestone) return { title: 'Milestone Not Found' }
 
@@ -40,11 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function MilestoneSharePage({ params }: PageProps) {
-  const { data: milestone } = await adminClient
-    .from('milestones')
-    .select('*, athletes(name), milestone_definitions(icon, label)')
-    .eq('id', params.id)
-    .single()
+  const milestone = await getMilestone(params.id)
 
   if (!milestone) notFound()
 
