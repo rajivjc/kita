@@ -1,0 +1,9 @@
+# Next.js advisories with no fix available in the 14.x line.
+# These require upgrading to Next.js 15+.
+# TODO: Remove after upgrading to Next.js 15.
+
+# Next.js self-hosted applications vulnerable to DoS via Image Optimizer remotePatterns configuration
+GHSA-9g9p-9gw9-jx7f
+
+# Next.js HTTP request deserialization can lead to DoS when using insecure React Server Components
+GHSA-h25m-26qc-wcjf
