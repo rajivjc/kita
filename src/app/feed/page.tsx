@@ -265,8 +265,8 @@ export default async function FeedPage() {
                         ))}
                       </div>
                     )}
-                    {/* Kudos / high five */}
-                    {!isReadOnly && (
+                    {/* Kudos / high five — available to all logged-in users including caregivers */}
+                    {user && (
                       <div className="mt-3 pt-2 border-t border-gray-100">
                         <KudosButton
                           sessionId={s.id}
