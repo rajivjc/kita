@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Json } from '@/lib/supabase/types'
+import dynamic from 'next/dynamic'
 import RunsTab from './RunsTab'
-import CuesTab from './CuesTab'
-import NotesTab from './NotesTab'
-import LogRunSheet from './LogRunSheet'
 import { createManualSession } from '@/app/athletes/[id]/actions'
+
+const CuesTab = dynamic(() => import('./CuesTab'))
+const NotesTab = dynamic(() => import('./NotesTab'))
+const LogRunSheet = dynamic(() => import('./LogRunSheet'))
 
 export type AthleteData = {
   id: string

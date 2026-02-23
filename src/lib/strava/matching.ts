@@ -93,13 +93,19 @@ export async function matchActivityToAthlete(
     return { matched: false, athletes: [], ambiguousIdentifiers: [] }
   }
 
+  // Look up all identifiers in parallel instead of sequentially
+  const lookupResults = await Promise.all(
+    identifiers.map(async (identifier) => ({
+      identifier,
+      found: await findAthletesByIdentifier(identifier),
+    }))
+  )
+
   const athletes: AthleteMatch[] = []
   const ambiguousIdentifiers: string[] = []
   const seenAthleteIds = new Set<string>()
 
-  for (const identifier of identifiers) {
-    const found = await findAthletesByIdentifier(identifier)
-
+  for (const { identifier, found } of lookupResults) {
     if (found.length === 1 && !seenAthleteIds.has(found[0].id)) {
       seenAthleteIds.add(found[0].id)
       athletes.push({

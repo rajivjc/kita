@@ -40,33 +40,76 @@ function groupByDate(sessions: any[]) {
 }
 
 export default async function FeedPage() {
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { data: userRow } = user
-    ? await adminClient.from('users').select('role, name').eq('id', user.id).single()
-    : { data: null }
+  // Phase 1: Fetch user role + sessions + milestones + club stats in parallel
+  const [
+    { data: userRow },
+    { data: sessions },
+    { data: milestones },
+    { count: totalSessionCount },
+    { data: totalDistanceRows },
+    { count: totalAthleteCount },
+    { count: totalMilestoneCount },
+  ] = await Promise.all([
+    user
+      ? adminClient.from('users').select('role, name').eq('id', user.id).single()
+      : Promise.resolve({ data: null }),
+    adminClient
+      .from('sessions')
+      .select('id, date, distance_km, duration_seconds, feel, note, athlete_id, coach_user_id, strava_title, avg_heart_rate, max_heart_rate')
+      .eq('status', 'completed')
+      .order('date', { ascending: false })
+      .limit(30),
+    adminClient
+      .from('milestones')
+      .select('id, athlete_id, session_id, label, achieved_at, athletes(name), milestone_definitions(icon)')
+      .order('achieved_at', { ascending: false })
+      .limit(20),
+    adminClient.from('sessions').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
+    adminClient.from('sessions').select('distance_km').eq('status', 'completed'),
+    adminClient.from('athletes').select('*', { count: 'exact', head: true }).eq('active', true),
+    adminClient.from('milestones').select('*', { count: 'exact', head: true }),
+  ])
 
   const isReadOnly = userRow?.role === 'caregiver'
+  const totalKm = (totalDistanceRows ?? []).reduce((sum: number, s: any) => sum + (s.distance_km ?? 0), 0)
 
-  const { data: sessions, error } = await adminClient
-    .from('sessions')
-    .select('id, date, distance_km, duration_seconds, feel, note, athlete_id, coach_user_id, strava_title, avg_heart_rate, max_heart_rate')
-    .eq('status', 'completed')
-    .order('date', { ascending: false })
-    .limit(30)
-
-  // Fetch athlete and coach names separately
+  // Phase 2: Fetch athlete/coach names, kudos, and role-specific data in parallel
   const athleteIds = [...new Set((sessions ?? []).map((s: any) => s.athlete_id).filter(Boolean))]
   const coachIds = [...new Set((sessions ?? []).map((s: any) => s.coach_user_id).filter(Boolean))]
+  const sessionIds = (sessions ?? []).map((s: any) => s.id)
 
-  const [{ data: athletes }, { data: coaches }] = await Promise.all([
+  const [
+    { data: athletes },
+    { data: coaches },
+    { data: kudosCounts },
+    { data: myKudos },
+    { data: myMonthSessions },
+    caregiverData,
+  ] = await Promise.all([
     athleteIds.length > 0
       ? adminClient.from('athletes').select('id, name').in('id', athleteIds)
       : Promise.resolve({ data: [] }),
     coachIds.length > 0
       ? adminClient.from('users').select('id, name, email').in('id', coachIds)
       : Promise.resolve({ data: [] }),
+    sessionIds.length > 0
+      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds)
+      : Promise.resolve({ data: [] }),
+    sessionIds.length > 0 && user
+      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds).eq('user_id', user.id)
+      : Promise.resolve({ data: [] }),
+    user && !isReadOnly
+      ? adminClient.from('sessions').select('id, athlete_id, feel, date').eq('coach_user_id', user.id).gte('date', monthStart).eq('status', 'completed')
+      : Promise.resolve({ data: [] }),
+    isReadOnly && user
+      ? adminClient.from('athletes').select('id, name').eq('caregiver_user_id', user.id).maybeSingle()
+      : Promise.resolve({ data: null }),
   ])
 
   const athleteMap = Object.fromEntries((athletes ?? []).map((a: any) => [a.id, a.name]))
@@ -82,12 +125,6 @@ export default async function FeedPage() {
 
   const groups = groupByDate(feed)
 
-  const { data: milestones } = await adminClient
-    .from('milestones')
-    .select('id, athlete_id, session_id, label, achieved_at, athletes(name), milestone_definitions(icon)')
-    .order('achieved_at', { ascending: false })
-    .limit(20)
-
   const milestonesBySession: Record<string, { icon: string; label: string }[]> = {}
   for (const m of milestones ?? []) {
     const anyM = m as any
@@ -98,17 +135,6 @@ export default async function FeedPage() {
       label: anyM.label,
     })
   }
-
-  // Fetch kudos counts and user's own kudos
-  const sessionIds = (sessions ?? []).map((s: any) => s.id)
-  const [{ data: kudosCounts }, { data: myKudos }] = await Promise.all([
-    sessionIds.length > 0
-      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds)
-      : Promise.resolve({ data: [] }),
-    sessionIds.length > 0 && user
-      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds).eq('user_id', user.id)
-      : Promise.resolve({ data: [] }),
-  ])
 
   const kudosCountMap: Record<string, number> = {}
   for (const k of kudosCounts ?? []) {
@@ -125,53 +151,25 @@ export default async function FeedPage() {
   const weeklyKm = thisWeek.reduce((sum, s) => sum + (s.distance_km ?? 0), 0)
   const weeklyAthletes = new Set(thisWeek.map(s => s.athlete_id)).size
 
-  // Coach card data
-  const now = new Date()
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
-
-  const { data: myMonthSessions } = user ? await adminClient
-    .from('sessions')
-    .select('id, athlete_id, feel, date')
-    .eq('coach_user_id', user.id)
-    .gte('date', monthStart)
-    .eq('status', 'completed')
-    : { data: [] }
-
+  // Phase 3: Fetch remaining role-specific data that depends on previous results
   const myAthleteIds = [...new Set((myMonthSessions ?? []).map((s: any) => s.athlete_id))]
   const { data: myAthletes } = myAthleteIds.length > 0
     ? await adminClient.from('athletes').select('id, name').in('id', myAthleteIds)
     : { data: [] }
 
-  // Caregiver card data — fetch their linked athlete's recent activity
-  let caregiverAthlete: { id: string; name: string } | null = null
+  // Caregiver card data
+  const caregiverAthlete = (caregiverData as any) ?? null
   let caregiverRecentSessions: any[] = []
-  if (isReadOnly && user) {
-    const { data: linkedAthlete } = await adminClient
-      .from('athletes')
-      .select('id, name')
-      .eq('caregiver_user_id', user.id)
-      .maybeSingle()
-    if (linkedAthlete) {
-      caregiverAthlete = linkedAthlete
-      const { data: recentSessions } = await adminClient
-        .from('sessions')
-        .select('id, date, distance_km, feel')
-        .eq('athlete_id', linkedAthlete.id)
-        .eq('status', 'completed')
-        .gte('date', monthStart)
-        .order('date', { ascending: false })
-      caregiverRecentSessions = recentSessions ?? []
-    }
+  if (caregiverAthlete) {
+    const { data: recentSessions } = await adminClient
+      .from('sessions')
+      .select('id, date, distance_km, feel')
+      .eq('athlete_id', caregiverAthlete.id)
+      .eq('status', 'completed')
+      .gte('date', monthStart)
+      .order('date', { ascending: false })
+    caregiverRecentSessions = recentSessions ?? []
   }
-
-  // Club statistics — all-time numbers for emotional pull
-  const [{ count: totalSessionCount }, { data: allSessionStats }, { count: totalAthleteCount }, { count: totalMilestoneCount }] = await Promise.all([
-    adminClient.from('sessions').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
-    adminClient.from('sessions').select('distance_km').eq('status', 'completed'),
-    adminClient.from('athletes').select('*', { count: 'exact', head: true }).eq('active', true),
-    adminClient.from('milestones').select('*', { count: 'exact', head: true }),
-  ])
-  const totalKm = (allSessionStats ?? []).reduce((sum: number, s: any) => sum + (s.distance_km ?? 0), 0)
 
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'

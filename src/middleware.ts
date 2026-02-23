@@ -33,6 +33,19 @@ function isPublic(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  const { pathname } = request.nextUrl
+
+  // Skip auth entirely for public paths — no Supabase call needed
+  if (isPublic(pathname)) {
+    return NextResponse.next({ request })
+  }
+
+  // For non-protected, non-public paths (e.g. _next, static), pass through
+  if (!isProtected(pathname)) {
+    return NextResponse.next({ request })
+  }
+
+  // Only create Supabase client and call getUser() for protected paths
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -53,30 +66,26 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
 
-  if (isProtected(pathname) && !user) {
+  if (!user) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
     return NextResponse.redirect(loginUrl)
   }
 
-  // If user is logged in, check active flag
-  if (user && isProtected(pathname)) {
-    const { data: userRow } = await supabase
-      .from('users')
-      .select('active')
-      .eq('id', user.id)
-      .single()
+  // Check active flag for authenticated users on protected routes
+  const { data: userRow } = await supabase
+    .from('users')
+    .select('active')
+    .eq('id', user.id)
+    .single()
 
-    if (userRow && userRow.active === false) {
-      // Sign out and redirect to login with revoked message
-      await supabase.auth.signOut()
-      const loginUrl = request.nextUrl.clone()
-      loginUrl.pathname = '/login'
-      loginUrl.search = '?error=revoked'
-      return NextResponse.redirect(loginUrl)
-    }
+  if (userRow && userRow.active === false) {
+    await supabase.auth.signOut()
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
+    loginUrl.search = '?error=revoked'
+    return NextResponse.redirect(loginUrl)
   }
 
   return response
