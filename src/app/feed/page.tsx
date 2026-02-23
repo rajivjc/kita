@@ -2,6 +2,7 @@ import { adminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { formatDate, formatDistance, formatDuration } from '@/lib/utils/dates'
+import KudosButton from '@/components/feed/KudosButton'
 
 const FEEL_EMOJI: Record<number, string> = {
   1: '😰', 2: '😐', 3: '🙂', 4: '😊', 5: '🔥',
@@ -89,6 +90,23 @@ export default async function FeedPage() {
       label: anyM.label,
     })
   }
+
+  // Fetch kudos counts and user's own kudos
+  const sessionIds = (sessions ?? []).map((s: any) => s.id)
+  const [{ data: kudosCounts }, { data: myKudos }] = await Promise.all([
+    sessionIds.length > 0
+      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds)
+      : Promise.resolve({ data: [] }),
+    sessionIds.length > 0 && user
+      ? adminClient.from('kudos').select('session_id').in('session_id', sessionIds).eq('user_id', user.id)
+      : Promise.resolve({ data: [] }),
+  ])
+
+  const kudosCountMap: Record<string, number> = {}
+  for (const k of kudosCounts ?? []) {
+    kudosCountMap[k.session_id] = (kudosCountMap[k.session_id] ?? 0) + 1
+  }
+  const myKudosSet = new Set((myKudos ?? []).map((k: any) => k.session_id))
 
   const thisWeek = feed.filter(s => {
     const d = new Date(s.date)
@@ -245,6 +263,16 @@ export default async function FeedPage() {
                             {m.icon || '🏆'} {m.label}
                           </span>
                         ))}
+                      </div>
+                    )}
+                    {/* Kudos / high five */}
+                    {!isReadOnly && (
+                      <div className="mt-3 pt-2 border-t border-gray-100">
+                        <KudosButton
+                          sessionId={s.id}
+                          initialCount={kudosCountMap[s.id] ?? 0}
+                          initialGiven={myKudosSet.has(s.id)}
+                        />
                       </div>
                     )}
                   </div>

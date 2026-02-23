@@ -149,6 +149,12 @@ export interface Database {
         Update: Partial<Invitation>
         Relationships: []
       }
+      kudos: {
+        Row: Kudos & Record<string, unknown>
+        Insert: Omit<Kudos, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<Kudos>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -344,5 +350,12 @@ export interface Invitation {
   athlete_id: string | null
   invited_by: string | null
   accepted_at: string | null
+  created_at: string
+}
+
+export interface Kudos {
+  id: string
+  session_id: string
+  user_id: string
   created_at: string
 }
