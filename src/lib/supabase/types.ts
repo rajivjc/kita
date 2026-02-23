@@ -133,7 +133,7 @@ export interface Database {
         Insert: {
           id?: string
           user_id: string
-          type: 'milestone' | 'feel_prompt' | 'unmatched_run' | 'strava_disconnected' | 'general'
+          type: 'milestone' | 'feel_prompt' | 'low_feel_alert' | 'unmatched_run' | 'strava_disconnected' | 'general'
           payload: Json
           read?: boolean
           channel: 'in_app' | 'email' | 'push'
@@ -329,7 +329,7 @@ export interface SessionRsvp {
 export interface Notification {
   id: string
   user_id: string
-  type: 'milestone' | 'feel_prompt' | 'unmatched_run' | 'strava_disconnected' | 'general'
+  type: 'milestone' | 'feel_prompt' | 'low_feel_alert' | 'unmatched_run' | 'strava_disconnected' | 'general'
   payload: Json
   read: boolean
   channel: 'in_app' | 'email' | 'push'

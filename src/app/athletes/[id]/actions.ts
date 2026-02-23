@@ -5,17 +5,27 @@ import { adminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { checkAndAwardMilestones } from '@/lib/milestones'
 
-export async function addCoachNote(athleteId: string, content: string): Promise<void> {
+export async function addCoachNote(athleteId: string, content: string): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role === 'caregiver') return { error: 'Caregivers cannot add notes' }
+
   await supabase.from('coach_notes').insert({
     athlete_id: athleteId,
-    coach_user_id: user?.id ?? null,
+    coach_user_id: user.id,
     content,
     note_type: 'general',
     visibility: 'all',
   })
   revalidatePath(`/athletes/${athleteId}`)
+  return {}
 }
 
 export async function updateAthlete(
@@ -117,7 +127,7 @@ export async function createManualSession(
     if (feel === null) {
       await adminClient.from('notifications').insert({
         user_id: user.id,
-        type: 'feel_prompt' as unknown as 'feel_prompt',
+        type: 'feel_prompt',
         channel: 'in_app',
         payload: {
           session_id: newSession.id,
@@ -132,7 +142,7 @@ export async function createManualSession(
     if (feel !== null && (feel === 1 || feel === 2)) {
       await adminClient.from('notifications').insert({
         user_id: user.id,
-        type: 'low_feel_alert' as unknown as 'feel_prompt',
+        type: 'low_feel_alert',
         channel: 'in_app',
         payload: {
           session_id: newSession.id,
@@ -203,7 +213,14 @@ export async function updateCoachNote(
     .eq('coach_user_id', user.id)
 
   if (error) return { error: error.message }
-  revalidatePath('/athletes')
+
+  // Fetch the athlete ID so we revalidate the correct athlete detail page
+  const { data: noteRow } = await adminClient
+    .from('coach_notes')
+    .select('athlete_id')
+    .eq('id', noteId)
+    .single()
+  revalidatePath(`/athletes/${noteRow?.athlete_id ?? ''}`)
   return {}
 }
 
@@ -254,29 +271,29 @@ export async function updateManualSession(
 
   if (error) return { error: error.message }
 
-  if (data.feel !== null && (data.feel === 1 || data.feel === 2)) {
-    const { data: updatedSession } = await adminClient
-      .from('sessions')
-      .select('athlete_id, feel, athlete:athletes(name)')
-      .eq('id', sessionId)
-      .single()
-    if (updatedSession) {
-      await adminClient.from('notifications').insert({
-        user_id: user.id,
-        type: 'low_feel_alert' as unknown as 'feel_prompt',
-        channel: 'in_app',
-        payload: {
-          session_id: sessionId,
-          athlete_id: updatedSession.athlete_id,
-          feel: updatedSession.feel,
-          athlete_name: (updatedSession as any).athlete?.name ?? 'An athlete',
-          message: `${(updatedSession as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
-        },
-        read: false,
-      })
-    }
+  // Fetch the session to get athlete_id for revalidation and low-feel notification
+  const { data: updatedSession } = await adminClient
+    .from('sessions')
+    .select('athlete_id, feel, athlete:athletes(name)')
+    .eq('id', sessionId)
+    .single()
+
+  if (data.feel !== null && (data.feel === 1 || data.feel === 2) && updatedSession) {
+    await adminClient.from('notifications').insert({
+      user_id: user.id,
+      type: 'low_feel_alert',
+      channel: 'in_app',
+      payload: {
+        session_id: sessionId,
+        athlete_id: updatedSession.athlete_id,
+        feel: updatedSession.feel,
+        athlete_name: (updatedSession as any).athlete?.name ?? 'An athlete',
+        message: `${(updatedSession as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
+      },
+      read: false,
+    })
   }
 
-  revalidatePath('/athletes')
+  revalidatePath(`/athletes/${updatedSession?.athlete_id ?? ''}`)
   return {}
 }
