@@ -15,10 +15,5 @@ create policy "Users can view their own badges"
   on public.coach_badges for select
   using (auth.uid() = user_id);
 
-create policy "Service role can manage badges"
-  on public.coach_badges for all
-  using (true)
-  with check (true);
-
 -- Index for fast lookups
 create index if not exists idx_coach_badges_user_id on public.coach_badges(user_id);
