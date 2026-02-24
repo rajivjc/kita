@@ -1,8 +1,8 @@
 /**
  * Unit tests for Strava client functions.
  *
- * Tests getStravaAuthUrl with desktop and PWA parameters,
- * and createStravaState / verifyStravaState round-trip.
+ * Tests getStravaAuthUrl (always web endpoint) and
+ * createStravaState / verifyStravaState round-trip.
  */
 
 // Save original env
@@ -25,7 +25,7 @@ import { getStravaAuthUrl, createStravaState, verifyStravaState } from '@/lib/st
 const TEST_USER_ID = 'user-abc-123'
 
 describe('getStravaAuthUrl', () => {
-  it('returns desktop OAuth URL by default', () => {
+  it('always returns web OAuth URL (never mobile endpoint)', () => {
     const url = getStravaAuthUrl(TEST_USER_ID)
     expect(url).toContain('https://www.strava.com/oauth/authorize?')
     expect(url).not.toContain('/mobile/')
@@ -34,20 +34,6 @@ describe('getStravaAuthUrl', () => {
     expect(url).toContain('response_type=code')
     expect(url).toContain('scope=activity%3Aread_all')
     expect(url).toContain('state=')
-  })
-
-  it('returns desktop OAuth URL when pwa=false', () => {
-    const url = getStravaAuthUrl(TEST_USER_ID, false)
-    expect(url).toContain('https://www.strava.com/oauth/authorize?')
-    expect(url).not.toContain('/mobile/')
-  })
-
-  it('returns mobile OAuth URL when pwa=true', () => {
-    const url = getStravaAuthUrl(TEST_USER_ID, true)
-    expect(url).toContain('https://www.strava.com/oauth/mobile/authorize?')
-    expect(url).toContain('client_id=test-client-id')
-    expect(url).toContain('response_type=code')
-    expect(url).toContain('scope=activity%3Aread_all')
   })
 
   it('uses NEXT_PUBLIC_APP_URL for redirect_uri', () => {
@@ -65,11 +51,13 @@ describe('getStravaAuthUrl', () => {
     )
   })
 
-  it('PWA URL also uses correct redirect_uri', () => {
-    const url = getStravaAuthUrl(TEST_USER_ID, true)
-    expect(url).toContain(
-      'redirect_uri=' + encodeURIComponent('https://app.example.com/api/strava/callback')
-    )
+  it('includes a signed state parameter', () => {
+    const url = getStravaAuthUrl(TEST_USER_ID)
+    const parsed = new URL(url)
+    const state = parsed.searchParams.get('state')
+    expect(state).toBeTruthy()
+    // State should be verifiable
+    expect(verifyStravaState(state!)).toBe(TEST_USER_ID)
   })
 })
 

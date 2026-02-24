@@ -73,7 +73,7 @@ export function verifyStravaState(state: string): string | null {
 
 // ─── Auth URL ──────────────────────────────────────────────────────────────────
 
-export function getStravaAuthUrl(userId: string, pwa = false): string {
+export function getStravaAuthUrl(userId: string): string {
   const clientId = process.env.STRAVA_CLIENT_ID
   const codespaceName = process.env.CODESPACE_NAME
 
@@ -89,13 +89,11 @@ export function getStravaAuthUrl(userId: string, pwa = false): string {
     state: createStravaState(userId),
   })
 
-  // Only use Strava's mobile OAuth endpoint for PWA installs.
-  // Mobile browsers should use the regular web endpoint (stays in same tab).
-  const base = pwa
-    ? 'https://www.strava.com/oauth/mobile/authorize'
-    : 'https://www.strava.com/oauth/authorize'
-
-  return `${base}?${params.toString()}`
+  // Always use the web OAuth endpoint. The mobile endpoint opens the Strava
+  // native app which then redirects the callback to a NEW browser context —
+  // breaking both mobile browser and PWA flows. The connect route handles
+  // mobile separately by using a JS redirect (prevents Strava app interception).
+  return `https://www.strava.com/oauth/authorize?${params.toString()}`
 }
 
 // ─── Token exchange ────────────────────────────────────────────────────────────

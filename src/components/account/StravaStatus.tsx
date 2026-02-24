@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { disconnectStrava } from '@/app/account/actions'
 
 type Connection = {
@@ -12,68 +12,9 @@ type Connection = {
   created_at: string | null
 } | null
 
-function isStandalonePWA(): boolean {
-  if (typeof window === 'undefined') return false
-  return (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    (navigator as unknown as { standalone?: boolean }).standalone === true
-  )
-}
-
 export default function StravaStatus({ connection }: { connection: Connection }) {
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [isPwa, setIsPwa] = useState(false)
-
-  useEffect(() => {
-    setIsPwa(isStandalonePWA())
-  }, [])
-
-  // PWA: fetch URL as JSON so the OS can open the Strava app via universal links
-  // Browser (mobile or desktop): regular <a> link stays in same tab
-  async function handlePwaConnect() {
-    try {
-      const res = await fetch('/api/strava/connect?pwa=1&json=1')
-      const { url } = await res.json()
-      if (url) {
-        window.location.href = url
-        return
-      }
-    } catch { /* fall through */ }
-    window.location.href = '/api/strava/connect?pwa=1'
-  }
-
-  const connectButton = isPwa ? (
-    <button
-      onClick={handlePwaConnect}
-      className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
-    >
-      Connect Strava
-    </button>
-  ) : (
-    <a
-      href="/api/strava/connect"
-      className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
-    >
-      Connect Strava
-    </a>
-  )
-
-  const reconnectButton = isPwa ? (
-    <button
-      onClick={handlePwaConnect}
-      className="text-xs font-medium text-gray-600 hover:text-teal-600 border border-gray-200 rounded-lg px-3 py-1.5 transition-colors"
-    >
-      Reconnect
-    </button>
-  ) : (
-    <a
-      href="/api/strava/connect"
-      className="text-xs font-medium text-gray-600 hover:text-teal-600 border border-gray-200 rounded-lg px-3 py-1.5 transition-colors"
-    >
-      Reconnect
-    </a>
-  )
 
   if (!connection) {
     return (
@@ -82,7 +23,12 @@ export default function StravaStatus({ connection }: { connection: Connection })
         <p className="text-xs text-orange-700 mb-3">
           Connect Strava so your runs automatically sync to athlete profiles.
         </p>
-        {connectButton}
+        <a
+          href="/api/strava/connect"
+          className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
+        >
+          Connect Strava
+        </a>
       </div>
     )
   }
@@ -136,7 +82,12 @@ export default function StravaStatus({ connection }: { connection: Connection })
         </div>
       ) : (
         <div className="flex gap-2 mt-3">
-          {reconnectButton}
+          <a
+            href="/api/strava/connect"
+            className="text-xs font-medium text-gray-600 hover:text-teal-600 border border-gray-200 rounded-lg px-3 py-1.5 transition-colors"
+          >
+            Reconnect
+          </a>
           <button
             type="button"
             onClick={() => setConfirming(true)}
