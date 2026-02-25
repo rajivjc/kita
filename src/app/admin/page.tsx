@@ -87,12 +87,12 @@ export default async function AdminPage() {
         ) : (
           <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
             {invitations.map((inv) => (
-              <div key={inv.id} className="flex items-center justify-between px-4 py-3 bg-white">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{inv.email}</p>
+              <div key={inv.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 py-3 bg-white">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{inv.email}</p>
                   <p className="text-xs text-gray-500 capitalize">{inv.role}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-shrink-0">
                   <p className="text-xs text-gray-400">
                     {new Date(inv.created_at).toLocaleDateString('en-SG')}
                   </p>

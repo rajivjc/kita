@@ -32,8 +32,8 @@ export default function CancelInviteButton({
   if (confirming) {
     return (
       <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-red-600 font-medium">Remove {email} completely?</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-red-600 font-medium whitespace-nowrap">Remove {email} completely?</span>
           <button
             onClick={handleConfirm}
             disabled={busy}
