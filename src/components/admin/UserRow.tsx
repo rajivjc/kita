@@ -93,10 +93,10 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
 
   return (
     <div className={`px-4 py-3 bg-white ${!active ? 'opacity-50' : ''}`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-900">{email}</p>
-          <div className="flex items-center gap-2 mt-0.5">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-gray-900 truncate">{email}</p>
+          <div className="flex flex-wrap items-center gap-2 mt-0.5">
             {isSelf ? (
               <p className="text-xs text-gray-500 capitalize">{currentRole}</p>
             ) : (
@@ -124,7 +124,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
           </div>
           {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-shrink-0">
           <p className="text-xs text-gray-400">
             {new Date(createdAt).toLocaleDateString('en-SG')}
           </p>
@@ -133,7 +133,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
               <button
                 onClick={handleToggle}
                 disabled={busy || deleting}
-                className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50 ${
+                className={`text-xs font-medium px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap ${
                   active
                     ? 'bg-red-50 text-red-600 hover:bg-red-100'
                     : 'bg-green-50 text-green-600 hover:bg-green-100'
@@ -144,7 +144,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
               <button
                 onClick={handleDelete}
                 disabled={deleting || busy}
-                className="text-xs font-medium px-2.5 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
+                className="text-xs font-medium px-2.5 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50 whitespace-nowrap"
               >
                 {deleting ? '…' : 'Delete'}
               </button>
