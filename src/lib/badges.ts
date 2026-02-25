@@ -16,6 +16,11 @@ interface CoachStats {
   feelRatedCount: number
 }
 
+export interface BadgeSyncResult {
+  awarded: string[]
+  revoked: string[]
+}
+
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
   {
     key: 'first_steps',
@@ -96,7 +101,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
   },
 ]
 
-export async function checkAndAwardBadges(userId: string): Promise<string[]> {
+export async function syncBadges(userId: string): Promise<BadgeSyncResult> {
   try {
     // Fetch existing badges
     const { data: existing } = await adminClient
@@ -118,17 +123,20 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
         .from('sessions')
         .select('*', { count: 'exact', head: true })
         .eq('coach_user_id', userId)
-        .eq('status', 'completed'),
+        .eq('status', 'completed')
+        .is('strava_deleted_at', null),
       adminClient
         .from('sessions')
         .select('athlete_id')
         .eq('coach_user_id', userId)
-        .eq('status', 'completed'),
+        .eq('status', 'completed')
+        .is('strava_deleted_at', null),
       adminClient
         .from('sessions')
         .select('*', { count: 'exact', head: true })
         .eq('coach_user_id', userId)
         .eq('status', 'completed')
+        .is('strava_deleted_at', null)
         .not('note', 'is', null),
       adminClient
         .from('kudos')
@@ -139,6 +147,7 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
         .select('*', { count: 'exact', head: true })
         .eq('coach_user_id', userId)
         .eq('status', 'completed')
+        .is('strava_deleted_at', null)
         .not('feel', 'is', null),
     ])
 
@@ -152,14 +161,14 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
       feelRatedCount: feelCount ?? 0,
     }
 
-    // Check for new badges
-    const newBadges: string[] = []
+    // Award new badges
+    const awarded: string[] = []
     const inserts: { user_id: string; badge_key: string }[] = []
 
     for (const badge of BADGE_DEFINITIONS) {
       if (earnedKeys.has(badge.key)) continue
       if (badge.check(stats)) {
-        newBadges.push(badge.key)
+        awarded.push(badge.key)
         inserts.push({ user_id: userId, badge_key: badge.key })
       }
     }
@@ -168,11 +177,34 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
       await adminClient.from('coach_badges').insert(inserts)
     }
 
-    return newBadges
+    // Revoke badges where conditions are no longer met
+    const revoked: string[] = []
+
+    for (const badge of BADGE_DEFINITIONS) {
+      if (earnedKeys.has(badge.key) && !badge.check(stats)) {
+        revoked.push(badge.key)
+      }
+    }
+
+    if (revoked.length > 0) {
+      await adminClient
+        .from('coach_badges')
+        .delete()
+        .eq('user_id', userId)
+        .in('badge_key', revoked)
+    }
+
+    return { awarded, revoked }
   } catch (err) {
-    console.error('checkAndAwardBadges error:', err)
-    return []
+    console.error('syncBadges error:', err)
+    return { awarded: [], revoked: [] }
   }
+}
+
+/** @deprecated Use syncBadges instead */
+export async function checkAndAwardBadges(userId: string): Promise<string[]> {
+  const result = await syncBadges(userId)
+  return result.awarded
 }
 
 export function getBadgeDefinition(key: string): BadgeDefinition | undefined {

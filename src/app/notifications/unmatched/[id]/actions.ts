@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { checkAndAwardMilestones } from '@/lib/milestones'
+import { syncBadges } from '@/lib/badges'
 import { processStravaActivity } from '@/lib/strava/sync'
 
 export async function resolveUnmatchedRun(
@@ -107,8 +108,9 @@ export async function resolveUnmatchedRun(
       .in('id', unmatchedNotifs.map((n) => n.id))
   }
 
-  // Award milestones
+  // Award milestones and sync badges
   await checkAndAwardMilestones(athleteId, session.id, unmatched.coach_user_id ?? user.id)
+  await syncBadges(unmatched.coach_user_id ?? user.id)
 
   revalidatePath('/notifications')
   revalidatePath('/feed')

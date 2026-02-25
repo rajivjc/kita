@@ -6,6 +6,7 @@ import { getValidAccessToken } from './tokens'
 import { matchActivityToAthlete } from './matching'
 import type { AthleteMatch } from './matching'
 import { checkAndAwardMilestones } from '@/lib/milestones'
+import { syncBadges } from '@/lib/badges'
 
 const RUN_SPORT_TYPES = ['Run', 'TrailRun', 'VirtualRun'] as const
 
@@ -158,6 +159,9 @@ export async function processStravaActivity(
       }
     }
 
+    // Re-evaluate badges after Strava activity deletion
+    await syncBadges(coachUserId)
+
     await adminClient
       .from('strava_sync_log')
       .update({ status: 'matched' as const, processed_at: now })
@@ -286,6 +290,9 @@ export async function processStravaActivity(
         await checkAndAwardMilestones(athleteMatch.athleteId, sessionId, coachUserId)
       }
     }
+
+    // Sync coach badges after matched session creation
+    await syncBadges(coachUserId)
 
     await adminClient
       .from('strava_sync_log')
