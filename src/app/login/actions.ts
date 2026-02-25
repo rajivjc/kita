@@ -25,18 +25,3 @@ export async function sendMagicLink(
 
   return { error: 'Something went wrong. Please try again.' }
 }
-
-export async function verifyOtpCode(
-  email: string,
-  token: string
-): Promise<{ error: string | null }> {
-  const supabase = createClient()
-
-  const { error } = await supabase.auth.verifyOtp({
-    email,
-    token,
-    type: 'email',
-  })
-
-  return { error: error ? 'Invalid or expired code. Please try again.' : null }
-}

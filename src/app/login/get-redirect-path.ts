@@ -4,14 +4,32 @@ import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 
 /**
- * After OTP verification, determine where to redirect the user based on role.
- * Mirrors the logic in /auth/callback/route.ts.
+ * Verify OTP and determine redirect path in a single server action.
+ * This avoids the race condition where the browser client sets auth cookies
+ * asynchronously after verifyOtp resolves, but the server action to get the
+ * redirect path fires before those cookies are available.
  */
-export async function getRedirectPath(): Promise<string> {
+export async function verifyOtpAndRedirect(
+  email: string,
+  token: string
+): Promise<{ error: string | null; redirectPath: string }> {
   const supabase = await createClient()
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: 'email',
+  })
+
+  if (error) {
+    return { error: 'Invalid or expired code. Please try again.', redirectPath: '' }
+  }
+
+  // Session is now established on the server client — cookies are set in the response.
+  // Determine redirect path using the same authenticated session.
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) return '/login?error=auth'
+  if (!user) return { error: null, redirectPath: '/login?error=auth' }
 
   const { data: userRow } = await adminClient
     .from('users')
@@ -38,9 +56,9 @@ export async function getRedirectPath(): Promise<string> {
         .eq('id', invitation.athlete_id)
         .is('caregiver_user_id', null)
 
-      return `/athletes/${invitation.athlete_id}`
+      return { error: null, redirectPath: `/athletes/${invitation.athlete_id}` }
     }
   }
 
-  return '/feed'
+  return { error: null, redirectPath: '/feed' }
 }
