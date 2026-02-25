@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { checkAndAwardMilestones } from '@/lib/milestones'
-import { checkAndAwardBadges } from '@/lib/badges'
+import { syncBadges } from '@/lib/badges'
 
 export async function addCoachNote(athleteId: string, content: string): Promise<{ error?: string }> {
   const supabase = await createClient()
@@ -165,8 +165,8 @@ export async function createManualSession(
     }
   }
 
-  // Check for coach badges
-  await checkAndAwardBadges(user.id)
+  // Sync coach badges
+  await syncBadges(user.id)
 
   revalidatePath(`/athletes/${athleteId}`)
   return {}
@@ -307,8 +307,8 @@ export async function updateSessionFeel(
     }
   }
 
-  // Check for coach badges (feel rating + notes)
-  await checkAndAwardBadges(user.id)
+  // Sync coach badges (feel rating + notes)
+  await syncBadges(user.id)
 
   revalidatePath('/athletes')
   return {}
@@ -377,6 +377,9 @@ export async function updateManualSession(
     }
   }
 
+  // Sync coach badges (feel/note changes affect heart_reader/storyteller)
+  await syncBadges(user.id)
+
   revalidatePath(`/athletes/${updatedSession?.athlete_id ?? ''}`)
   return {}
 }
@@ -421,6 +424,11 @@ export async function deleteSession(
   // Delete the session
   const { error } = await adminClient.from('sessions').delete().eq('id', sessionId)
   if (error) return { error: 'Could not delete the session. Please try again.' }
+
+  // Re-evaluate badges for the session's coach (not the admin performing the delete)
+  if (session.coach_user_id) {
+    await syncBadges(session.coach_user_id)
+  }
 
   revalidatePath(`/athletes/${athleteId}`)
   revalidatePath('/feed')

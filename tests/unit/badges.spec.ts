@@ -1,8 +1,8 @@
 /**
  * Unit tests for the coach badges system.
  *
- * Tests badge definitions, the checkAndAwardBadges logic,
- * and the getBadgeDefinition helper.
+ * Tests badge definitions, the syncBadges logic (award + revoke),
+ * the checkAndAwardBadges backward-compat wrapper, and the getBadgeDefinition helper.
  */
 
 // ── Mocks (must be before imports) ───────────────────────────────────────────
@@ -15,7 +15,7 @@ jest.mock('@/lib/supabase/admin', () => ({
   },
 }))
 
-import { checkAndAwardBadges, getBadgeDefinition, BADGE_DEFINITIONS } from '@/lib/badges'
+import { syncBadges, checkAndAwardBadges, getBadgeDefinition, BADGE_DEFINITIONS } from '@/lib/badges'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -33,27 +33,14 @@ function chainable(data: unknown, error: unknown = null) {
   return new Proxy(obj, handler)
 }
 
-/** Chainable mock that resolves with { count } for head queries. */
-function countable(count: number) {
-  const obj: Record<string, unknown> = {}
-  const handler: ProxyHandler<Record<string, unknown>> = {
-    get(_target, prop) {
-      if (prop === 'then') {
-        return (resolve: (v: unknown) => void) => resolve({ data: null, count, error: null })
-      }
-      return () => new Proxy(obj, handler)
-    },
-  }
-  return new Proxy(obj, handler)
-}
-
 /**
  * Queue-based mock for adminClient.from().
- * Supports insert capture and count queries.
+ * Supports insert capture, delete tracking, and count queries.
  */
 function createQueueMock() {
   const queues: Record<string, Array<{ data: unknown; count?: number; error: unknown }>> = {}
   const inserts: Record<string, unknown[]> = {}
+  const deletes: Record<string, number> = {}
 
   function enqueue(
     table: string,
@@ -81,13 +68,19 @@ function createQueueMock() {
             return new Proxy(obj, handler)
           }
         }
+        if (prop === 'delete') {
+          return () => {
+            deletes[table] = (deletes[table] ?? 0) + 1
+            return new Proxy(obj, handler)
+          }
+        }
         return (..._args: unknown[]) => new Proxy(obj, handler)
       },
     }
     return new Proxy(obj, handler)
   }
 
-  return { enqueue, impl, inserts }
+  return { enqueue, impl, inserts, deletes }
 }
 
 beforeEach(() => {
@@ -213,10 +206,10 @@ describe('badge check functions', () => {
   })
 })
 
-describe('checkAndAwardBadges', () => {
+describe('syncBadges', () => {
   const userId = 'coach-1'
 
-  it('returns empty array when no new badges earned', async () => {
+  it('returns no awards or revocations when nothing changes', async () => {
     const mock = createQueueMock()
 
     // Already has first_steps badge
@@ -230,8 +223,9 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
-    const newBadges = await checkAndAwardBadges(userId)
-    expect(newBadges).toHaveLength(0)
+    const result = await syncBadges(userId)
+    expect(result.awarded).toHaveLength(0)
+    expect(result.revoked).toHaveLength(0)
   })
 
   it('awards first_steps badge on first session', async () => {
@@ -250,8 +244,9 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
-    const newBadges = await checkAndAwardBadges(userId)
-    expect(newBadges).toContain('first_steps')
+    const result = await syncBadges(userId)
+    expect(result.awarded).toContain('first_steps')
+    expect(result.revoked).toHaveLength(0)
     expect(mock.inserts['coach_badges']).toBeDefined()
     expect(mock.inserts['coach_badges'][0]).toEqual(
       expect.arrayContaining([
@@ -279,12 +274,13 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
-    const newBadges = await checkAndAwardBadges(userId)
+    const result = await syncBadges(userId)
     // Should earn: first_steps (1+), high_five (5+), team_player (3+ athletes)
-    expect(newBadges).toContain('first_steps')
-    expect(newBadges).toContain('high_five')
-    expect(newBadges).toContain('team_player')
-    expect(newBadges).toHaveLength(3)
+    expect(result.awarded).toContain('first_steps')
+    expect(result.awarded).toContain('high_five')
+    expect(result.awarded).toContain('team_player')
+    expect(result.awarded).toHaveLength(3)
+    expect(result.revoked).toHaveLength(0)
   })
 
   it('does not re-award existing badges', async () => {
@@ -311,19 +307,118 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
-    const newBadges = await checkAndAwardBadges(userId)
+    const result = await syncBadges(userId)
     // Should earn double_digits and team_player, NOT first_steps or high_five
-    expect(newBadges).toContain('double_digits')
-    expect(newBadges).toContain('team_player')
-    expect(newBadges).not.toContain('first_steps')
-    expect(newBadges).not.toContain('high_five')
+    expect(result.awarded).toContain('double_digits')
+    expect(result.awarded).toContain('team_player')
+    expect(result.awarded).not.toContain('first_steps')
+    expect(result.awarded).not.toContain('high_five')
   })
 
-  it('returns empty array on error and does not throw', async () => {
+  it('revokes badges when conditions are no longer met', async () => {
+    const mock = createQueueMock()
+
+    // Coach has first_steps badge but now has 0 sessions (session was deleted)
+    mock.enqueue('coach_badges', { data: [{ badge_key: 'first_steps' }] })
+    // Stats: 0 sessions
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: [] })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('kudos', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    // Delete response for revoked badges
+    mock.enqueue('coach_badges', { data: null })
+
+    mockFrom.mockImplementation(mock.impl)
+
+    const result = await syncBadges(userId)
+    expect(result.awarded).toHaveLength(0)
+    expect(result.revoked).toContain('first_steps')
+    expect(mock.deletes['coach_badges']).toBe(1)
+  })
+
+  it('awards and revokes in the same sync', async () => {
+    const mock = createQueueMock()
+
+    // Coach has high_five (5 sessions) but now only has 1 session + 10 kudos
+    mock.enqueue('coach_badges', { data: [
+      { badge_key: 'first_steps' },
+      { badge_key: 'high_five' },
+    ] })
+    // Stats: 1 session, 10 kudos
+    mock.enqueue('sessions', { data: null, count: 1 })
+    mock.enqueue('sessions', { data: [{ athlete_id: 'a1' }] })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('kudos', { data: null, count: 10 })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    // Insert for cheerleader badge
+    mock.enqueue('coach_badges', { data: null })
+    // Delete for revoked high_five badge
+    mock.enqueue('coach_badges', { data: null })
+
+    mockFrom.mockImplementation(mock.impl)
+
+    const result = await syncBadges(userId)
+    expect(result.awarded).toContain('cheerleader')
+    expect(result.revoked).toContain('high_five')
+    // first_steps should be retained (1 session still meets threshold)
+    expect(result.revoked).not.toContain('first_steps')
+  })
+
+  it('does not revoke badges that are still valid', async () => {
+    const mock = createQueueMock()
+
+    // Coach has first_steps and stats still show 1 session
+    mock.enqueue('coach_badges', { data: [{ badge_key: 'first_steps' }] })
+    mock.enqueue('sessions', { data: null, count: 1 })
+    mock.enqueue('sessions', { data: [{ athlete_id: 'a1' }] })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('kudos', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: null, count: 0 })
+
+    mockFrom.mockImplementation(mock.impl)
+
+    const result = await syncBadges(userId)
+    expect(result.revoked).toHaveLength(0)
+    expect(result.awarded).toHaveLength(0)
+    // No delete should have been called
+    expect(mock.deletes['coach_badges']).toBeUndefined()
+  })
+
+  it('revokes multiple badges at once', async () => {
+    const mock = createQueueMock()
+
+    // Coach had 5 sessions with 3 athletes, now has 0
+    mock.enqueue('coach_badges', { data: [
+      { badge_key: 'first_steps' },
+      { badge_key: 'high_five' },
+      { badge_key: 'team_player' },
+    ] })
+    // Stats: 0 sessions, 0 athletes
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: [] })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('kudos', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    // Delete response
+    mock.enqueue('coach_badges', { data: null })
+
+    mockFrom.mockImplementation(mock.impl)
+
+    const result = await syncBadges(userId)
+    expect(result.revoked).toContain('first_steps')
+    expect(result.revoked).toContain('high_five')
+    expect(result.revoked).toContain('team_player')
+    expect(result.revoked).toHaveLength(3)
+    expect(result.awarded).toHaveLength(0)
+  })
+
+  it('returns empty results on error and does not throw', async () => {
     mockFrom.mockImplementation(() => chainable(null, 'db error'))
 
-    const newBadges = await checkAndAwardBadges(userId)
-    expect(newBadges).toHaveLength(0)
+    const result = await syncBadges(userId)
+    expect(result.awarded).toHaveLength(0)
+    expect(result.revoked).toHaveLength(0)
   })
 
   it('awards cheerleader badge when kudos count meets threshold', async () => {
@@ -339,9 +434,9 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
-    const newBadges = await checkAndAwardBadges(userId)
-    expect(newBadges).toContain('cheerleader')
-    expect(newBadges).toContain('first_steps')
+    const result = await syncBadges(userId)
+    expect(result.awarded).toContain('cheerleader')
+    expect(result.awarded).toContain('first_steps')
   })
 
   it('awards storyteller and heart_reader badges', async () => {
@@ -357,8 +452,37 @@ describe('checkAndAwardBadges', () => {
 
     mockFrom.mockImplementation(mock.impl)
 
+    const result = await syncBadges(userId)
+    expect(result.awarded).toContain('storyteller')
+    expect(result.awarded).toContain('heart_reader')
+  })
+})
+
+describe('checkAndAwardBadges (backward compat)', () => {
+  const userId = 'coach-1'
+
+  it('returns only the awarded badges as a string array', async () => {
+    const mock = createQueueMock()
+
+    mock.enqueue('coach_badges', { data: [] })
+    mock.enqueue('sessions', { data: null, count: 1 })
+    mock.enqueue('sessions', { data: [{ athlete_id: 'a1' }] })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('kudos', { data: null, count: 0 })
+    mock.enqueue('sessions', { data: null, count: 0 })
+    mock.enqueue('coach_badges', { data: null })
+
+    mockFrom.mockImplementation(mock.impl)
+
     const newBadges = await checkAndAwardBadges(userId)
-    expect(newBadges).toContain('storyteller')
-    expect(newBadges).toContain('heart_reader')
+    expect(newBadges).toContain('first_steps')
+    expect(Array.isArray(newBadges)).toBe(true)
+  })
+
+  it('returns empty array on error', async () => {
+    mockFrom.mockImplementation(() => chainable(null, 'db error'))
+
+    const newBadges = await checkAndAwardBadges(userId)
+    expect(newBadges).toHaveLength(0)
   })
 })

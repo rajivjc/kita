@@ -5,7 +5,8 @@
  * 1. Works for both manual and Strava-synced sessions
  * 2. Enforces ownership (coach or admin only)
  * 3. Cleans up related milestones and notifications
- * 4. Handles errors properly
+ * 4. Syncs badges after deletion (revokes stale badges)
+ * 5. Handles errors properly
  */
 
 // ── Mocks (must be before imports) ───────────────────────────────────────────
@@ -36,8 +37,10 @@ jest.mock('@/lib/milestones', () => ({
   checkAndAwardMilestones: jest.fn().mockResolvedValue(0),
 }))
 
+const mockSyncBadges = jest.fn().mockResolvedValue({ awarded: [], revoked: [] })
+
 jest.mock('@/lib/badges', () => ({
-  checkAndAwardBadges: jest.fn().mockResolvedValue([]),
+  syncBadges: (...args: unknown[]) => mockSyncBadges(...args),
 }))
 
 import { deleteSession } from '@/app/athletes/[id]/actions'
@@ -198,5 +201,51 @@ describe('deleteSession', () => {
     const result = await deleteSession(sessionId, athleteId)
     expect(result).toHaveProperty('error')
     expect(result.error).toMatch(/could not delete/i)
+  })
+
+  it('calls syncBadges with the session coach ID after successful deletion', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: coachId } } })
+
+    const mock = createQueueMock()
+    mock.enqueue('sessions', { data: { id: sessionId, sync_source: 'manual', coach_user_id: coachId } })
+    mock.enqueue('milestones', { data: null })
+    mock.enqueue('notifications', { data: null })
+    mock.enqueue('sessions', { data: null })
+    mockFrom.mockImplementation(mock.impl)
+
+    await deleteSession(sessionId, athleteId)
+    expect(mockSyncBadges).toHaveBeenCalledWith(coachId)
+  })
+
+  it('syncs badges for the session owner when admin deletes another coach session', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'admin-1' } } })
+
+    const mock = createQueueMock()
+    // Session owned by coachId, deleted by admin
+    mock.enqueue('sessions', { data: { id: sessionId, sync_source: 'manual', coach_user_id: coachId } })
+    mock.enqueue('users', { data: { role: 'admin' } })
+    mock.enqueue('milestones', { data: null })
+    mock.enqueue('notifications', { data: null })
+    mock.enqueue('sessions', { data: null })
+    mockFrom.mockImplementation(mock.impl)
+
+    await deleteSession(sessionId, athleteId)
+    // Should sync badges for the session owner (coachId), NOT the admin
+    expect(mockSyncBadges).toHaveBeenCalledWith(coachId)
+    expect(mockSyncBadges).not.toHaveBeenCalledWith('admin-1')
+  })
+
+  it('does not call syncBadges when session delete fails', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: coachId } } })
+
+    const mock = createQueueMock()
+    mock.enqueue('sessions', { data: { id: sessionId, sync_source: 'manual', coach_user_id: coachId } })
+    mock.enqueue('milestones', { data: null })
+    mock.enqueue('notifications', { data: null })
+    mock.enqueue('sessions', { data: null, error: 'foreign key constraint' })
+    mockFrom.mockImplementation(mock.impl)
+
+    await deleteSession(sessionId, athleteId)
+    expect(mockSyncBadges).not.toHaveBeenCalled()
   })
 })
