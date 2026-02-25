@@ -25,8 +25,8 @@ export async function sendMagicLink(
     .eq('id', authUser.id)
     .single()
 
-  if (userRow?.active === false) {
-    // Don't reveal the account is deactivated — show generic success
+  if (!userRow || userRow.active === false) {
+    // Don't reveal the account is deactivated/deleted — show generic success
     return { error: null }
   }
 
