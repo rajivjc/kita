@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { sendMagicLink, verifyOtpCode } from './actions'
-import { getRedirectPath } from './get-redirect-path'
+import { sendMagicLink } from './actions'
+import { verifyOtpAndRedirect } from './get-redirect-path'
 
 type PageState = 'idle' | 'loading' | 'success' | 'error' | 'rate_limited'
 type OtpState = 'idle' | 'verifying' | 'error'
@@ -78,12 +78,11 @@ export default function LoginPage() {
     e.preventDefault()
     if (!otpCode.trim()) return
     setOtpState('verifying')
-    const { error } = await verifyOtpCode(sentEmail, otpCode.trim())
+    const { error, redirectPath } = await verifyOtpAndRedirect(sentEmail, otpCode.trim())
     if (error) {
       setOtpState('error')
     } else {
-      const path = await getRedirectPath()
-      router.push(path)
+      router.push(redirectPath)
     }
   }
 
