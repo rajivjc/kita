@@ -235,24 +235,22 @@ describe('sendMagicLink', () => {
     expect(mockSignInWithOtp).toHaveBeenCalled()
   })
 
-  it('proceeds when user has no users table row (new invited user)', async () => {
+  it('returns silent success when auth user exists but no users table row (ghost user)', async () => {
     mockListUsers.mockResolvedValue({
       data: {
-        users: [{ id: 'user-1', email: 'invited@email.com' }],
+        users: [{ id: 'user-1', email: 'ghost@email.com' }],
       },
     })
 
     const mock = createQueueMock()
-    // No users table row yet (just invited, trigger hasn't run)
+    // Auth user exists but users table row was deleted (ghost user)
     mock.enqueue('users', { data: null })
     mockFrom.mockImplementation(mock.impl)
 
-    mockSignInWithOtp.mockResolvedValue({ error: null })
+    const result = await sendMagicLink('ghost@email.com', origin)
 
-    const result = await sendMagicLink('invited@email.com', origin)
-
-    // active is not false (it's null/undefined), so OTP should be sent
+    // Should NOT send OTP — no users row means deleted/ghost user
     expect(result.error).toBeNull()
-    expect(mockSignInWithOtp).toHaveBeenCalled()
+    expect(mockSignInWithOtp).not.toHaveBeenCalled()
   })
 })
