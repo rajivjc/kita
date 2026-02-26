@@ -4,6 +4,10 @@ import Link from 'next/link'
 import { formatDate, formatDistance, formatDuration } from '@/lib/utils/dates'
 import KudosButton from '@/components/feed/KudosButton'
 import { BADGE_DEFINITIONS } from '@/lib/badges'
+import { getCoachFocusData, getCaregiverFocusData } from '@/lib/feed/today-focus'
+import type { CoachFocusData, CaregiverFocusData } from '@/lib/feed/today-focus'
+import CheerBox from '@/components/feed/CheerBox'
+import { computeWeeklyRecap } from '@/lib/feed/weekly-recap'
 
 const FEEL_EMOJI: Record<number, string> = {
   1: '😰', 2: '😐', 3: '🙂', 4: '😊', 5: '🔥',
@@ -47,6 +51,10 @@ export default async function FeedPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Start focus data fetches early — they run concurrently with the phases below
+  let coachFocusPromise: Promise<CoachFocusData | null> = Promise.resolve(null)
+  let caregiverFocusPromise: Promise<CaregiverFocusData | null> = Promise.resolve(null)
+
   // Phase 1: Fetch user role + sessions + milestones + club stats in parallel
   const [
     { data: userRow },
@@ -80,6 +88,11 @@ export default async function FeedPage() {
   const isReadOnly = userRow?.role === 'caregiver'
   const totalKm = (totalDistanceRows ?? []).reduce((sum: number, s: any) => sum + (s.distance_km ?? 0), 0)
 
+  // Kick off focus data (runs concurrently with Phase 2+3)
+  if (user && !isReadOnly) {
+    coachFocusPromise = getCoachFocusData(user.id)
+  }
+
   // Phase 2: Fetch athlete/coach names, kudos, and role-specific data in parallel
   const athleteIds = [...new Set((sessions ?? []).map((s: any) => s.athlete_id).filter(Boolean))]
   const coachIds = [...new Set((sessions ?? []).map((s: any) => s.coach_user_id).filter(Boolean))]
@@ -93,6 +106,7 @@ export default async function FeedPage() {
     { data: myMonthSessions },
     { data: caregiverData },
     { data: myBadges },
+    { data: recentCheers },
   ] = await Promise.all([
     athleteIds.length > 0
       ? adminClient.from('athletes').select('id, name').in('id', athleteIds)
@@ -114,6 +128,14 @@ export default async function FeedPage() {
       : Promise.resolve({ data: null }),
     user && !isReadOnly
       ? adminClient.from('coach_badges').select('badge_key, earned_at').eq('user_id', user.id).order('earned_at', { ascending: false })
+      : Promise.resolve({ data: [] }),
+    user && !isReadOnly
+      ? adminClient
+          .from('cheers')
+          .select('id, athlete_id, message, created_at')
+          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+          .order('created_at', { ascending: false })
+          .limit(10)
       : Promise.resolve({ data: [] }),
   ])
 
@@ -171,6 +193,16 @@ export default async function FeedPage() {
   const weeklyKm = thisWeek.reduce((sum, s) => sum + (s.distance_km ?? 0), 0)
   const weeklyAthletes = new Set(thisWeek.map(s => s.athlete_id)).size
 
+  // Compute weekly recap from already-fetched data (no new queries)
+  const weekAgo = new Date()
+  weekAgo.setDate(weekAgo.getDate() - 7)
+  weekAgo.setHours(0, 0, 0, 0)
+  const weeklyRecap = computeWeeklyRecap(
+    thisWeek.map(s => ({ athlete_id: s.athlete_id, athlete_name: s.athlete_name, distance_km: s.distance_km, feel: s.feel })),
+    recentMilestones.map(m => ({ achievedAt: m.achievedAt })),
+    weekAgo
+  )
+
   // Phase 3: Fetch remaining role-specific data that depends on previous results
   const myAthleteIds = [...new Set((myMonthSessions ?? []).map((s: any) => s.athlete_id))]
   const { data: myAthletes } = myAthleteIds.length > 0
@@ -179,14 +211,21 @@ export default async function FeedPage() {
 
   // Caregiver card data
   const caregiverAthlete = caregiverData ?? null
+  if (caregiverAthlete) {
+    caregiverFocusPromise = getCaregiverFocusData(caregiverAthlete.id)
+  }
   let caregiverRecentSessions: any[] = []
   let caregiverMilestones: any[] = []
   let caregiverRecentNotes: any[] = []
+  let cheerSentToday = false
   if (caregiverAthlete) {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
     const [
       { data: recentSessions },
       { data: cgMilestones },
       { data: cgNotes },
+      { count: cheerTodayCount },
     ] = await Promise.all([
       adminClient
         .from('sessions')
@@ -208,10 +247,14 @@ export default async function FeedPage() {
         .eq('visibility', 'all')
         .order('created_at', { ascending: false })
         .limit(3),
+      user
+        ? adminClient.from('cheers').select('*', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', todayStart.toISOString())
+        : Promise.resolve({ count: 0 }),
     ])
     caregiverRecentSessions = recentSessions ?? []
     caregiverMilestones = cgMilestones ?? []
     caregiverRecentNotes = cgNotes ?? []
+    cheerSentToday = (cheerTodayCount ?? 0) > 0
   }
 
   // Recent badge (earned in last 7 days)
@@ -220,6 +263,10 @@ export default async function FeedPage() {
   const recentBadge = (myBadges ?? []).find((b: any) => new Date(b.earned_at) >= sevenDaysAgo)
   const recentBadgeDef = recentBadge ? BADGE_DEFINITIONS.find(d => d.key === recentBadge.badge_key) : null
   const badgeCount = (myBadges ?? []).length
+
+  // Await focus data (likely already resolved by now)
+  const coachFocus = await coachFocusPromise
+  const caregiverFocus = await caregiverFocusPromise
 
   const hour = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
@@ -233,6 +280,17 @@ export default async function FeedPage() {
           <p className="text-lg font-bold text-gray-900 mb-1">
             {greeting}, {firstName}
           </p>
+          {coachFocus && coachFocus.streak.current > 0 && (
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-sm">🔥</span>
+              <span className="text-sm font-semibold text-teal-700">
+                {coachFocus.streak.current}-week streak
+              </span>
+              {!coachFocus.streak.activeThisWeek && (
+                <span className="text-xs text-teal-500/70">· Log a run to keep it!</span>
+              )}
+            </div>
+          )}
           {myMonthSessions?.length === 0 ? (
             <p className="text-sm text-teal-700">
               No sessions this month yet — let&apos;s get out there!
@@ -357,6 +415,34 @@ export default async function FeedPage() {
                 </div>
               )}
 
+              {/* Next milestone progress */}
+              {caregiverFocus?.nextMilestone && (
+                <div className="mb-3">
+                  <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">Next milestone</p>
+                  <div className="bg-white/50 rounded-lg px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-semibold text-gray-800">
+                        {caregiverFocus.nextMilestone.icon} {caregiverFocus.nextMilestone.label}
+                      </span>
+                      <span className="text-[10px] text-amber-600 font-medium">
+                        {caregiverFocus.nextMilestone.current}/{caregiverFocus.nextMilestone.target}
+                      </span>
+                    </div>
+                    <div className="w-full bg-amber-100 rounded-full h-1.5">
+                      <div
+                        className="bg-amber-500 h-1.5 rounded-full transition-all"
+                        style={{ width: `${Math.min(100, Math.round((caregiverFocus.nextMilestone.current / caregiverFocus.nextMilestone.target) * 100))}%` }}
+                      />
+                    </div>
+                    {(caregiverFocus.nextMilestone.target - caregiverFocus.nextMilestone.current) <= 2 && (
+                      <p className="text-[10px] text-amber-600 mt-1">
+                        Just {caregiverFocus.nextMilestone.target - caregiverFocus.nextMilestone.current} more run{(caregiverFocus.nextMilestone.target - caregiverFocus.nextMilestone.current) !== 1 ? 's' : ''} to go!
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Recent coach notes (visibility: all) */}
               {caregiverRecentNotes.length > 0 && (
                 <div>
@@ -370,12 +456,73 @@ export default async function FeedPage() {
                   </div>
                 </div>
               )}
+
+              {/* Journey story link */}
+              <div className="mt-3 text-center">
+                <Link
+                  href={`/story/${caregiverAthlete.id}`}
+                  className="text-xs text-amber-600 hover:text-amber-800 font-medium transition-colors"
+                >
+                  View {caregiverAthlete.name?.split(' ')[0]}&apos;s journey story &rarr;
+                </Link>
+              </div>
+
+              {/* Send a cheer */}
+              <div className="mt-3 pt-3 border-t border-amber-200/40">
+                <CheerBox
+                  athleteId={caregiverAthlete.id}
+                  athleteFirstName={caregiverAthlete.name?.split(' ')[0] ?? 'your athlete'}
+                  alreadySentToday={cheerSentToday}
+                />
+              </div>
             </>
           ) : (
             <p className="text-sm text-amber-700">
               Welcome to the SOSG Running Club! Your athlete hasn&apos;t been linked yet — please ask a coach.
             </p>
           )}
+        </div>
+      )}
+
+      {/* Cheers from home — coaches see recent cheers from caregivers */}
+      {!isReadOnly && (recentCheers ?? []).length > 0 && (
+        <div className="bg-amber-50/40 border border-amber-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-2.5">Cheers from home 📣</p>
+          <div className="space-y-2">
+            {(recentCheers ?? []).map((c: any) => (
+              <Link key={c.id} href={`/athletes/${c.athlete_id}`}>
+                <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 transition-colors">
+                  <div className="min-w-0">
+                    <p className="text-sm text-amber-800">&ldquo;{c.message}&rdquo;</p>
+                    <p className="text-[10px] text-amber-400">
+                      for {athleteMap[c.athlete_id] ?? 'an athlete'} · {formatDate(c.created_at)}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Today's Focus — only shown when there are actionable items */}
+      {!isReadOnly && coachFocus && coachFocus.items.length > 0 && (
+        <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
+          <div className="space-y-2">
+            {coachFocus.items.map((item, i) => (
+              <Link key={i} href={`/athletes/${item.athleteId}`}>
+                <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
+                  <span className="text-base flex-shrink-0">{item.type === 'approaching_milestone' ? '⭐' : item.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{item.title}</p>
+                    <p className="text-xs text-gray-500">{item.subtitle}</p>
+                  </div>
+                  <span className="text-gray-300 flex-shrink-0 text-sm">&#x203A;</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
@@ -402,18 +549,34 @@ export default async function FeedPage() {
 
       {/* Weekly club summary */}
       {thisWeek.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 mb-5 shadow-sm flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
-            <span className="text-lg">🏃</span>
+        <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
+              <span className="text-lg">🏃</span>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900">
+                {thisWeek.length} run{thisWeek.length !== 1 ? 's' : ''} this week
+              </p>
+              <p className="text-xs text-gray-500">
+                {weeklyKm.toFixed(1)} km across {weeklyAthletes} athlete{weeklyAthletes !== 1 ? 's' : ''} — growing together
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-900">
-              {thisWeek.length} run{thisWeek.length !== 1 ? 's' : ''} this week
-            </p>
-            <p className="text-xs text-gray-500">
-              {weeklyKm.toFixed(1)} km across {weeklyAthletes} athlete{weeklyAthletes !== 1 ? 's' : ''} — growing together
-            </p>
-          </div>
+          {(weeklyRecap.starMoment || weeklyRecap.milestonesEarned > 0) && (
+            <div className="mt-2 pt-2 border-t border-gray-50 space-y-1">
+              {weeklyRecap.starMoment && (
+                <p className="text-xs text-teal-600">
+                  ⭐ {weeklyRecap.starMoment.athleteName} {weeklyRecap.starMoment.value}
+                </p>
+              )}
+              {weeklyRecap.milestonesEarned > 0 && (
+                <p className="text-xs text-amber-600">
+                  🏆 {weeklyRecap.milestonesEarned} milestone{weeklyRecap.milestonesEarned !== 1 ? 's' : ''} earned this week
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
 

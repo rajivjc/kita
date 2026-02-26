@@ -23,7 +23,7 @@ export interface Database {
       }
       athletes: {
         Row: Athlete & Record<string, unknown>
-        Insert: Omit<Athlete, 'id' | 'created_at' | 'updated_at' | 'updated_by'> & { id?: string; created_at?: string | null; updated_at?: string | null; updated_by?: string | null }
+        Insert: Omit<Athlete, 'id' | 'created_at' | 'updated_at' | 'updated_by' | 'goal_type' | 'goal_target'> & { id?: string; created_at?: string | null; updated_at?: string | null; updated_by?: string | null; goal_type?: Athlete['goal_type']; goal_target?: number | null }
         Update: Partial<Athlete>
         Relationships: []
       }
@@ -164,6 +164,12 @@ export interface Database {
         Update: Partial<CoachBadge>
         Relationships: []
       }
+      cheers: {
+        Row: Cheer & Record<string, unknown>
+        Insert: Omit<Cheer, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<Cheer>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -207,6 +213,8 @@ export interface Athlete {
   date_of_birth: string | null
   joined_at: string | null
   running_goal: string | null
+  goal_type: 'distance_total' | 'distance_single' | 'session_count' | null
+  goal_target: number | null
   communication_notes: string | null
   medical_notes: string | null
   emergency_contact: string | null
@@ -378,4 +386,12 @@ export interface CoachBadge {
   user_id: string
   badge_key: string
   earned_at: string
+}
+
+export interface Cheer {
+  id: string
+  athlete_id: string
+  user_id: string
+  message: string
+  created_at: string
 }

@@ -1,10 +1,13 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Pencil } from 'lucide-react'
+import { ChevronLeft, Pencil, Share2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import AthleteTabs from '@/components/athlete/AthleteTabs'
 import StickyHeader from '@/components/athlete/StickyHeader'
+import { formatDate } from '@/lib/utils/dates'
+import { calculateGoalProgress } from '@/lib/goals'
+import type { GoalType } from '@/lib/goals'
 import { addCoachNote } from './actions'
 
 interface PageProps {
@@ -29,10 +32,11 @@ export default async function AthleteHubPage({ params }: PageProps) {
     { data: cues },
     { data: notes },
     { data: milestones },
+    { data: cheers },
   ] = await Promise.all([
     adminClient
       .from('athletes')
-      .select('id, name, photo_url, active, date_of_birth, running_goal, communication_notes, medical_notes, emergency_contact')
+      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact')
       .eq('id', id)
       .single(),
 
@@ -61,6 +65,13 @@ export default async function AthleteHubPage({ params }: PageProps) {
       .select('id, label, achieved_at, session_id, milestone_definitions(icon)')
       .eq('athlete_id', id)
       .order('achieved_at', { ascending: false }),
+    adminClient
+      .from('cheers')
+      .select('id, message, created_at')
+      .eq('athlete_id', id)
+      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .order('created_at', { ascending: false })
+      .limit(5),
   ])
 
   const flatNotes = (notes ?? []).map((n: any) => ({
@@ -122,6 +133,15 @@ export default async function AthleteHubPage({ params }: PageProps) {
     notFound()
   }
 
+  // Goal progress (no new query — uses already-fetched sessions)
+  const goalProgress = athlete.goal_type && athlete.goal_target
+    ? calculateGoalProgress(
+        athlete.goal_type as GoalType,
+        Number(athlete.goal_target),
+        (sessions ?? []).filter((s: any) => s.date) // completed sessions already filtered by athlete
+      )
+    : null
+
   return (
     <main className="max-w-2xl mx-auto px-4 py-6 pb-28">
       <StickyHeader
@@ -142,15 +162,25 @@ export default async function AthleteHubPage({ params }: PageProps) {
 
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-gray-900">{athlete.name}</h1>
-        {!isReadOnly && (
+        <div className="flex items-center gap-1">
           <Link
-            href={`/athletes/${id}/edit`}
+            href={`/story/${id}`}
             className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
-            aria-label="Edit athlete profile"
+            aria-label="View journey story"
+            title="Journey story"
           >
-            <Pencil size={18} />
+            <Share2 size={18} />
           </Link>
-        )}
+          {!isReadOnly && (
+            <Link
+              href={`/athletes/${id}/edit`}
+              className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+              aria-label="Edit athlete profile"
+            >
+              <Pencil size={18} />
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Profile strip */}
@@ -168,6 +198,45 @@ export default async function AthleteHubPage({ params }: PageProps) {
           {athlete.communication_notes && (
             <p className="text-sm text-gray-500 line-clamp-2">💬 {athlete.communication_notes}</p>
           )}
+        </div>
+      )}
+
+      {/* Goal progress */}
+      {goalProgress && (
+        <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-teal-800">🎯 {goalProgress.label}</span>
+            <span className="text-[10px] text-teal-600 font-medium">
+              {goalProgress.current} / {goalProgress.target} {goalProgress.unit}
+            </span>
+          </div>
+          <div className="w-full bg-teal-100 rounded-full h-2">
+            <div
+              className="bg-teal-500 h-2 rounded-full transition-all"
+              style={{ width: `${goalProgress.pct}%` }}
+            />
+          </div>
+          {goalProgress.pct >= 100 && (
+            <p className="text-[10px] text-teal-600 mt-1 font-medium">Goal achieved! 🎉</p>
+          )}
+          {goalProgress.pct >= 75 && goalProgress.pct < 100 && (
+            <p className="text-[10px] text-teal-600 mt-1">Almost there!</p>
+          )}
+        </div>
+      )}
+
+      {/* Cheers from home */}
+      {(cheers ?? []).length > 0 && (
+        <div className="mb-6">
+          <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-2">Cheers from home 📣</p>
+          <div className="space-y-1.5">
+            {(cheers ?? []).map((c: any) => (
+              <div key={c.id} className="bg-amber-50/50 border border-amber-100 rounded-lg px-3 py-2">
+                <p className="text-sm text-amber-800">&ldquo;{c.message}&rdquo;</p>
+                <p className="text-[10px] text-amber-400 mt-0.5">{formatDate(c.created_at)}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
