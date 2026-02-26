@@ -2,11 +2,15 @@
  * Coaching streak calculation.
  *
  * Tracks consecutive weeks (Mon–Sun) where a coach logged at least one session.
- * Session dates are YYYY-MM-DD strings stored in SGT.
+ * Session dates may be YYYY-MM-DD strings or full ISO timestamps (timestamptz).
  */
 
+function toDateOnly(dateStr: string): string {
+  return dateStr.split('T')[0]
+}
+
 function getMondayUTC(dateStr: string): string {
-  const [y, m, d] = dateStr.split('-').map(Number)
+  const [y, m, d] = toDateOnly(dateStr).split('-').map(Number)
   const date = new Date(Date.UTC(y, m - 1, d))
   const dow = date.getUTCDay() // 0=Sun … 6=Sat
   const diff = dow === 0 ? 6 : dow - 1
@@ -15,7 +19,7 @@ function getMondayUTC(dateStr: string): string {
 }
 
 function subtractWeek(mondayStr: string): string {
-  const [y, m, d] = mondayStr.split('-').map(Number)
+  const [y, m, d] = toDateOnly(mondayStr).split('-').map(Number)
   const date = new Date(Date.UTC(y, m - 1, d - 7))
   return date.toISOString().split('T')[0]
 }
