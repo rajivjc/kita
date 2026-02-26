@@ -49,28 +49,38 @@ export async function getCoachFocusData(coachUserId: string): Promise<CoachFocus
   // 3. Unique athlete IDs this coach has worked with
   const athleteIds = [...new Set(coachSessions.map(s => s.athlete_id))]
 
-  // 4. Parallel: athlete names, all sessions for those athletes, milestone defs, earned milestones
+  // 4. Parallel: athlete names, milestone defs, earned milestones
+  //    We derive session counts and last-dates from coachSessions + a single
+  //    lightweight query (only athlete_id) rather than fetching every row.
   const [
     { data: athleteRows },
-    { data: allAthleteSessionData },
+    { data: allAthleteIds },
     { data: milestoneDefs },
     { data: earnedMilestones },
+    { data: latestPerAthlete },
   ] = await Promise.all([
     adminClient.from('athletes').select('id, name').in('id', athleteIds).eq('active', true),
-    adminClient.from('sessions').select('athlete_id, date').in('athlete_id', athleteIds).eq('status', 'completed'),
+    // Lightweight: only athlete_id column for counting (no date/distance payload)
+    adminClient.from('sessions').select('athlete_id').in('athlete_id', athleteIds).eq('status', 'completed'),
     adminClient.from('milestone_definitions').select('id, label, icon, condition').eq('active', true).eq('type', 'automatic'),
     adminClient.from('milestones').select('athlete_id, milestone_definition_id').in('athlete_id', athleteIds),
+    // Last session date per athlete — fetch recent sessions, we only need the latest per athlete
+    adminClient.from('sessions').select('athlete_id, date').in('athlete_id', athleteIds).eq('status', 'completed').order('date', { ascending: false }),
   ])
 
   const nameMap = Object.fromEntries((athleteRows ?? []).map(a => [a.id, a.name]))
   const activeAthleteIds = new Set((athleteRows ?? []).map(a => a.id))
 
-  // 5. Per-athlete: session count + last session date
+  // 5. Per-athlete: session count (from lightweight id-only query)
   const sessionCountMap: Record<string, number> = {}
-  const lastDateMap: Record<string, string> = {}
-  for (const s of allAthleteSessionData ?? []) {
+  for (const s of allAthleteIds ?? []) {
     sessionCountMap[s.athlete_id] = (sessionCountMap[s.athlete_id] ?? 0) + 1
-    if (!lastDateMap[s.athlete_id] || s.date > lastDateMap[s.athlete_id]) {
+  }
+
+  // Per-athlete: last session date (first occurrence per athlete since sorted desc)
+  const lastDateMap: Record<string, string> = {}
+  for (const s of latestPerAthlete ?? []) {
+    if (!lastDateMap[s.athlete_id]) {
       lastDateMap[s.athlete_id] = s.date
     }
   }
@@ -147,12 +157,12 @@ export async function getCoachFocusData(coachUserId: string): Promise<CoachFocus
  */
 export async function getCaregiverFocusData(athleteId: string): Promise<CaregiverFocusData> {
   const [
-    { data: sessionData },
+    { count: sessionCount },
     { data: milestoneDefs },
     { data: earnedMilestones },
     { data: lastSession },
   ] = await Promise.all([
-    adminClient.from('sessions').select('id').eq('athlete_id', athleteId).eq('status', 'completed'),
+    adminClient.from('sessions').select('*', { count: 'exact', head: true }).eq('athlete_id', athleteId).eq('status', 'completed'),
     adminClient.from('milestone_definitions').select('id, label, icon, condition').eq('active', true).eq('type', 'automatic'),
     adminClient.from('milestones').select('milestone_definition_id').eq('athlete_id', athleteId),
     adminClient
@@ -164,7 +174,7 @@ export async function getCaregiverFocusData(athleteId: string): Promise<Caregive
       .limit(1),
   ])
 
-  const totalSessions = (sessionData ?? []).length
+  const totalSessions = sessionCount ?? 0
   const earned = new Set((earnedMilestones ?? []).map(m => m.milestone_definition_id).filter(Boolean))
   const latest = (lastSession ?? [])[0] ?? null
 
