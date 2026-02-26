@@ -128,7 +128,8 @@ export async function getCoachFocusData(coachUserId: string): Promise<CoachFocus
     const lastDate = lastDateMap[athleteId]
     if (!lastDate) continue
 
-    const lastMs = new Date(lastDate + 'T00:00:00').getTime()
+    const lastDateOnly = lastDate.split('T')[0]
+    const lastMs = new Date(lastDateOnly + 'T00:00:00').getTime()
     const daysAgo = Math.floor((todayMs - lastMs) / (1000 * 60 * 60 * 24))
 
     if (daysAgo >= 14) {
