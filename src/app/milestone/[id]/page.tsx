@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const athleteName = (milestone.athletes as any)?.name ?? 'Athlete'
   const label = milestone.label
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://runsosg.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://sosg.run'
   const imageUrl = `${appUrl}/api/milestone/${params.id}/image`
 
   return {
