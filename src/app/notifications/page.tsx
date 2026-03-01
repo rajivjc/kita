@@ -1,7 +1,10 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { NotificationList } from './NotificationList'
+
+export const metadata: Metadata = { title: 'Notifications — SOSG Running Club' }
 
 export default async function NotificationsPage() {
   const supabase = await createClient()

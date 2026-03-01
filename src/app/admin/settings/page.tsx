@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import ClubSettingsForm from '@/components/admin/ClubSettingsForm'
+
+export const metadata: Metadata = { title: 'Club Settings — SOSG Running Club' }
 
 export default async function AdminSettingsPage() {
   const supabase = await createClient()

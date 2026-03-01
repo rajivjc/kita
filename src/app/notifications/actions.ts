@@ -50,10 +50,17 @@ export async function fetchUnreadNotifications(userId: string): Promise<{
     read: boolean
   }>
 }> {
+  const empty = { count: 0, notifications: [] }
+
+  // Verify the caller is the owner of these notifications
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || user.id !== userId) return empty
+
   const { data } = await adminClient
     .from('notifications')
     .select('id, type, payload, created_at, read')
-    .eq('user_id', userId)
+    .eq('user_id', user.id)
     .eq('read', false)
     .order('created_at', { ascending: false })
     .limit(20)

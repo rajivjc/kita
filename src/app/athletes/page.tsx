@@ -1,4 +1,7 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+
+export const metadata: Metadata = { title: 'Athletes — SOSG Running Club' }
 import AthleteSearch from '@/components/athletes/AthleteSearch'
 import { adminClient } from '@/lib/supabase/admin'
 import StravaConnectBanner from '@/components/athletes/StravaConnectBanner'

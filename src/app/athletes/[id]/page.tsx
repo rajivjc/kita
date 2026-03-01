@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft, Pencil, Share2 } from 'lucide-react'
@@ -15,6 +16,15 @@ import { addCoachNote } from './actions'
 
 interface PageProps {
   params: { id: string }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { data: athlete } = await adminClient
+    .from('athletes')
+    .select('name')
+    .eq('id', params.id)
+    .single()
+  return { title: athlete ? `${athlete.name} — SOSG Running Club` : 'Athlete — SOSG Running Club' }
 }
 
 export default async function AthleteHubPage({ params }: PageProps) {

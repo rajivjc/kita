@@ -80,7 +80,7 @@ export default async function StoryPage({ params }: PageProps) {
     ?? athlete.created_at
 
   const startFormatted = startDate
-    ? new Date(startDate).toLocaleDateString('en-SG', { month: 'long', year: 'numeric' })
+    ? new Date(startDate).toLocaleDateString('en-SG', { month: 'long', year: 'numeric', timeZone: 'Asia/Singapore' })
     : null
 
   // Build narrative
@@ -120,7 +120,7 @@ export default async function StoryPage({ params }: PageProps) {
     narrative.push(`Their goal: ${athlete.running_goal}`)
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://runsosg.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">

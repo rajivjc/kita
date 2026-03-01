@@ -1,6 +1,9 @@
+import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+
+export const metadata: Metadata = { title: 'Feed — SOSG Running Club' }
 import { formatDate, formatDistance, formatDuration } from '@/lib/utils/dates'
 import KudosButton from '@/components/feed/KudosButton'
 import { BADGE_DEFINITIONS } from '@/lib/badges'

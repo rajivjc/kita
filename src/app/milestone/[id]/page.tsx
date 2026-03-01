@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const athleteName = (milestone.athletes as any)?.name ?? 'Athlete'
   const label = milestone.label
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://sosg.run'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
   const imageUrl = `${appUrl}/api/milestone/${params.id}/image`
 
   return {
@@ -61,7 +61,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
   const icon = (milestone.milestone_definitions as any)?.icon ?? '🏆'
   const label = milestone.label
   const date = new Date(milestone.achieved_at).toLocaleDateString('en-SG', {
-    day: 'numeric', month: 'long', year: 'numeric'
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Singapore'
   })
 
   return (

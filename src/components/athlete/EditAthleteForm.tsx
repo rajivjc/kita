@@ -17,7 +17,7 @@ type AthleteProfile = {
 
 type Props = {
   athlete: AthleteProfile
-  onUpdate: (formData: FormData) => Promise<void>
+  onUpdate: (formData: FormData) => Promise<{ error?: string } | void>
 }
 
 function SubmitButton() {
@@ -38,7 +38,8 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
 
   async function handleAction(formData: FormData) {
     setError(null)
-    await onUpdate(formData)
+    const result = await onUpdate(formData)
+    if (result?.error) setError(result.error)
   }
 
   return (
