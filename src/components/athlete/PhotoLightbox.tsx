@@ -12,21 +12,14 @@ type PhotoLightboxProps = {
   onClose: () => void
 }
 
-async function downloadPhoto(photo: PhotoData, athleteName: string) {
-  try {
-    const res = await fetch(photo.signed_url)
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${athleteName.replace(/\s+/g, '_')}_${formatDate(photo.created_at).replace(/\s+/g, '_')}_${photo.id.slice(0, 8)}.jpg`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  } catch {
-    // Silent failure for individual download
-  }
+function downloadPhoto(photo: PhotoData, athleteName: string) {
+  const filename = `${athleteName.replace(/\s+/g, '_')}_${formatDate(photo.created_at).replace(/\s+/g, '_')}_${photo.id.slice(0, 8)}.jpg`
+  const a = document.createElement('a')
+  a.href = `/api/photos/download/${photo.id}?name=${encodeURIComponent(filename)}`
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 
 async function sharePhoto(photo: PhotoData, athleteName: string) {
@@ -43,7 +36,7 @@ async function sharePhoto(photo: PhotoData, athleteName: string) {
     })
   } catch {
     // User cancelled or share not supported — fall back to download
-    await downloadPhoto(photo, athleteName)
+    downloadPhoto(photo, athleteName)
   }
 }
 
@@ -104,10 +97,8 @@ export default function PhotoLightbox({ photos, initialIndex, athleteName, onClo
     }
   }
 
-  async function handleDownload() {
-    setDownloading(true)
-    await downloadPhoto(photo, athleteName)
-    setDownloading(false)
+  function handleDownload() {
+    downloadPhoto(photo, athleteName)
   }
 
   async function handleShare() {

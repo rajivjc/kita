@@ -43,17 +43,14 @@ function groupByMonth(photos: PhotoData[]): { month: string; photos: PhotoData[]
   return Array.from(groups.entries()).map(([month, photos]) => ({ month, photos }))
 }
 
-async function downloadSinglePhoto(photo: PhotoData, athleteName: string) {
-  const res = await fetch(photo.signed_url)
-  const blob = await res.blob()
-  const url = URL.createObjectURL(blob)
+function downloadSinglePhoto(photo: PhotoData, athleteName: string) {
+  const filename = `${athleteName.replace(/\s+/g, '_')}_${formatDate(photo.created_at).replace(/\s+/g, '_')}_${photo.id.slice(0, 8)}.jpg`
   const a = document.createElement('a')
-  a.href = url
-  a.download = `${athleteName.replace(/\s+/g, '_')}_${formatDate(photo.created_at).replace(/\s+/g, '_')}_${photo.id.slice(0, 8)}.jpg`
+  a.href = `/api/photos/download/${photo.id}?name=${encodeURIComponent(filename)}`
+  a.download = filename
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  URL.revokeObjectURL(url)
 }
 
 export default function PhotosTab({
@@ -129,11 +126,10 @@ export default function PhotosTab({
 
     try {
       if (ids.length <= 3) {
-        // Direct download for small count
-        for (let i = 0; i < ids.length; i++) {
-          setDownloadProgress(`Saving ${i + 1} of ${ids.length}...`)
-          const photo = photos.find(p => p.id === ids[i])
-          if (photo) await downloadSinglePhoto(photo, athleteName)
+        // Direct download — server endpoint handles Content-Disposition
+        for (const id of ids) {
+          const photo = photos.find(p => p.id === id)
+          if (photo) downloadSinglePhoto(photo, athleteName)
         }
         showToast(`${ids.length} photo${ids.length > 1 ? 's' : ''} saved`)
       } else {
