@@ -9,7 +9,6 @@ export interface OnboardingInput {
   userName: string | null
   totalSessionsCoached: number
   hasStravaConnection: boolean
-  athleteCount: number
 }
 
 export interface OnboardingStep {
@@ -37,12 +36,6 @@ export function computeOnboardingState(input: OnboardingInput): OnboardingState 
       label: 'Set your display name',
       completed: input.userName != null && input.userName.trim().length > 0,
       href: '/account',
-    },
-    {
-      key: 'view_athlete',
-      label: 'View an athlete profile',
-      completed: input.athleteCount > 0, // They've interacted with athletes
-      href: '/athletes',
     },
     {
       key: 'log_run',
