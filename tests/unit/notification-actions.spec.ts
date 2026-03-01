@@ -30,7 +30,7 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }))
 
-import { markNotificationRead, markAllNotificationsRead } from '@/app/notifications/actions'
+import { markNotificationRead, markAllNotificationsRead, fetchUnreadNotifications } from '@/app/notifications/actions'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -115,5 +115,39 @@ describe('markAllNotificationsRead', () => {
     const result = await markAllNotificationsRead()
     expect(result).toHaveProperty('error')
     expect(result.error).toMatch(/could not mark/i)
+  })
+})
+
+describe('fetchUnreadNotifications', () => {
+  it('returns empty when user is not authenticated', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } })
+
+    const result = await fetchUnreadNotifications('user-1')
+    expect(result.count).toBe(0)
+    expect(result.notifications).toEqual([])
+    // adminClient.from should NOT have been called
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+
+  it('returns empty when userId does not match authenticated user', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
+
+    const result = await fetchUnreadNotifications('different-user')
+    expect(result.count).toBe(0)
+    expect(result.notifications).toEqual([])
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+
+  it('returns notifications when userId matches authenticated user', async () => {
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'user-1' } } })
+    const fakeNotifications = [
+      { id: 'n1', type: 'milestone', payload: {}, created_at: '2024-01-01', read: false },
+    ]
+    mockFrom.mockImplementation(() => chainable(fakeNotifications))
+
+    const result = await fetchUnreadNotifications('user-1')
+    expect(result.count).toBe(1)
+    expect(result.notifications).toEqual(fakeNotifications)
+    expect(mockFrom).toHaveBeenCalledWith('notifications')
   })
 })

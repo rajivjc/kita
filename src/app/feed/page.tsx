@@ -1,6 +1,9 @@
+import type { Metadata } from 'next'
 import { adminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+
+export const metadata: Metadata = { title: 'Feed — SOSG Running Club' }
 import { formatDate, formatDistance, formatDuration } from '@/lib/utils/dates'
 import KudosButton from '@/components/feed/KudosButton'
 import { BADGE_DEFINITIONS } from '@/lib/badges'
@@ -70,6 +73,8 @@ export default async function FeedPage() {
     { data: totalDistanceRows },
     { count: totalAthleteCount },
     { count: totalMilestoneCount },
+    { count: coachCount },
+    { count: caregiverCount },
   ] = await Promise.all([
     user
       ? adminClient.from('users').select('role, name').eq('id', user.id).single()
@@ -89,6 +94,8 @@ export default async function FeedPage() {
     adminClient.from('sessions').select('distance_km').eq('status', 'completed'),
     adminClient.from('athletes').select('*', { count: 'exact', head: true }).eq('active', true),
     adminClient.from('milestones').select('*', { count: 'exact', head: true }),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).in('role', ['coach', 'admin']).eq('active', true),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'caregiver').eq('active', true),
   ])
 
   const isReadOnly = userRow?.role === 'caregiver'
@@ -631,6 +638,13 @@ export default async function FeedPage() {
               <p className="text-[10px] text-gray-400 font-medium mt-0.5">milestones</p>
             </div>
           </div>
+          {((coachCount ?? 0) > 0 || (caregiverCount ?? 0) > 0) && (
+            <p className="text-[11px] text-gray-400 text-center mt-3 pt-3 border-t border-gray-200/60">
+              {(coachCount ?? 0) > 0 && <span>{coachCount} coach{(coachCount ?? 0) !== 1 ? 'es' : ''}</span>}
+              {(coachCount ?? 0) > 0 && (caregiverCount ?? 0) > 0 && <span> · </span>}
+              {(caregiverCount ?? 0) > 0 && <span>{caregiverCount} caregiver{(caregiverCount ?? 0) !== 1 ? 's' : ''}</span>}
+            </p>
+          )}
         </div>
       )}
 

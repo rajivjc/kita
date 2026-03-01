@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import { formatDate, formatDuration } from '@/lib/utils/dates'
 import { ResolveForm } from './ResolveForm'
+
+export const metadata: Metadata = { title: 'Link Run to Athlete — SOSG Running Club' }
 
 export default async function UnmatchedRunPage({
   params,

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -5,6 +6,8 @@ import { adminClient } from '@/lib/supabase/admin'
 import EditAthleteForm from '@/components/athlete/EditAthleteForm'
 import DeleteAthleteButton from '@/components/admin/DeleteAthleteButton'
 import { updateAthlete } from '../actions'
+
+export const metadata: Metadata = { title: 'Edit Athlete — SOSG Running Club' }
 
 interface PageProps {
   params: { id: string }
@@ -35,9 +38,8 @@ export default async function EditAthletePage({ params }: PageProps) {
   async function handleUpdate(formData: FormData) {
     'use server'
     const result = await updateAthlete(id, formData)
-    if (!result.error) {
-      redirect(`/athletes/${id}`)
-    }
+    if (result.error) return result
+    redirect(`/athletes/${id}`)
   }
 
   return (

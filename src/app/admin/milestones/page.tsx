@@ -1,9 +1,12 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import MilestoneDefinitionRow from '@/components/admin/MilestoneDefinitionRow'
+
+export const metadata: Metadata = { title: 'Milestone Definitions — SOSG Running Club' }
 import MilestoneDefinitionForm from '@/components/admin/MilestoneDefinitionForm'
 
 export default async function AdminMilestonesPage() {

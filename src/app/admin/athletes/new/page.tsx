@@ -1,8 +1,11 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AddAthleteForm from '@/components/admin/AddAthleteForm'
+
+export const metadata: Metadata = { title: 'Add Athlete — SOSG Running Club' }
 
 export default async function NewAthletePage() {
   const supabase = await createClient()

@@ -1,8 +1,11 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import SignOutButton from '@/components/account/SignOutButton'
+
+export const metadata: Metadata = { title: 'My Account — SOSG Running Club' }
 import StravaStatus from '@/components/account/StravaStatus'
 import DisplayNameForm from '@/components/account/DisplayNameForm'
 import { formatDate, formatDistance } from '@/lib/utils/dates'

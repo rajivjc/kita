@@ -1,8 +1,11 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AdminInviteForm from '@/components/admin/AdminInviteForm'
+
+export const metadata: Metadata = { title: 'Admin — SOSG Running Club' }
 import UserRow from '@/components/admin/UserRow'
 import CancelInviteButton from '@/components/admin/CancelInviteButton'
 
