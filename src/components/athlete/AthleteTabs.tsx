@@ -10,6 +10,7 @@ import { createManualSession } from '@/app/athletes/[id]/actions'
 
 const CuesTab = dynamic(() => import('./CuesTab'))
 const NotesTab = dynamic(() => import('./NotesTab'))
+const PhotosTab = dynamic(() => import('./PhotosTab'))
 const LogRunSheet = dynamic(() => import('./LogRunSheet'))
 
 export type AthleteData = {
@@ -65,7 +66,15 @@ export type MilestoneData = {
   session_id?: string | null
 }
 
-type Tab = 'feed' | 'cues' | 'notes'
+export type PhotoData = {
+  id: string
+  session_id: string | null
+  signed_url: string
+  caption: string | null
+  created_at: string
+}
+
+type Tab = 'feed' | 'cues' | 'notes' | 'photos'
 
 type AthleteTabsProps = {
   athlete: AthleteData
@@ -73,6 +82,8 @@ type AthleteTabsProps = {
   cues: CuesData | null
   notes: NoteData[]
   milestones: MilestoneData[]
+  photos: PhotoData[]
+  photosBySession: Record<string, PhotoData[]>
   weeklyData: { label: string; km: number; weekStart: string }[]
   weeklyVolume?: WeeklyVolume[]
   feelTrend?: FeelPoint[]
@@ -89,6 +100,8 @@ export default function AthleteTabs({
   cues,
   notes,
   milestones,
+  photos,
+  photosBySession,
   weeklyData,
   weeklyVolume,
   feelTrend,
@@ -109,6 +122,7 @@ export default function AthleteTabs({
     { key: 'feed', label: 'Runs' },
     ...(!isReadOnly ? [{ key: 'cues' as Tab, label: 'Cues' }] : []),
     ...(!isReadOnly ? [{ key: 'notes' as Tab, label: 'Notes' }] : []),
+    ...(photos.length > 0 ? [{ key: 'photos' as Tab, label: `Photos (${photos.length})` }] : []),
   ]
 
   async function handleSaveNote() {
@@ -151,6 +165,7 @@ export default function AthleteTabs({
         <RunsTab
           sessions={sessions}
           milestones={milestones}
+          photosBySession={photosBySession}
           weeklyData={weeklyData}
           weeklyVolume={weeklyVolume}
           feelTrend={feelTrend}
@@ -164,6 +179,9 @@ export default function AthleteTabs({
       )}
       {activeTab === 'cues' && (
         <CuesTab athleteId={athlete.id} initialCues={cues} />
+      )}
+      {activeTab === 'photos' && (
+        <PhotosTab photos={photos} athleteName={athlete.name} />
       )}
       {activeTab === 'notes' && (
         <NotesTab

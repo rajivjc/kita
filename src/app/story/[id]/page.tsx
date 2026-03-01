@@ -3,6 +3,7 @@ import { adminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import ShareButton from '@/components/milestone/ShareButton'
+import { getHeroPhoto, getSignedUrl } from '@/lib/media'
 
 interface PageProps {
   params: { id: string }
@@ -34,14 +35,21 @@ const getStoryData = cache(async (athleteId: string) => {
 
   if (!athlete) return null
 
-  return { athlete, sessions: sessions ?? [], milestones: milestones ?? [] }
+  // Fetch hero photo
+  const heroPhoto = await getHeroPhoto(athleteId)
+  let heroPhotoUrl: string | null = null
+  if (heroPhoto) {
+    heroPhotoUrl = await getSignedUrl(heroPhoto.storage_path, heroPhoto.url)
+  }
+
+  return { athlete, sessions: sessions ?? [], milestones: milestones ?? [], heroPhotoUrl }
 })
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const data = await getStoryData(params.id)
   if (!data) return { title: 'Story Not Found' }
 
-  const { athlete, sessions, milestones } = data
+  const { athlete, sessions, milestones, heroPhotoUrl } = data
   const totalKm = sessions.reduce((sum, s: any) => sum + (s.distance_km ?? 0), 0)
 
   const description = `${athlete.name} has completed ${sessions.length} session${sessions.length !== 1 ? 's' : ''} covering ${totalKm.toFixed(1)}km with ${milestones.length} milestone${milestones.length !== 1 ? 's' : ''} at SOSG Running Club.`
@@ -53,11 +61,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${athlete.name}'s Running Journey`,
       description,
       type: 'profile',
+      ...(heroPhotoUrl ? { images: [{ url: heroPhotoUrl }] } : {}),
     },
     twitter: {
-      card: 'summary',
+      card: heroPhotoUrl ? 'summary_large_image' : 'summary',
       title: `${athlete.name}'s Running Journey`,
       description,
+      ...(heroPhotoUrl ? { images: [heroPhotoUrl] } : {}),
     },
   }
 }
@@ -66,7 +76,7 @@ export default async function StoryPage({ params }: PageProps) {
   const data = await getStoryData(params.id)
   if (!data) notFound()
 
-  const { athlete, sessions, milestones } = data
+  const { athlete, sessions, milestones, heroPhotoUrl } = data
   const totalKm = sessions.reduce((sum, s: any) => sum + (s.distance_km ?? 0), 0)
   const sessionsWithFeel = sessions.filter((s: any) => s.feel != null)
   const avgFeel = sessionsWithFeel.length > 0
@@ -124,7 +134,17 @@ export default async function StoryPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
-        <span className="text-7xl mb-4">🏃</span>
+        {/* Hero photo or running emoji fallback */}
+        {heroPhotoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroPhotoUrl}
+            alt={`${athlete.name} running`}
+            className="w-28 h-28 rounded-full object-cover mb-4 ring-4 ring-teal-100 shadow-lg"
+          />
+        ) : (
+          <span className="text-7xl mb-4">🏃</span>
+        )}
         <p className="text-xs font-bold text-teal-500 uppercase tracking-widest mb-2">Running Journey</p>
         <h1 className="text-3xl font-bold text-gray-900 mb-6">{athlete.name}</h1>
 

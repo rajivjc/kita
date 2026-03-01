@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Camera, X } from 'lucide-react'
+import { compressPhoto } from '@/lib/media-client'
 
 type Feel = 1 | 2 | 3 | 4 | 5
 
@@ -37,11 +39,39 @@ function SubmitButton() {
 export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, createSession }: Props) {
   const [selectedFeel, setSelectedFeel] = useState<Feel | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const [compressing, setCompressing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (!isOpen) return null
 
+  async function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setCompressing(true)
+    try {
+      const compressed = await compressPhoto(file)
+      setPhotoFile(compressed)
+      setPhotoPreview(URL.createObjectURL(compressed))
+    } catch {
+      setPhotoFile(file)
+      setPhotoPreview(URL.createObjectURL(file))
+    }
+    setCompressing(false)
+  }
+
+  function removePhoto() {
+    setPhotoFile(null)
+    if (photoPreview) URL.revokeObjectURL(photoPreview)
+    setPhotoPreview(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
   async function handleAction(formData: FormData) {
     if (selectedFeel) formData.set('feel', String(selectedFeel))
+    if (photoFile) formData.set('photo', photoFile)
     setError(null)
     const result = await createSession(athleteId, formData)
     if (result.error) {
@@ -49,12 +79,14 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
       return
     }
     setSelectedFeel(null)
+    removePhoto()
     onSaved()
   }
 
   function handleClose() {
     setSelectedFeel(null)
     setError(null)
+    removePhoto()
     onClose()
   }
 
@@ -203,6 +235,49 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                 rows={2}
                 placeholder="How did the run go? Any observations…"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+
+            {/* Photo */}
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                Photo <span className="font-normal normal-case">(optional)</span>
+              </p>
+              {photoPreview ? (
+                <div className="relative inline-block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photoPreview}
+                    alt="Photo preview"
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={removePhoto}
+                    className="absolute -top-2 -right-2 bg-gray-800 text-white rounded-full p-0.5"
+                    aria-label="Remove photo"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={compressing}
+                  className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 text-sm rounded-lg px-3 py-2.5 transition-colors"
+                >
+                  <Camera size={16} />
+                  {compressing ? 'Compressing…' : 'Add a photo'}
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handlePhotoSelect}
+                className="hidden"
               />
             </div>
 

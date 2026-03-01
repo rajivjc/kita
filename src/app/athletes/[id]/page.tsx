@@ -11,6 +11,7 @@ import type { GoalType } from '@/lib/goals'
 import { computeWeeklyVolume, computeFeelTrend, computeDistanceTimeline } from '@/lib/analytics/session-trends'
 import type { MilestonePin } from '@/lib/analytics/session-trends'
 import CheerViewTracker from '@/components/feed/CheerViewTracker'
+import { getAthletePhotos, withSignedUrls } from '@/lib/media'
 import { addCoachNote } from './actions'
 
 interface PageProps {
@@ -85,9 +86,12 @@ export default async function AthleteHubPage({ params }: PageProps) {
 
   // Build a map of coach user_id -> display name from the users we already fetched
   const coachIds = [...new Set((sessions ?? []).map((s: any) => s.coach_user_id).filter(Boolean))]
-  const { data: coachUsers } = coachIds.length > 0
-    ? await adminClient.from('users').select('id, name, email').in('id', coachIds)
-    : { data: [] }
+  const [{ data: coachUsers }, rawPhotos] = await Promise.all([
+    coachIds.length > 0
+      ? adminClient.from('users').select('id, name, email').in('id', coachIds)
+      : Promise.resolve({ data: [] }),
+    getAthletePhotos(id),
+  ])
   const coachMap = Object.fromEntries(
     (coachUsers ?? []).map((u: any) => [u.id, u.name ?? u.email?.split('@')[0] ?? null])
   )
@@ -103,6 +107,22 @@ export default async function AthleteHubPage({ params }: PageProps) {
     session_id: m.session_id ?? null,
     icon: (m.milestone_definitions as any)?.icon ?? undefined,
   }))
+
+  // Enrich photos with signed URLs and build session→photos map
+  const photos = await withSignedUrls(rawPhotos)
+  const flatPhotos = photos.map(p => ({
+    id: p.id,
+    session_id: p.session_id,
+    signed_url: p.signed_url,
+    caption: p.caption,
+    created_at: p.created_at,
+  }))
+  const photosBySession: Record<string, typeof flatPhotos> = {}
+  for (const p of flatPhotos) {
+    if (!p.session_id) continue
+    if (!photosBySession[p.session_id]) photosBySession[p.session_id] = []
+    photosBySession[p.session_id].push(p)
+  }
 
   // Chart data — computed from already-fetched sessions (no new queries)
   // Filter out sessions with missing dates to avoid Invalid Date errors
@@ -255,6 +275,8 @@ export default async function AthleteHubPage({ params }: PageProps) {
         cues={cues ?? null}
         notes={flatNotes}
         milestones={flatMilestones}
+        photos={flatPhotos}
+        photosBySession={photosBySession}
         weeklyData={weeklyData}
         weeklyVolume={weeklyVolume}
         feelTrend={feelTrend}

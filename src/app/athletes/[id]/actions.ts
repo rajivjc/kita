@@ -135,6 +135,40 @@ export async function createManualSession(
     .single()
 
   if (newSession?.id) {
+    // Handle photo upload if provided
+    const photoFile = formData.get('photo') as File | null
+    if (photoFile && photoFile.size > 0) {
+      try {
+        const dateStr = date
+        const ext = photoFile.type?.includes('png') ? 'png' : photoFile.type?.includes('webp') ? 'webp' : 'jpg'
+        const storagePath = `${athleteId}/${dateStr}_${newSession.id}.${ext}`
+        const buffer = Buffer.from(await photoFile.arrayBuffer())
+
+        const { error: uploadError } = await adminClient.storage
+          .from('athlete-media')
+          .upload(storagePath, buffer, {
+            contentType: photoFile.type || 'image/webp',
+            upsert: false,
+          })
+
+        if (!uploadError) {
+          await adminClient.from('media').insert({
+            athlete_id: athleteId,
+            session_id: newSession.id,
+            milestone_id: null,
+            url: storagePath,
+            caption: null,
+            uploaded_by: user.id,
+            source: 'upload',
+            storage_path: storagePath,
+          })
+        }
+      } catch (photoErr) {
+        // Photo failure should not fail the session creation
+        console.error('Photo upload failed (non-fatal):', photoErr)
+      }
+    }
+
     await checkAndAwardMilestones(athleteId, newSession.id, user.id)
 
     const { data: athleteRow } = await adminClient

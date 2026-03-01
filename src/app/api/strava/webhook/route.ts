@@ -38,6 +38,52 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const { object_type, object_id, owner_id, aspect_type } = body
 
+  // ── Handle athlete deauthorization ───────────────────────────────────────────
+  if (object_type === 'athlete' && aspect_type === 'update') {
+    const updates = body.updates as Record<string, string> | undefined
+    if (updates?.authorized === 'false') {
+      try {
+        const { data: connection } = await adminClient
+          .from('strava_connections')
+          .select('user_id')
+          .eq('strava_athlete_id', owner_id)
+          .single()
+
+        if (connection) {
+          // Mark Strava-sourced photos as archived (keep files, they belong to athlete stories)
+          await adminClient
+            .from('media')
+            .update({ source: 'strava_archived' })
+            .eq('uploaded_by', connection.user_id)
+            .eq('source', 'strava')
+
+          // Delete the connection
+          await adminClient
+            .from('strava_connections')
+            .delete()
+            .eq('user_id', connection.user_id)
+
+          // Notify the coach
+          await adminClient.from('notifications').insert({
+            user_id: connection.user_id,
+            type: 'strava_disconnected' as const,
+            channel: 'in_app' as const,
+            payload: {
+              message: 'Your Strava account has been disconnected. Reconnect to resume auto-syncing runs.',
+            },
+            read: false,
+          })
+
+          revalidatePath('/account')
+        }
+      } catch (err: unknown) {
+        console.error('Deauth error:', err instanceof Error ? err.message : err)
+      }
+    }
+    return NextResponse.json({ ok: true })
+  }
+
+  // ── Handle activity events ──────────────────────────────────────────────────
   if (object_type !== 'activity') {
     return NextResponse.json({ ok: true })
   }
