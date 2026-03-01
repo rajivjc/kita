@@ -4,7 +4,7 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Plus, ChevronRight } from 'lucide-react'
 import { formatDate, formatDistance, formatDuration } from '@/lib/utils/dates'
-import type { SessionData, MilestoneData } from './AthleteTabs'
+import type { SessionData, MilestoneData, PhotoData } from './AthleteTabs'
 import type { WeeklyVolume, FeelPoint, DistancePoint, MilestonePin } from '@/lib/analytics/session-trends'
 import { updateManualSession, updateSessionFeel, deleteSession } from '@/app/athletes/[id]/actions'
 import StravaActivityLink from '@/components/feed/StravaActivityLink'
@@ -17,6 +17,7 @@ const ProgressChart = dynamic(() => import('@/components/charts/ProgressChart'),
 type RunsTabProps = {
   sessions: SessionData[]
   milestones: MilestoneData[]
+  photosBySession?: Record<string, PhotoData[]>
   weeklyData: { label: string; km: number; weekStart: string }[]
   weeklyVolume?: WeeklyVolume[]
   feelTrend?: FeelPoint[]
@@ -63,6 +64,7 @@ type SessionCardProps = {
   isReadOnly: boolean
   onUpdated?: () => void
   badges?: MilestoneData[]
+  photos?: PhotoData[]
 }
 
 const FEEL_COLORS: Record<number, string> = {
@@ -97,7 +99,7 @@ function formatPace(distanceKm: number, durationSeconds: number): string {
   return `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} /km`
 }
 
-function SessionCard({ session: s, athleteId, isReadOnly, onUpdated, badges = [] }: SessionCardProps) {
+function SessionCard({ session: s, athleteId, isReadOnly, onUpdated, badges = [], photos = [] }: SessionCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [feel, setFeel] = useState<Feel | null>(s.feel as Feel | null)
   const [note, setNote] = useState(s.note ?? '')
@@ -216,6 +218,22 @@ function SessionCard({ session: s, athleteId, isReadOnly, onUpdated, badges = []
           {/* Note */}
           {note && (
             <p className="text-sm text-gray-600 mt-2 line-clamp-2 italic">&ldquo;{note}&rdquo;</p>
+          )}
+
+          {/* Session photos */}
+          {photos.length > 0 && (
+            <div className="flex gap-1.5 mt-2">
+              {photos.map((photo) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={photo.id}
+                  src={photo.signed_url}
+                  alt={photo.caption ?? 'Session photo'}
+                  loading="lazy"
+                  className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                />
+              ))}
+            </div>
           )}
 
           {/* Milestone badges — unified amber style (matches feed page) */}
@@ -354,7 +372,7 @@ function SessionCard({ session: s, athleteId, isReadOnly, onUpdated, badges = []
   )
 }
 
-export default function RunsTab({ sessions, milestones, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, isReadOnly = false, onSessionUpdated, onLogRun }: RunsTabProps) {
+export default function RunsTab({ sessions, milestones, photosBySession, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, isReadOnly = false, onSessionUpdated, onLogRun }: RunsTabProps) {
   const milestonesBySession: Record<string, MilestoneData[]> = {}
   for (const m of milestones) {
     if (!m.session_id) continue
@@ -405,6 +423,7 @@ export default function RunsTab({ sessions, milestones, weeklyData, weeklyVolume
           isReadOnly={isReadOnly}
           onUpdated={onSessionUpdated}
           badges={milestonesBySession[item.data.id] ?? []}
+          photos={photosBySession?.[item.data.id] ?? []}
         />
       ))}
     </div>

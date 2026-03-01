@@ -305,6 +305,8 @@ export interface Media {
   caption: string | null
   uploaded_by: string | null
   created_at: string
+  source: 'strava' | 'upload' | 'strava_archived' | null
+  storage_path: string | null
 }
 
 export interface StravaConnection {
