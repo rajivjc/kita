@@ -5,7 +5,6 @@ function input(overrides: Partial<OnboardingInput> = {}): OnboardingInput {
     userName: null,
     totalSessionsCoached: 0,
     hasStravaConnection: false,
-    athleteCount: 0,
     ...overrides,
   }
 }
@@ -15,7 +14,7 @@ describe('computeOnboardingState', () => {
     const state = computeOnboardingState(input())
     expect(state.isNewUser).toBe(true)
     expect(state.completedCount).toBe(0)
-    expect(state.totalCount).toBe(4)
+    expect(state.totalCount).toBe(3)
   })
 
   it('marks name step completed when user has a name', () => {
@@ -43,22 +42,15 @@ describe('computeOnboardingState', () => {
     expect(stravaStep!.completed).toBe(true)
   })
 
-  it('marks view_athlete step completed when athletes > 0', () => {
-    const state = computeOnboardingState(input({ athleteCount: 5 }))
-    const viewStep = state.steps.find(s => s.key === 'view_athlete')
-    expect(viewStep!.completed).toBe(true)
-  })
-
   it('returns isNewUser=false when all steps completed', () => {
     const state = computeOnboardingState(input({
       userName: 'Alex',
       totalSessionsCoached: 5,
       hasStravaConnection: true,
-      athleteCount: 3,
     }))
     expect(state.isNewUser).toBe(false)
-    expect(state.completedCount).toBe(4)
-    expect(state.totalCount).toBe(4)
+    expect(state.completedCount).toBe(3)
+    expect(state.totalCount).toBe(3)
   })
 
   it('returns correct partial completion', () => {
@@ -66,7 +58,6 @@ describe('computeOnboardingState', () => {
       userName: 'Alex',
       totalSessionsCoached: 0,
       hasStravaConnection: true,
-      athleteCount: 0,
     }))
     expect(state.isNewUser).toBe(true)
     expect(state.completedCount).toBe(2) // name + strava

@@ -299,7 +299,6 @@ export default async function FeedPage() {
     userName: (userRow as any)?.name ?? null,
     totalSessionsCoached: myTotalSessionCount ?? 0,
     hasStravaConnection: !!stravaConnection,
-    athleteCount: (totalAthleteCount ?? 0),
   }) : null
   const showOnboarding = onboardingState?.isNewUser === true
 
