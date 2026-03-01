@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { X, ChevronLeft, ChevronRight, Download, Share2 } from 'lucide-react'
 import { formatDate } from '@/lib/utils/dates'
-import { savePhoto, shareViaWebShare, downloadViaServer } from '@/lib/utils/download'
+import { savePhoto, shareViaWebShare } from '@/lib/utils/download'
 import type { PhotoData } from './AthleteTabs'
 
 type PhotoLightboxProps = {
@@ -92,8 +92,12 @@ export default function PhotoLightbox({ photos, initialIndex, athleteName, onClo
       text: photo.caption || undefined,
     })
     if (!shared) {
-      // Share not supported or cancelled — fall back to server download
-      downloadViaServer(photo.id, filename)
+      // Share not supported or cancelled — use savePhoto which is
+      // platform-aware (won't break out of iOS PWA standalone mode)
+      await savePhoto(photo.id, photo.signed_url, filename, {
+        title: `${athleteName} — Run photo`,
+        text: photo.caption || undefined,
+      })
     }
     setDownloading(false)
   }

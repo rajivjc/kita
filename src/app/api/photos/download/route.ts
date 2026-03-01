@@ -43,7 +43,15 @@ export async function POST(req: NextRequest) {
     if (!raw || typeof raw !== 'string') {
       return NextResponse.json({ error: 'Missing payload' }, { status: 400 })
     }
-    const parsed = JSON.parse(raw)
+    let parsed: { photoIds?: unknown; athleteName?: unknown }
+    try {
+      parsed = JSON.parse(raw)
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
+    }
+    if (!Array.isArray(parsed.photoIds) || typeof parsed.athleteName !== 'string') {
+      return NextResponse.json({ error: 'Invalid payload format' }, { status: 400 })
+    }
     photoIds = parsed.photoIds
     athleteName = parsed.athleteName
   }

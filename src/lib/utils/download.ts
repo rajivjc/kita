@@ -117,10 +117,11 @@ export async function savePhoto(
 ): Promise<void> {
   // In iOS PWA standalone mode, <a download> breaks out to Safari.
   // Use Web Share API which keeps the user inside the PWA.
+  // If user cancels the share sheet, we return without fallback —
+  // falling through to downloadViaServer would eject them from the PWA.
   if (isIOSDevice() && isPWAStandalone() && canShareFiles()) {
-    const shared = await shareViaWebShare(signedUrl, filename, options)
-    if (shared) return
-    // If user cancelled the share sheet, fall through to server download
+    await shareViaWebShare(signedUrl, filename, options)
+    return
   }
 
   downloadViaServer(photoId, filename)
