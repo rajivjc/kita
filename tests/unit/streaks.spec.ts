@@ -7,6 +7,22 @@ function daysAgo(n: number): string {
   return d.toISOString().split('T')[0]
 }
 
+/**
+ * Week-aware date helper. Returns a YYYY-MM-DD string for a specific day
+ * within the current or a past ISO week (Mon–Sun).
+ *
+ * @param weekOffset  0 = this week, 1 = last week, 2 = two weeks ago, etc.
+ * @param dayOfWeek   0 = Mon, 1 = Tue, … 6 = Sun (ISO convention)
+ */
+function dayInWeek(weekOffset: number, dayOfWeek: number = 0): string {
+  const now = new Date()
+  const utcDow = now.getUTCDay() // 0=Sun, 1=Mon…6=Sat
+  const diffToMon = utcDow === 0 ? 6 : utcDow - 1
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - diffToMon))
+  monday.setUTCDate(monday.getUTCDate() - weekOffset * 7 + dayOfWeek)
+  return monday.toISOString().split('T')[0]
+}
+
 describe('calculateWeeklyStreak', () => {
   it('returns 0 for empty dates', () => {
     expect(calculateWeeklyStreak([])).toEqual({ current: 0, activeThisWeek: false })
@@ -19,50 +35,51 @@ describe('calculateWeeklyStreak', () => {
   })
 
   it('counts consecutive weeks correctly', () => {
-    // Sessions on each of the last 4 weeks
-    const dates = [daysAgo(0), daysAgo(7), daysAgo(14), daysAgo(21)]
+    // One session in each of the last 4 weeks (all on Monday)
+    const dates = [dayInWeek(0), dayInWeek(1), dayInWeek(2), dayInWeek(3)]
     const result = calculateWeeklyStreak(dates)
     expect(result.current).toBe(4)
     expect(result.activeThisWeek).toBe(true)
   })
 
   it('breaks streak on a gap week', () => {
-    // Session today and 2 weeks ago (gap at week -1)
-    const dates = [daysAgo(0), daysAgo(14)]
+    // Session this week and 2 weeks ago (gap at week -1)
+    const dates = [dayInWeek(0), dayInWeek(2)]
     const result = calculateWeeklyStreak(dates)
     expect(result.current).toBe(1)
     expect(result.activeThisWeek).toBe(true)
   })
 
   it('carries streak from previous week when current week has no session', () => {
-    // Sessions 7, 14, 21 days ago but NOT this week
-    const dates = [daysAgo(7), daysAgo(14), daysAgo(21)]
+    // Sessions in weeks -1, -2, -3 but NOT this week
+    const dates = [dayInWeek(1), dayInWeek(2), dayInWeek(3)]
     const result = calculateWeeklyStreak(dates)
     expect(result.current).toBe(3)
     expect(result.activeThisWeek).toBe(false)
   })
 
   it('returns 0 when last session was 2+ weeks ago with gap', () => {
-    // Only a session 14 days ago — previous week has no session
-    const dates = [daysAgo(14)]
+    // Only a session 3 weeks ago — previous week has no session
+    const dates = [dayInWeek(3)]
     const result = calculateWeeklyStreak(dates)
-    // Whether this is 0 or 1 depends on whether day 14 falls in prev week or earlier
-    // If daysAgo(14) is in the week before last, streak from prev week = 0
-    // Just check it doesn't crash and returns a valid result
-    expect(result.current).toBeGreaterThanOrEqual(0)
+    expect(result.current).toBe(0)
+    expect(result.activeThisWeek).toBe(false)
   })
 
   it('handles multiple sessions in the same week', () => {
-    // 3 sessions this week, 2 last week
-    const dates = [daysAgo(0), daysAgo(1), daysAgo(2), daysAgo(7), daysAgo(8)]
+    // 3 sessions this week (Mon, Tue, Wed), 2 last week (Mon, Tue)
+    const dates = [
+      dayInWeek(0, 0), dayInWeek(0, 1), dayInWeek(0, 2),
+      dayInWeek(1, 0), dayInWeek(1, 1),
+    ]
     const result = calculateWeeklyStreak(dates)
     expect(result.current).toBe(2)
     expect(result.activeThisWeek).toBe(true)
   })
 
   it('handles sessions far in the past', () => {
-    // Sessions 200+ days ago shouldn't affect current streak
-    const dates = [daysAgo(200), daysAgo(207), daysAgo(214)]
+    // Sessions 30+ weeks ago shouldn't affect current streak
+    const dates = [dayInWeek(30), dayInWeek(31), dayInWeek(32)]
     const result = calculateWeeklyStreak(dates)
     expect(result.current).toBe(0)
     expect(result.activeThisWeek).toBe(false)
