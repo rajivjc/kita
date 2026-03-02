@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import { adminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -93,7 +94,20 @@ export default async function StoryPage({ params }: PageProps) {
   const { athlete, sessions, milestones, heroPhotoUrl } = data
   const isPublic = (athlete as Record<string, unknown>).allow_public_sharing === true
 
-  if (!isPublic) {
+  // Logged-in coaches/admins can always view stories
+  let canView = isPublic
+  if (!canView) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const { data: userRow } = await adminClient.from('users').select('role').eq('id', user.id).single()
+      if (userRow?.role === 'admin' || userRow?.role === 'coach') {
+        canView = true
+      }
+    }
+  }
+
+  if (!canView) {
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
         <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
