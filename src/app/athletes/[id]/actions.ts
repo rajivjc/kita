@@ -343,7 +343,9 @@ export async function updateCoachNote(
     .select('athlete_id')
     .eq('id', noteId)
     .single()
-  revalidatePath(`/athletes/${noteRow?.athlete_id ?? ''}`)
+  if (noteRow?.athlete_id) {
+    revalidatePath(`/athletes/${noteRow.athlete_id}`)
+  }
   return {}
 }
 
@@ -585,6 +587,24 @@ export async function loadMorePhotos(
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { photos: [], nextCursor: null }
+
+  // Caregivers can only view their linked athlete's photos
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (callerUser?.role === 'caregiver') {
+    const { data: linked } = await adminClient
+      .from('athletes')
+      .select('id')
+      .eq('caregiver_user_id', user.id)
+      .single()
+    if (!linked || linked.id !== athleteId) {
+      return { photos: [], nextCursor: null }
+    }
+  }
 
   const { photos: rawPhotos, nextCursor } = await getAthletePhotosPaginated(athleteId, 24, cursor)
   const enriched = await withSignedUrls(rawPhotos)
