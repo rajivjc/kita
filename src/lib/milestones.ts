@@ -83,7 +83,7 @@ export async function checkAndAwardMilestones(
 
     // 5. Insert earned milestones
     const achievedAt = new Date().toISOString()
-    const inserts = toAward.map((def: any) => ({
+    const inserts = toAward.map((def) => ({
       athlete_id: athleteId,
       milestone_definition_id: def.id,
       label: def.label,
@@ -132,7 +132,7 @@ export async function checkAndAwardMilestones(
               html: milestoneEmail({
                 athleteName,
                 milestoneLabel: def.label,
-                milestoneIcon: (def as any).icon ?? '🏆',
+                milestoneIcon: def.icon ?? '🏆',
                 coachName: coach?.name ?? null,
                 date,
                 milestoneUrl: `${appUrl}/milestone/${milestoneId ?? ''}`,

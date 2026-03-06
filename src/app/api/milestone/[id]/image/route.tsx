@@ -7,18 +7,23 @@ export async function GET(
   _request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { data: milestone } = await adminClient
+  const { data: rawMilestone } = await adminClient
     .from('milestones')
     .select('*, athletes(name), milestone_definitions(icon, label)')
     .eq('id', params.id)
     .single()
 
-  if (!milestone) {
+  if (!rawMilestone) {
     return new Response('Milestone not found', { status: 404 })
   }
 
-  const athleteName = (milestone.athletes as any)?.name ?? 'Athlete'
-  const icon = (milestone.milestone_definitions as any)?.icon ?? '🏆'
+  const milestone = rawMilestone as typeof rawMilestone & {
+    athletes: { name: string } | null
+    milestone_definitions: { icon: string; label: string } | null
+  }
+
+  const athleteName = milestone.athletes?.name ?? 'Athlete'
+  const icon = milestone.milestone_definitions?.icon ?? '🏆'
   const label = milestone.label
   const date = new Date(milestone.achieved_at).toLocaleDateString('en-SG', {
     day: 'numeric',

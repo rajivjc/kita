@@ -420,6 +420,7 @@ export async function updateSessionFeel(
         .eq('id', sessionId)
         .single()
       if (session) {
+        const athleteName = (session.athlete as unknown as { name: string } | null)?.name ?? 'An athlete'
         await adminClient.from('notifications').insert({
           user_id: user.id,
           type: 'low_feel_alert',
@@ -428,8 +429,8 @@ export async function updateSessionFeel(
             session_id: sessionId,
             athlete_id: session.athlete_id,
             feel: session.feel,
-            athlete_name: (session as any).athlete?.name ?? 'An athlete',
-            message: `${(session as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
+            athlete_name: athleteName,
+            message: `${athleteName} had a tough session. Check in before next run.`,
           },
           read: false,
         })
@@ -493,6 +494,7 @@ export async function updateManualSession(
 
     if (!existing || existing.length === 0) {
       if (updatedSession) {
+        const athleteName = (updatedSession.athlete as unknown as { name: string } | null)?.name ?? 'An athlete'
         await adminClient.from('notifications').insert({
           user_id: user.id,
           type: 'low_feel_alert',
@@ -501,8 +503,8 @@ export async function updateManualSession(
             session_id: sessionId,
             athlete_id: updatedSession.athlete_id,
             feel: updatedSession.feel,
-            athlete_name: (updatedSession as any).athlete?.name ?? 'An athlete',
-            message: `${(updatedSession as any).athlete?.name ?? 'An athlete'} had a tough session. Check in before next run.`,
+            athlete_name: athleteName,
+            message: `${athleteName} had a tough session. Check in before next run.`,
           },
           read: false,
         })

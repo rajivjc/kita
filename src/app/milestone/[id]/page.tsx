@@ -11,13 +11,24 @@ interface PageProps {
   params: { id: string }
 }
 
-const getMilestone = cache(async (id: string) => {
+interface MilestoneWithRelations {
+  id: string
+  athlete_id: string
+  label: string
+  achieved_at: string
+  awarded_by: string | null
+  athletes: { name: string; allow_public_sharing: boolean } | null
+  milestone_definitions: { icon: string; label: string } | null
+  [key: string]: unknown
+}
+
+const getMilestone = cache(async (id: string): Promise<MilestoneWithRelations | null> => {
   const { data } = await adminClient
     .from('milestones')
     .select('*, athletes(name, allow_public_sharing), milestone_definitions(icon, label)')
     .eq('id', id)
     .single()
-  return data
+  return data as MilestoneWithRelations | null
 })
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -25,8 +36,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!milestone) return { title: 'Milestone Not Found' }
 
-  const isPublic = (milestone.athletes as any)?.allow_public_sharing === true
-  const athleteName = (milestone.athletes as any)?.name ?? 'Athlete'
+  const isPublic = milestone.athletes?.allow_public_sharing === true
+  const athleteName = milestone.athletes?.name ?? 'Athlete'
   const label = milestone.label
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
   const imageUrl = `${appUrl}/api/milestone/${params.id}/image`
@@ -61,7 +72,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
 
   if (!milestone) notFound()
 
-  const isPublic = (milestone.athletes as any)?.allow_public_sharing === true
+  const isPublic = milestone.athletes?.allow_public_sharing === true
 
   // Logged-in coaches/admins can always view milestones
   let canView = isPublic
@@ -97,14 +108,14 @@ export default async function MilestoneSharePage({ params }: PageProps) {
     )
   }
 
-  const coachId = (milestone as any).awarded_by ?? null
+  const coachId = milestone.awarded_by ?? null
   const { data: coach } = coachId
     ? await adminClient.from('users').select('name').eq('id', coachId).single()
     : { data: null }
 
-  const athleteName = (milestone.athletes as any)?.name ?? 'Athlete'
+  const athleteName = milestone.athletes?.name ?? 'Athlete'
   const coachName = coach?.name ?? null
-  const icon = (milestone.milestone_definitions as any)?.icon ?? '🏆'
+  const icon = milestone.milestone_definitions?.icon ?? '🏆'
   const label = milestone.label
   const date = new Date(milestone.achieved_at).toLocaleDateString('en-SG', {
     day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Singapore'
