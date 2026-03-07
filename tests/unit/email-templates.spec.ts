@@ -107,6 +107,7 @@ describe('Email templates', () => {
       expect(html).toContain('Connect Strava')
       expect(html).toContain('Log your first run')
       expect(html).toContain('install the app')
+      expect(html).toContain('Account')
     })
 
     it('includes getting started steps for caregivers', () => {
@@ -121,6 +122,7 @@ describe('Email templates', () => {
       expect(html).toContain('View your athlete')
       expect(html).toContain('Send your first cheer')
       expect(html).toContain('install the app')
+      expect(html).toContain('Account')
     })
 
     it('does not include getting started for admin role', () => {
