@@ -139,13 +139,13 @@ function IOSInstructions() {
   return (
     <div className="space-y-4">
       <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 text-xs text-amber-800">
-        <strong>Important:</strong> You must use <strong>Safari</strong> for this step. If you&apos;re using Chrome or another browser, copy the link and open it in Safari first.
+        <strong>Important:</strong> You must use <strong>Safari</strong> for this step (the blue compass icon on your home screen). If you&apos;re using Chrome or another browser, open <strong>Safari</strong>, go to <strong>sosg.run</strong>, and sign in there first.
       </div>
       <ol className="space-y-3 pl-0" style={{ listStyle: 'none', paddingLeft: 0 }}>
         <li className="flex gap-3 items-start">
           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">1</span>
           <span>
-            Tap the <strong>Share</strong> button{' '}
+            Tap the <strong>Share</strong> button &mdash; the square with an upward arrow{' '}
             <span style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               width: 22, height: 22, background: '#007AFF', borderRadius: 5,
@@ -153,16 +153,16 @@ function IOSInstructions() {
             }}>
               <span style={{ color: '#fff', fontSize: 12, lineHeight: 1 }}>&#x2B06;&#xFE0F;</span>
             </span>{' '}
-            at the bottom of Safari
+            at the <strong>bottom centre</strong> of your screen
           </span>
         </li>
         <li className="flex gap-3 items-start">
           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">2</span>
-          <span>Scroll down in the menu and tap <strong>&quot;Add to Home Screen&quot;</strong></span>
+          <span>A menu will slide up from the bottom. Scroll down in this menu and look for <strong>&quot;Add to Home Screen&quot;</strong> (it has a <strong>+</strong> icon next to it)</span>
         </li>
         <li className="flex gap-3 items-start">
           <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">3</span>
-          <span>Tap <strong>&quot;Add&quot;</strong> in the top right corner</span>
+          <span>You&apos;ll see a preview with the app name and icon. Tap <strong>&quot;Add&quot;</strong> in the top right corner to confirm</span>
         </li>
       </ol>
       <p className="text-xs text-gray-400">
@@ -183,11 +183,11 @@ function AndroidInstructions() {
         <ol className="space-y-3 pl-0" style={{ listStyle: 'none', paddingLeft: 0 }}>
           <li className="flex gap-3 items-start">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">1</span>
-            <span>You should see an <strong>&quot;Install SOSG Run&quot;</strong> banner at the bottom. Tap <strong>Install</strong>.</span>
+            <span>You should see an <strong>&quot;Install SOSG Run&quot;</strong> banner at the bottom of your screen when you first visit. Tap <strong>Install</strong>.</span>
           </li>
           <li className="flex gap-3 items-start">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">2</span>
-            <span>If you don&apos;t see it, tap the <strong>&#x22EE; menu</strong> (three dots, top right) and then <strong>&quot;Install app&quot;</strong> or <strong>&quot;Add to Home screen&quot;</strong>.</span>
+            <span>If you don&apos;t see the banner, tap the <strong>&#x22EE;</strong> icon (three vertical dots in the top right corner of your screen) and then tap <strong>&quot;Install app&quot;</strong> or <strong>&quot;Add to Home screen&quot;</strong>.</span>
           </li>
         </ol>
       </div>
@@ -196,7 +196,7 @@ function AndroidInstructions() {
         <ol className="space-y-3 pl-0" style={{ listStyle: 'none', paddingLeft: 0 }}>
           <li className="flex gap-3 items-start">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">1</span>
-            <span>Tap the <strong>&#x22EE; menu</strong> (three dots, top right)</span>
+            <span>Tap the <strong>&#x22EE;</strong> icon (three vertical dots in the top right corner of your screen)</span>
           </li>
           <li className="flex gap-3 items-start">
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-bold flex items-center justify-center mt-0.5">2</span>

@@ -245,7 +245,7 @@ export function invitationEmail({
         </tr>
       </table>
       <p style="font-size:13px;color:#6B7280;margin:12px 0 0 0;">
-        Tip: You can also install the app on your phone for the best experience.
+        Tip: Once you&rsquo;re signed in, go to your <strong>Account</strong> page to install the app on your phone.
       </p>
     </div>
     ` : ''}${role === 'caregiver' ? `
@@ -268,7 +268,7 @@ export function invitationEmail({
         </tr>
       </table>
       <p style="font-size:13px;color:#6B7280;margin:12px 0 0 0;">
-        Tip: You can also install the app on your phone for the best experience.
+        Tip: Once you&rsquo;re signed in, go to your <strong>Account</strong> page to install the app on your phone.
       </p>
     </div>
     ` : ''}
