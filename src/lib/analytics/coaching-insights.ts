@@ -30,12 +30,13 @@ export interface FeelDecline {
  */
 export function detectFeelDecline(
   sessions: SessionForInsights[],
-  windowDays = 14
+  windowDays = 14,
+  referenceDate?: Date
 ): FeelDecline | null {
   if (sessions.length === 0) return null
 
   const athleteId = sessions[0].athlete_id
-  const now = new Date()
+  const now = referenceDate ?? new Date()
   const recentCutoff = new Date(now)
   recentCutoff.setDate(recentCutoff.getDate() - windowDays)
   const priorCutoff = new Date(recentCutoff)
