@@ -19,8 +19,11 @@ function session(overrides: Partial<SessionForInsights> = {}): SessionForInsight
 // --- detectFeelDecline ---
 
 describe('detectFeelDecline', () => {
+  // Pin reference date so tests don't drift as real time passes
+  const refDate = new Date('2026-02-28T12:00:00Z')
+
   it('returns null for empty sessions', () => {
-    expect(detectFeelDecline([])).toBeNull()
+    expect(detectFeelDecline([], 14, refDate)).toBeNull()
   })
 
   it('returns null with insufficient data in either window', () => {
@@ -30,7 +33,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-01', feel: 4 }),
       session({ date: '2026-01-30', feel: 4 }),
     ]
-    expect(detectFeelDecline(sessions)).toBeNull()
+    expect(detectFeelDecline(sessions, 14, refDate)).toBeNull()
   })
 
   it('detects a significant feel decline (>= 1.0 drop)', () => {
@@ -44,7 +47,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-08', feel: 5 }),
       session({ date: '2026-02-06', feel: 4 }),
     ]
-    const result = detectFeelDecline(sessions)
+    const result = detectFeelDecline(sessions, 14, refDate)
     expect(result).not.toBeNull()
     expect(result!.delta).toBeLessThanOrEqual(-1.0)
     expect(result!.avgRecent).toBeLessThan(result!.avgPrior)
@@ -57,7 +60,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-10', feel: 4 }),
       session({ date: '2026-02-08', feel: 3 }),
     ]
-    expect(detectFeelDecline(sessions)).toBeNull()
+    expect(detectFeelDecline(sessions, 14, refDate)).toBeNull()
   })
 
   it('returns null when feel is improving', () => {
@@ -67,7 +70,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-10', feel: 2 }),
       session({ date: '2026-02-08', feel: 1 }),
     ]
-    expect(detectFeelDecline(sessions)).toBeNull()
+    expect(detectFeelDecline(sessions, 14, refDate)).toBeNull()
   })
 
   it('skips sessions with null feel', () => {
@@ -79,7 +82,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-08', feel: null }),
       session({ date: '2026-02-06', feel: 4 }),
     ]
-    const result = detectFeelDecline(sessions)
+    const result = detectFeelDecline(sessions, 14, refDate)
     expect(result).not.toBeNull()
     expect(result!.avgRecent).toBeLessThan(3)
   })
@@ -93,7 +96,7 @@ describe('detectFeelDecline', () => {
       session({ date: '2026-02-08', feel: 5 }),
       session({ date: '2026-02-06', feel: 4 }),
     ]
-    const result = detectFeelDecline(sessions)
+    const result = detectFeelDecline(sessions, 14, refDate)
     expect(result).not.toBeNull()
     // Check values are rounded (no more than 1 decimal)
     expect(String(result!.avgRecent).split('.')[1]?.length ?? 0).toBeLessThanOrEqual(1)

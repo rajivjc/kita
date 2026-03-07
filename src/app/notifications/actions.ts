@@ -2,6 +2,7 @@
 
 import { adminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
+import type { Json } from '@/lib/supabase/types'
 import { revalidatePath } from 'next/cache'
 
 export async function markNotificationRead(notificationId: string): Promise<{ error?: string }> {
@@ -45,7 +46,7 @@ export async function fetchUnreadNotifications(userId: string): Promise<{
   notifications: Array<{
     id: string
     type: string
-    payload: Record<string, any>
+    payload: Json
     created_at: string
     read: boolean
   }>
@@ -65,7 +66,7 @@ export async function fetchUnreadNotifications(userId: string): Promise<{
     .order('created_at', { ascending: false })
     .limit(20)
 
-  const notifications = (data ?? []) as any
+  const notifications = data ?? []
   return {
     count: notifications.length,
     notifications,

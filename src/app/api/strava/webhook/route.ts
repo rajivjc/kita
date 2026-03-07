@@ -107,6 +107,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     .single()
 
   if (!connection) {
+    console.warn('Strava webhook: no connection found for owner_id=%d, activity=%d', Number(owner_id), Number(object_id))
     return NextResponse.json({ ok: true })
   }
 

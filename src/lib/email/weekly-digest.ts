@@ -103,7 +103,7 @@ export async function getCoachDigests(
     .in('id', coachIds)
     .eq('active', true)
 
-  const { data: { users: authUsers } } = await adminClient.auth.admin.listUsers()
+  const { data: { users: authUsers } } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 })
   const authMap = new Map(authUsers?.map(u => [u.id, u.email]) ?? [])
 
   const digests: CoachDigestData[] = []
@@ -173,14 +173,15 @@ export async function getCaregiverDigests(
     .in('athlete_id', athleteIds)
 
   // Fetch total session counts for each athlete (for next-milestone calculation)
+  const { data: allCompletedSessions } = await adminClient
+    .from('sessions')
+    .select('athlete_id')
+    .eq('status', 'completed')
+    .in('athlete_id', athleteIds)
+
   const sessionCountMap = new Map<string, number>()
-  for (const athleteId of athleteIds) {
-    const { count } = await adminClient
-      .from('sessions')
-      .select('*', { count: 'exact', head: true })
-      .eq('athlete_id', athleteId)
-      .eq('status', 'completed')
-    sessionCountMap.set(athleteId, count ?? 0)
+  for (const s of allCompletedSessions ?? []) {
+    sessionCountMap.set(s.athlete_id, (sessionCountMap.get(s.athlete_id) ?? 0) + 1)
   }
 
   // Fetch caregiver info
@@ -191,7 +192,7 @@ export async function getCaregiverDigests(
     .in('id', caregiverIds)
     .eq('active', true)
 
-  const { data: { users: authUsers } } = await adminClient.auth.admin.listUsers()
+  const { data: { users: authUsers } } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 })
   const authMap = new Map(authUsers?.map(u => [u.id, u.email]) ?? [])
   const caregiverMap = new Map(
     (caregiverUsers ?? []).map(u => [u.id, { name: u.name, email: authMap.get(u.id) }])

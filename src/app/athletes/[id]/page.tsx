@@ -112,13 +112,16 @@ export default async function AthleteHubPage({ params }: PageProps) {
     coach_name: coachMap[s.coach_user_id] ?? null,
   }))
 
-  const flatMilestones = (milestones ?? []).map((m: any) => ({
-    id: m.id,
-    label: m.label,
-    achieved_at: m.achieved_at,
-    session_id: m.session_id ?? null,
-    icon: (m.milestone_definitions as any)?.icon ?? undefined,
-  }))
+  const flatMilestones = (milestones ?? []).map((m) => {
+    const row = m as typeof m & { milestone_definitions: { icon: string } | null }
+    return {
+      id: row.id,
+      label: row.label,
+      achieved_at: row.achieved_at,
+      session_id: row.session_id ?? null,
+      icon: row.milestone_definitions?.icon ?? undefined,
+    }
+  })
 
   // Enrich photos with signed URLs
   // Paginated photos for the Photos tab (first page)

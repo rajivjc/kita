@@ -164,11 +164,12 @@ export async function getCoachFocusData(coachUserId: string): Promise<CoachFocus
     if (!activeAthleteIds.has(s.athlete_id)) continue
     if (!s.date) continue
     if (!sessionsByAthlete[s.athlete_id]) sessionsByAthlete[s.athlete_id] = []
+    const row = s as { date: string; distance_km: number | null; feel: number | null; athlete_id: string }
     sessionsByAthlete[s.athlete_id].push({
-      date: s.date,
-      distance_km: (s as any).distance_km ?? null,
-      feel: (s as any).feel ?? null,
-      athlete_id: s.athlete_id,
+      date: row.date,
+      distance_km: row.distance_km ?? null,
+      feel: row.feel ?? null,
+      athlete_id: row.athlete_id,
     })
   }
 
