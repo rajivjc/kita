@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sosg-v3'
-const SHELL_ASSETS = ['/manifest.json', '/icon-192.png', '/icon-512.png']
+const CACHE_NAME = 'sosg-v4'
+const SHELL_ASSETS = ['/api/manifest.json', '/icon-192.png', '/icon-512.png']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
