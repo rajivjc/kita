@@ -139,11 +139,6 @@ export default function OnboardingCard({
         ))}
       </div>
 
-      <div className="mt-3 pt-3 border-t border-teal-200/40">
-        <Link href="/setup" className="text-xs text-teal-600 hover:text-teal-700 font-medium">
-          Install as app for the best experience &rarr;
-        </Link>
-      </div>
     </div>
   )
 }

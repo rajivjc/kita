@@ -401,12 +401,6 @@ export default async function AccountPage({
           {isCaregiver ? (
             <>
               <div className="flex items-center gap-3">
-                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${userRow?.name ? 'bg-amber-500 text-white' : 'border-2 border-amber-300'}`}>
-                  {userRow?.name && <span className="text-[10px]">&#10003;</span>}
-                </span>
-                <span className={`text-sm ${userRow?.name ? 'text-amber-600 line-through' : 'text-gray-900 font-medium'}`}>Set your display name</span>
-              </div>
-              <div className="flex items-center gap-3">
                 <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${caregiverAthlete ? 'bg-amber-500 text-white' : 'border-2 border-amber-300'}`}>
                   {caregiverAthlete && <span className="text-[10px]">&#10003;</span>}
                 </span>
@@ -419,12 +413,6 @@ export default async function AccountPage({
             </>
           ) : (
             <>
-              <div className="flex items-center gap-3">
-                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${userRow?.name ? 'bg-teal-500 text-white' : 'border-2 border-teal-300'}`}>
-                  {userRow?.name && <span className="text-[10px]">&#10003;</span>}
-                </span>
-                <span className={`text-sm ${userRow?.name ? 'text-teal-600 line-through' : 'text-gray-900 font-medium'}`}>Set your display name</span>
-              </div>
               <div className="flex items-center gap-3">
                 <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${connection ? 'bg-teal-500 text-white' : 'border-2 border-teal-300'}`}>
                   {connection && <span className="text-[10px]">&#10003;</span>}

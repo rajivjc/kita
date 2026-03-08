@@ -9,7 +9,7 @@ import type { Metadata, Viewport } from 'next'
 export const metadata: Metadata = {
   title: 'SOSG Running Club',
   description: 'Running club hub for coaches and athletes — growing together',
-  manifest: '/manifest.json',
+  manifest: '/api/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

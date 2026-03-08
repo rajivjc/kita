@@ -2,7 +2,6 @@ import { computeOnboardingState, computeCaregiverOnboardingState, type Onboardin
 
 function input(overrides: Partial<OnboardingInput> = {}): OnboardingInput {
   return {
-    userName: null,
     totalSessionsCoached: 0,
     hasStravaConnection: false,
     ...overrides,
@@ -11,7 +10,6 @@ function input(overrides: Partial<OnboardingInput> = {}): OnboardingInput {
 
 function caregiverInput(overrides: Partial<CaregiverOnboardingInput> = {}): CaregiverOnboardingInput {
   return {
-    userName: null,
     hasLinkedAthlete: false,
     hasViewedAthlete: false,
     hasSentCheer: false,
@@ -24,20 +22,7 @@ describe('computeOnboardingState', () => {
     const state = computeOnboardingState(input())
     expect(state.isNewUser).toBe(true)
     expect(state.completedCount).toBe(0)
-    expect(state.totalCount).toBe(3)
-  })
-
-  it('marks name step completed when user has a name', () => {
-    const state = computeOnboardingState(input({ userName: 'Alex' }))
-    const nameStep = state.steps.find(s => s.key === 'name')
-    expect(nameStep!.completed).toBe(true)
-    expect(state.completedCount).toBe(1)
-  })
-
-  it('does not mark name step completed for empty string', () => {
-    const state = computeOnboardingState(input({ userName: '  ' }))
-    const nameStep = state.steps.find(s => s.key === 'name')
-    expect(nameStep!.completed).toBe(false)
+    expect(state.totalCount).toBe(2)
   })
 
   it('marks log_run step completed when sessions > 0', () => {
@@ -54,23 +39,27 @@ describe('computeOnboardingState', () => {
 
   it('returns isNewUser=false when all steps completed', () => {
     const state = computeOnboardingState(input({
-      userName: 'Alex',
       totalSessionsCoached: 5,
       hasStravaConnection: true,
     }))
     expect(state.isNewUser).toBe(false)
-    expect(state.completedCount).toBe(3)
-    expect(state.totalCount).toBe(3)
+    expect(state.completedCount).toBe(2)
+    expect(state.totalCount).toBe(2)
   })
 
   it('returns correct partial completion', () => {
     const state = computeOnboardingState(input({
-      userName: 'Alex',
       totalSessionsCoached: 0,
       hasStravaConnection: true,
     }))
     expect(state.isNewUser).toBe(true)
-    expect(state.completedCount).toBe(2) // name + strava
+    expect(state.completedCount).toBe(1) // strava only
+  })
+
+  it('does not include a name step (handled by /welcome page)', () => {
+    const state = computeOnboardingState(input())
+    const nameStep = state.steps.find(s => s.key === 'name')
+    expect(nameStep).toBeUndefined()
   })
 
   it('each step has a valid href', () => {
@@ -94,19 +83,13 @@ describe('computeCaregiverOnboardingState', () => {
     const state = computeCaregiverOnboardingState(caregiverInput())
     expect(state.isNewUser).toBe(true)
     expect(state.completedCount).toBe(1) // view_athlete auto-completes when no linked athlete
-    expect(state.totalCount).toBe(3)
+    expect(state.totalCount).toBe(2)
   })
 
-  it('marks name step completed when caregiver has a name', () => {
-    const state = computeCaregiverOnboardingState(caregiverInput({ userName: 'Sarah' }))
+  it('does not include a name step (handled by /welcome page)', () => {
+    const state = computeCaregiverOnboardingState(caregiverInput())
     const nameStep = state.steps.find(s => s.key === 'name')
-    expect(nameStep!.completed).toBe(true)
-  })
-
-  it('does not mark name step completed for whitespace-only name', () => {
-    const state = computeCaregiverOnboardingState(caregiverInput({ userName: '  ' }))
-    const nameStep = state.steps.find(s => s.key === 'name')
-    expect(nameStep!.completed).toBe(false)
+    expect(nameStep).toBeUndefined()
   })
 
   it('marks view_athlete completed when athlete is linked', () => {
@@ -123,13 +106,12 @@ describe('computeCaregiverOnboardingState', () => {
 
   it('returns isNewUser=false when all steps completed', () => {
     const state = computeCaregiverOnboardingState(caregiverInput({
-      userName: 'Sarah',
       hasLinkedAthlete: true,
       hasViewedAthlete: true,
       hasSentCheer: true,
     }))
     expect(state.isNewUser).toBe(false)
-    expect(state.completedCount).toBe(3)
+    expect(state.completedCount).toBe(2)
   })
 
   it('each step has a valid href', () => {

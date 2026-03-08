@@ -3,16 +3,17 @@
  *
  * Determines which onboarding steps a new coach or caregiver has completed
  * based on their activity data. No database calls.
+ *
+ * Display name is no longer tracked here — it's captured on the /welcome
+ * page immediately after first sign-in.
  */
 
 export interface OnboardingInput {
-  userName: string | null
   totalSessionsCoached: number
   hasStravaConnection: boolean
 }
 
 export interface CaregiverOnboardingInput {
-  userName: string | null
   hasLinkedAthlete: boolean
   hasViewedAthlete: boolean
   hasSentCheer: boolean
@@ -38,12 +39,6 @@ export interface OnboardingState {
  */
 export function computeOnboardingState(input: OnboardingInput): OnboardingState {
   const steps: OnboardingStep[] = [
-    {
-      key: 'name',
-      label: 'Set your display name',
-      completed: input.userName != null && input.userName.trim().length > 0,
-      href: '/account',
-    },
     {
       key: 'strava',
       label: 'Connect Strava for auto-sync',
@@ -74,12 +69,6 @@ export function computeOnboardingState(input: OnboardingInput): OnboardingState 
  */
 export function computeCaregiverOnboardingState(input: CaregiverOnboardingInput): OnboardingState {
   const steps: OnboardingStep[] = [
-    {
-      key: 'name',
-      label: 'Set your display name',
-      completed: input.userName != null && input.userName.trim().length > 0,
-      href: '/account',
-    },
     {
       key: 'view_athlete',
       label: 'View your athlete\u2019s progress',

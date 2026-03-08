@@ -70,24 +70,25 @@ describe('Email templates', () => {
   })
 
   describe('invitationEmail', () => {
-    it('renders coach role description', () => {
+    it('renders coach role description with accept URL', () => {
       const html = invitationEmail({
         role: 'coach',
         inviterName: 'Admin Jane',
-        loginUrl: 'https://app.test/login',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=abc123',
       })
 
       expect(html).toContain('Admin Jane')
       expect(html).toContain('coach')
       expect(html).toContain('log runs')
       expect(html).toContain('Accept Invitation')
+      expect(html).toContain('accept-invite?token=abc123')
     })
 
     it('renders caregiver role description', () => {
       const html = invitationEmail({
         role: 'caregiver',
         inviterName: null,
-        loginUrl: 'https://app.test/login',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=xyz',
       })
 
       expect(html).toContain('caregiver')
@@ -95,46 +96,54 @@ describe('Email templates', () => {
       expect(html).not.toContain('null')
     })
 
-    it('includes getting started steps for coaches', () => {
+    it('includes getting started steps for coaches without display name step', () => {
       const html = invitationEmail({
         role: 'coach',
         inviterName: 'Admin',
-        loginUrl: 'https://app.test/login',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=abc',
       })
 
-      expect(html).toContain('After you sign in')
-      expect(html).toContain('Set your display name')
       expect(html).toContain('Connect Strava')
       expect(html).toContain('Log your first run')
-      expect(html).toContain('install the app')
-      expect(html).toContain('Account')
+      // Display name step is no longer in the email (handled by /welcome page)
+      expect(html).not.toContain('Set your display name')
+      // PWA install tip is no longer in the email
+      expect(html).not.toContain('install the app')
     })
 
-    it('includes getting started steps for caregivers', () => {
+    it('includes getting started steps for caregivers without display name step', () => {
       const html = invitationEmail({
         role: 'caregiver',
         inviterName: null,
-        loginUrl: 'https://app.test/login',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=xyz',
       })
 
-      expect(html).toContain('After you sign in')
-      expect(html).toContain('Set your display name')
       expect(html).toContain('View your athlete')
       expect(html).toContain('Send your first cheer')
-      expect(html).toContain('install the app')
-      expect(html).toContain('Account')
+      // Display name step is no longer in the email
+      expect(html).not.toContain('Set your display name')
+      expect(html).not.toContain('install the app')
     })
 
     it('does not include getting started for admin role', () => {
       const html = invitationEmail({
         role: 'admin',
         inviterName: 'Admin',
-        loginUrl: 'https://app.test/login',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=abc',
       })
 
-      expect(html).not.toContain('After you sign in')
       expect(html).not.toContain('Connect Strava')
       expect(html).not.toContain('Send your first cheer')
+    })
+
+    it('includes expiry notice', () => {
+      const html = invitationEmail({
+        role: 'coach',
+        inviterName: 'Admin',
+        acceptUrl: 'https://app.test/auth/accept-invite?token=abc',
+      })
+
+      expect(html).toContain('expires in 7 days')
     })
   })
 })

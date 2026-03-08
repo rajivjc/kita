@@ -133,11 +133,6 @@ export default function CaregiverOnboardingCard({
         ))}
       </div>
 
-      <div className="mt-3 pt-3 border-t border-amber-200/40">
-        <Link href="/setup" className="text-xs text-amber-600 hover:text-amber-700 font-medium">
-          Install as app for the best experience &rarr;
-        </Link>
-      </div>
     </div>
   )
 }

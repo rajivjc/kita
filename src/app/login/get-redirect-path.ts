@@ -43,6 +43,11 @@ export async function verifyOtpAndRedirect(
     return { error: null, redirectPath: '/login?error=revoked' }
   }
 
+  // New users without a display name go to /welcome
+  if (!userRow.name) {
+    return { error: null, redirectPath: '/welcome' }
+  }
+
   const role = userRow?.role
 
   if (role === 'caregiver') {
