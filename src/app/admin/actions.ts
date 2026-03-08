@@ -46,7 +46,7 @@ export async function inviteUser(
       invited_by: user.id,
       accepted_at: null,
     })
-    .select('id')
+    .select('id, token')
     .single()
   if (inviteRowError) return { error: 'Could not create the invitation. The email may already be invited.' }
 
@@ -69,15 +69,15 @@ export async function inviteUser(
     return { error: 'Could not create the user account. Please try again.' }
   }
 
-  // Send branded invitation email via Resend
-  const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/login`
+  // Send branded invitation email via Resend with one-click auth link
+  const acceptUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/accept-invite?token=${inviteRow.token}`
   const emailResult = await sendEmail({
     to: email,
     subject: "You're invited to SOSG Running Club",
     html: invitationEmail({
       role,
       inviterName: callerUser?.name ?? null,
-      loginUrl,
+      acceptUrl,
     }),
   })
 

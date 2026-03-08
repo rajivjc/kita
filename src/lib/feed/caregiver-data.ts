@@ -191,7 +191,6 @@ export async function loadCaregiverFeedData(userId: string): Promise<CaregiverFe
 
   // ─── Caregiver onboarding ────────────────────────────────────
   const caregiverOnboarding = computeCaregiverOnboardingState({
-    userName: userRow?.name ?? null,
     hasLinkedAthlete: !!caregiverAthlete,
     hasViewedAthlete: !!caregiverAthlete,
     hasSentCheer: (sentCheers ?? []).length > 0,

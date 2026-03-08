@@ -181,7 +181,6 @@ export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> 
 
   // ─── Onboarding ────────────────────────────────────────────────
   const onboarding = computeOnboardingState({
-    userName: userRow?.name ?? null,
     totalSessionsCoached: myTotalSessionCount ?? 0,
     hasStravaConnection: !!stravaConnection,
   })

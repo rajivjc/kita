@@ -24,10 +24,41 @@ export default function LoginPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const isRevoked = searchParams.get('error') === 'revoked'
+  const isExpired = searchParams.get('expired') === 'true'
+  const prefillEmail = searchParams.get('email') ?? ''
+  const isInvalidInvite = searchParams.get('error') === 'invalid-invite'
+
+  // Auto-fill email from URL params (e.g. expired invitation link)
+  useEffect(() => {
+    if (prefillEmail && !email) {
+      setEmail(prefillEmail)
+    }
+  }, [prefillEmail]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-send OTP when arriving from an expired invitation link
+  const autoSentRef = useRef(false)
+  useEffect(() => {
+    if (isExpired && prefillEmail && !autoSentRef.current) {
+      autoSentRef.current = true
+      ;(async () => {
+        setPageState('loading')
+        const { error, rateLimited, notFound } = await sendMagicLink(prefillEmail, window.location.origin)
+        if (error) {
+          if (notFound) setPageState('not_found')
+          else if (rateLimited) setPageState('rate_limited')
+          else setPageState('error')
+        } else {
+          setSentEmail(prefillEmail)
+          setPageState('success')
+          setResendCooldown(INITIAL_COOLDOWN_SECONDS)
+        }
+      })()
+    }
+  }, [isExpired, prefillEmail])
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    if (!isExpired) inputRef.current?.focus()
+  }, [isExpired])
 
   useEffect(() => {
     if (pageState === 'success') {
@@ -103,6 +134,16 @@ export default function LoginPage() {
         {isRevoked && (
           <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 text-center">
             Your access has been revoked. Please contact your administrator.
+          </div>
+        )}
+        {isExpired && pageState !== 'success' && (
+          <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-700 text-center">
+            Your invitation link has expired. We&apos;re sending a new sign-in code to your email.
+          </div>
+        )}
+        {isInvalidInvite && (
+          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 text-center">
+            This invitation link is invalid. Please contact your administrator.
           </div>
         )}
         <div className="text-4xl text-center mb-2">🏃</div>

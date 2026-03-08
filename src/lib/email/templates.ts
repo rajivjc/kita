@@ -200,11 +200,11 @@ export function caregiverDigestEmail({
 export function invitationEmail({
   role,
   inviterName,
-  loginUrl,
+  acceptUrl,
 }: {
   role: string
   inviterName: string | null
-  loginUrl: string
+  acceptUrl: string
 }): string {
   return layout(`
     <h1 style="font-size:22px;font-weight:700;color:${BRAND_DARK};margin:0 0 12px 0;">
@@ -221,56 +221,45 @@ export function invitationEmail({
         : 'As an admin, you&rsquo;ll have full access to manage the club.'}
     </p>
     <div style="text-align:center;margin-bottom:24px;">
-      <a href="${loginUrl}" style="display:inline-block;background-color:${BRAND_COLOR};color:white;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:24px;">
+      <a href="${acceptUrl}" style="display:inline-block;background-color:${BRAND_COLOR};color:white;font-size:14px;font-weight:600;text-decoration:none;padding:12px 28px;border-radius:24px;">
         Accept Invitation
       </a>
     </div>
     ${role === 'coach' ? `
     <div style="background-color:#F0FDFA;border-radius:8px;padding:16px 20px;">
       <p style="font-size:14px;font-weight:600;color:${BRAND_DARK};margin:0 0 12px 0;">
-        After you sign in, here&rsquo;s what to do:
+        After you&rsquo;re in, here&rsquo;s what to do:
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:14px;color:#4B5563;">
         <tr>
           <td style="padding:0 8px 8px 0;vertical-align:top;font-weight:600;color:${BRAND_COLOR};">1.</td>
-          <td style="padding-bottom:8px;"><strong>Set your display name</strong> &mdash; so athletes and fellow coaches know who you are</td>
-        </tr>
-        <tr>
-          <td style="padding:0 8px 8px 0;vertical-align:top;font-weight:600;color:${BRAND_COLOR};">2.</td>
           <td style="padding-bottom:8px;"><strong>Connect Strava</strong> &mdash; your runs will sync automatically</td>
         </tr>
         <tr>
-          <td style="padding:0 8px 0 0;vertical-align:top;font-weight:600;color:${BRAND_COLOR};">3.</td>
+          <td style="padding:0 8px 0 0;vertical-align:top;font-weight:600;color:${BRAND_COLOR};">2.</td>
           <td><strong>Log your first run</strong> &mdash; pick an athlete and record a session</td>
         </tr>
       </table>
-      <p style="font-size:13px;color:#6B7280;margin:12px 0 0 0;">
-        Tip: Once you&rsquo;re signed in, go to your <strong>Account</strong> page to install the app on your phone.
-      </p>
     </div>
     ` : ''}${role === 'caregiver' ? `
     <div style="background-color:#FFFBEB;border-radius:8px;padding:16px 20px;">
       <p style="font-size:14px;font-weight:600;color:${BRAND_DARK};margin:0 0 12px 0;">
-        After you sign in, here&rsquo;s what to do:
+        After you&rsquo;re in, here&rsquo;s what to do:
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:14px;color:#4B5563;">
         <tr>
           <td style="padding:0 8px 8px 0;vertical-align:top;font-weight:600;color:#D97706;">1.</td>
-          <td style="padding-bottom:8px;"><strong>Set your display name</strong> &mdash; so coaches know who you are</td>
-        </tr>
-        <tr>
-          <td style="padding:0 8px 8px 0;vertical-align:top;font-weight:600;color:#D97706;">2.</td>
           <td style="padding-bottom:8px;"><strong>View your athlete&rsquo;s progress</strong> &mdash; see runs, milestones, and coach notes</td>
         </tr>
         <tr>
-          <td style="padding:0 8px 0 0;vertical-align:top;font-weight:600;color:#D97706;">3.</td>
+          <td style="padding:0 8px 0 0;vertical-align:top;font-weight:600;color:#D97706;">2.</td>
           <td><strong>Send your first cheer</strong> &mdash; your encouragement shows up for coaches on run day</td>
         </tr>
       </table>
-      <p style="font-size:13px;color:#6B7280;margin:12px 0 0 0;">
-        Tip: Once you&rsquo;re signed in, go to your <strong>Account</strong> page to install the app on your phone.
-      </p>
     </div>
     ` : ''}
+    <p style="font-size:12px;color:#9CA3AF;margin:16px 0 0 0;text-align:center;">
+      This link expires in 7 days. If it has expired, you can sign in at the login page.
+    </p>
   `)
 }

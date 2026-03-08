@@ -28,6 +28,11 @@ export async function GET(request: NextRequest) {
           return NextResponse.redirect(`${baseUrl}/login?error=revoked`)
         }
 
+        // New users without a display name go to /welcome
+        if (!userRow.name) {
+          return NextResponse.redirect(`${baseUrl}/welcome`)
+        }
+
         const role = userRow?.role
 
         if (role === 'caregiver') {

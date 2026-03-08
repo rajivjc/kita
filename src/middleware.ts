@@ -8,6 +8,7 @@ const PROTECTED_PATHS = [
   '/admin',
   '/account',
   '/notifications',
+  '/welcome',
   '/api/strava/connect',
   '/api/strava/callback',
 ]
@@ -15,10 +16,13 @@ const PROTECTED_PATHS = [
 const PUBLIC_PATHS = [
   '/login',
   '/auth/callback',
+  '/auth/accept-invite',
+  '/auth/pwa-launch',
   '/setup',
   '/strava/connected',
   '/api/strava/webhook',
   '/api/health',
+  '/api/manifest.json',
   '/',
 ]
 

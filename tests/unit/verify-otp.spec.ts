@@ -128,6 +128,20 @@ describe('verifyOtpAndRedirect', () => {
     expect(result.redirectPath).toBe('/login?error=revoked')
   })
 
+  it('redirects new user without name to /welcome', async () => {
+    mockVerifyOtp.mockResolvedValue({ error: null })
+    mockGetUser.mockResolvedValue({ data: { user: { id: 'new-1', email } } })
+
+    const mock = createQueueMock()
+    mock.enqueue('users', { data: { role: 'coach', name: null, active: true } })
+    mockFrom.mockImplementation(mock.impl)
+
+    const result = await verifyOtpAndRedirect(email, token)
+
+    expect(result.error).toBeNull()
+    expect(result.redirectPath).toBe('/welcome')
+  })
+
   it('redirects coach to /feed', async () => {
     mockVerifyOtp.mockResolvedValue({ error: null })
     mockGetUser.mockResolvedValue({ data: { user: { id: 'coach-1', email } } })

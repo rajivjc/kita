@@ -97,11 +97,12 @@ describe('Middleware route classification', () => {
   // Test the classification logic directly since we extracted it
   const PROTECTED_PATHS = [
     '/dashboard', '/feed', '/athletes', '/admin', '/account',
-    '/notifications', '/api/strava/connect', '/api/strava/callback',
+    '/notifications', '/welcome', '/api/strava/connect', '/api/strava/callback',
   ]
 
   const PUBLIC_PATHS = [
-    '/login', '/auth/callback', '/api/strava/webhook', '/api/health', '/',
+    '/login', '/auth/callback', '/auth/accept-invite', '/auth/pwa-launch',
+    '/api/strava/webhook', '/api/health', '/api/manifest.json', '/',
   ]
 
   function isProtected(pathname: string): boolean {
@@ -161,6 +162,26 @@ describe('Middleware route classification', () => {
     expect(isProtected('/account')).toBe(true)
   })
 
+  it('classifies /welcome as protected', () => {
+    expect(isProtected('/welcome')).toBe(true)
+    expect(isPublic('/welcome')).toBe(false)
+  })
+
+  it('classifies /auth/accept-invite as public', () => {
+    expect(isPublic('/auth/accept-invite')).toBe(true)
+    expect(isProtected('/auth/accept-invite')).toBe(false)
+  })
+
+  it('classifies /auth/pwa-launch as public', () => {
+    expect(isPublic('/auth/pwa-launch')).toBe(true)
+    expect(isProtected('/auth/pwa-launch')).toBe(false)
+  })
+
+  it('classifies /api/manifest.json as public', () => {
+    expect(isPublic('/api/manifest.json')).toBe(true)
+    expect(isProtected('/api/manifest.json')).toBe(false)
+  })
+
   it('classifies /api/strava/connect as protected', () => {
     expect(isProtected('/api/strava/connect')).toBe(true)
   })
@@ -180,10 +201,10 @@ describe('Middleware skip behavior', () => {
   it('public paths should NOT require Supabase client creation', () => {
     // This validates the optimization: public paths return early
     // before createServerClient is called
-    const publicPaths = ['/login', '/auth/callback', '/api/strava/webhook', '/api/health', '/']
+    const publicPaths = ['/login', '/auth/callback', '/auth/accept-invite', '/auth/pwa-launch', '/api/strava/webhook', '/api/health', '/api/manifest.json', '/']
 
     for (const path of publicPaths) {
-      const isPublic = ['/login', '/auth/callback', '/api/strava/webhook', '/api/health', '/']
+      const isPublic = ['/login', '/auth/callback', '/auth/accept-invite', '/auth/pwa-launch', '/api/strava/webhook', '/api/health', '/api/manifest.json', '/']
         .some(p => path === p || path.startsWith(`${p}/`))
       expect(isPublic).toBe(true)
     }

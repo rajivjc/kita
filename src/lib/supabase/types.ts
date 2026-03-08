@@ -17,7 +17,7 @@ export interface Database {
       }
       users: {
         Row: User & Record<string, unknown>
-        Insert: Omit<User, 'created_at' | 'active'> & { created_at?: string; active?: boolean }
+        Insert: Omit<User, 'created_at' | 'active' | 'pwa_token' | 'pwa_token_expires_at'> & { created_at?: string; active?: boolean; pwa_token?: string | null; pwa_token_expires_at?: string | null }
         Update: Partial<User>
         Relationships: []
       }
@@ -149,7 +149,7 @@ export interface Database {
       }
       invitations: {
         Row: Invitation & Record<string, unknown>
-        Insert: Omit<Invitation, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Insert: Omit<Invitation, 'id' | 'created_at' | 'token' | 'expires_at'> & { id?: string; created_at?: string; token?: string; expires_at?: string }
         Update: Partial<Invitation>
         Relationships: []
       }
@@ -218,6 +218,8 @@ export interface User {
   role: 'admin' | 'coach' | 'caregiver'
   active: boolean
   created_at: string
+  pwa_token: string | null
+  pwa_token_expires_at: string | null
 }
 
 export interface Athlete {
@@ -392,6 +394,8 @@ export interface Invitation {
   invited_by: string | null
   accepted_at: string | null
   created_at: string
+  token: string
+  expires_at: string
 }
 
 export interface Kudos {
