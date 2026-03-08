@@ -4,6 +4,7 @@ import BottomNav from '@/components/nav/BottomNav'
 import ServiceWorkerRegistrar from '@/components/nav/ServiceWorkerRegistrar'
 import InstallBanner from '@/components/nav/InstallBanner'
 import SplashHider from '@/components/nav/SplashHider'
+import ScrollRestorer from '@/components/nav/ScrollRestorer'
 import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <SplashHider />
+        <ScrollRestorer />
         <ServiceWorkerRegistrar />
         <Suspense fallback={null}>
           <BottomNav />

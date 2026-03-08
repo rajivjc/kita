@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sosg-v4'
+const CACHE_NAME = 'sosg-v5'
 const SHELL_ASSETS = ['/api/manifest.json', '/icon-192.png', '/icon-512.png']
 
 self.addEventListener('install', (event) => {
@@ -41,38 +41,32 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   const url = event.notification.data?.url || '/'
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      // Focus existing tab if one is open
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (clients) => {
       for (const client of clients) {
         if (client.url.includes(self.location.origin) && 'focus' in client) {
-          client.navigate(url)
-          return client.focus()
+          try {
+            await client.navigate(url)
+            await client.focus()
+            return
+          } catch {
+            // client.navigate() can fail on frozen/discarded tabs (mobile).
+            // Fall through to openWindow below.
+          }
         }
       }
-      // Otherwise open a new window
       return self.clients.openWindow(url)
     })
   )
 })
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    // Network-first for navigation, cache the response for faster PWA launches
+  // Only serve shell assets from cache. Never cache navigation responses —
+  // Next.js pages are dynamic and serving stale HTML causes content bleed.
+  if (event.request.mode === 'navigate') return
+
+  if (SHELL_ASSETS.some((asset) => event.request.url.endsWith(asset))) {
     event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // Cache a copy of successful navigation responses
-          if (response.ok) {
-            const clone = response.clone()
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone)
-            })
-          }
-          return response
-        })
-        .catch(() =>
-          caches.match(event.request).then((cached) => cached || caches.match('/'))
-        )
+      caches.match(event.request).then((cached) => cached || fetch(event.request))
     )
   }
 })
