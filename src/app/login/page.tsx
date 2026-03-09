@@ -28,6 +28,34 @@ export default function LoginPage() {
   const prefillEmail = searchParams.get('email') ?? ''
   const isInvalidInvite = searchParams.get('error') === 'invalid-invite'
 
+  // In standalone PWA mode, try to auto-authenticate using the cached PWA token
+  // instead of showing the login form. This handles the case where iOS opens a
+  // new PWA instance (e.g. from a notification) without session cookies.
+  const [pwaAuthAttempted, setPwaAuthAttempted] = useState(false)
+  useEffect(() => {
+    if (pwaAuthAttempted || isRevoked) return
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as unknown as { standalone?: boolean }).standalone === true
+    if (!isStandalone) return
+    setPwaAuthAttempted(true)
+    ;(async () => {
+      try {
+        const tokenCache = await caches.open('sosg-pwa-token')
+        const tokenResp = await tokenCache.match('/_token')
+        if (tokenResp) {
+          const token = await tokenResp.text()
+          if (token) {
+            window.location.href = `/auth/pwa-launch?token=${encodeURIComponent(token)}`
+            return
+          }
+        }
+      } catch {
+        // Cache API unavailable — fall through to normal login
+      }
+    })()
+  }, [pwaAuthAttempted, isRevoked])
+
   // Auto-fill email from URL params (e.g. expired invitation link)
   useEffect(() => {
     if (prefillEmail && !email) {
