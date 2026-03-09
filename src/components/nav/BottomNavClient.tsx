@@ -24,6 +24,17 @@ const ICONS: Record<string, any> = {
 export default function BottomNavClient({ isAdmin, isCaregiver = false, unreadCount: initialCount }: Props) {
   const pathname = usePathname()
   const [unreadCount, setUnreadCount] = useState(initialCount)
+  const [isStandalone, setIsStandalone] = useState(false)
+
+  // Detect PWA standalone mode — in standalone mode, use full page reloads
+  // instead of Next.js soft navigation to prevent iOS WKWebView from
+  // retaining stale page content across route transitions.
+  useEffect(() => {
+    setIsStandalone(
+      window.matchMedia('(display-mode: standalone)').matches ||
+      ('standalone' in navigator && (navigator as any).standalone === true)
+    )
+  }, [])
 
   // Keep in sync with server-rendered prop (e.g. after navigation)
   useEffect(() => {
@@ -84,6 +95,20 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, unreadCo
             ? 'text-teal-600 bg-teal-50'
             : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
         }`
+
+        // In PWA standalone mode, use <a> tags for full page reloads to
+        // prevent iOS WKWebView from retaining stale content across routes.
+        if (isStandalone) {
+          return (
+            <a
+              key={tab.href}
+              href={tab.href}
+              className={baseClasses}
+            >
+              {tabContent}
+            </a>
+          )
+        }
 
         return (
           <Link
