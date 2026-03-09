@@ -8,7 +8,12 @@ export default function SplashHider() {
     if (splash) {
       splash.style.transition = 'opacity 0.4s ease'
       splash.style.opacity = '0'
-      setTimeout(() => splash.remove(), 400)
+      // Hide with CSS instead of remove() — the splash div is rendered by
+      // React in layout.tsx, so calling .remove() tears it out of the DOM
+      // before React can reconcile, causing "removeChild" NotFoundError.
+      setTimeout(() => {
+        splash.style.display = 'none'
+      }, 400)
     }
   }, [])
   return null
