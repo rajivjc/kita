@@ -67,16 +67,20 @@ export async function GET(request: NextRequest) {
     })
     .eq('id', userId)
 
-  const manifest = {
-    ...STATIC_MANIFEST,
-    start_url: `/auth/pwa-launch?token=${pwaToken}`,
-  }
-
-  return NextResponse.json(manifest, {
-    headers: {
-      'Content-Type': 'application/manifest+json',
-      // Short cache to ensure fresh token on install, but avoid excessive DB writes
-      'Cache-Control': 'private, max-age=300',
+  // Return the static manifest (start_url stays as /feed).
+  // The PWA token is NOT embedded in start_url because iOS uses start_url
+  // as the PWA's identity — a different start_url would cause notification
+  // taps to open a second PWA instance instead of reusing the existing one.
+  // The token is cached client-side by ServiceWorkerRegistrar for use in
+  // notification cold-start auth.
+  return NextResponse.json(
+    { ...STATIC_MANIFEST, _pwa_token: pwaToken },
+    {
+      headers: {
+        'Content-Type': 'application/manifest+json',
+        // Short cache to ensure fresh token on install, but avoid excessive DB writes
+        'Cache-Control': 'private, max-age=300',
+      },
     },
-  })
+  )
 }

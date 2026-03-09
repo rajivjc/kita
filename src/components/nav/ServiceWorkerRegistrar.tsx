@@ -64,11 +64,10 @@ async function cachePwaToken() {
   try {
     const res = await fetch('/api/manifest.json')
     const manifest = await res.json()
-    const startUrl: string = manifest.start_url || ''
-    const match = startUrl.match(/token=([^&]+)/)
-    if (match) {
+    const token: string | undefined = manifest._pwa_token
+    if (token) {
       const tokenCache = await caches.open('sosg-pwa-token')
-      await tokenCache.put('/_token', new Response(match[1]))
+      await tokenCache.put('/_token', new Response(token))
     }
   } catch {
     // Non-critical — notification cold starts will fall back to bare URL
