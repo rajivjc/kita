@@ -7,6 +7,20 @@ import { useEffect } from 'react'
 let navigating = false
 
 /**
+ * Detect DOM corruption from iOS WKWebView process restoration.
+ * When iOS terminates and restores a PWA's WebView process, orphaned DOM
+ * nodes from the previous page can persist. We detect this by checking for
+ * multiple <main> elements (each page renders exactly one). If found, we
+ * reload the entire page rather than surgically removing nodes (which would
+ * crash React with a removeChild error).
+ */
+function checkDomIntegrity() {
+  if (document.querySelectorAll('main').length > 1) {
+    window.location.reload()
+  }
+}
+
+/**
  * Force a full page load to the given URL. If the URL matches the current
  * page, window.location.href assignment is a no-op in WebKit, so we must
  * use window.location.reload() instead.
@@ -78,6 +92,9 @@ export default function ServiceWorkerRegistrar() {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         consumePendingNavigation()
+        // Check for DOM corruption after iOS process restoration.
+        // One-frame delay lets the WebView finish re-compositing.
+        requestAnimationFrame(checkDomIntegrity)
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
