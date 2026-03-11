@@ -44,11 +44,13 @@ export async function verifyAthletePin(
     if (lockUntil > new Date()) {
       return { error: 'Too many tries. Please wait 15 minutes and try again.' }
     }
-    // Lockout expired, reset attempts
+    // Lockout expired, reset attempts (both in DB and local state)
     await adminClient
       .from('athletes')
       .update({ pin_attempts: 0, pin_locked_until: null })
       .eq('id', athleteId)
+    athlete.pin_attempts = 0
+    athlete.pin_locked_until = null
   }
 
   // Verify PIN
