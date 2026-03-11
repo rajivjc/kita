@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { sendAthleteMessage } from '@/app/my/[athleteId]/actions'
+import { sendAthleteMessage, saveAthleteMood, toggleFavoriteRun, setAthleteGoal, setAthleteTheme } from '@/app/my/[athleteId]/actions'
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -45,14 +45,24 @@ interface CheerData {
   created_at: string
 }
 
+interface PersonalBestData {
+  distance_km: number
+  date: string
+}
+
 interface Props {
   athlete: AthleteData
   stats: StatData
   milestones: MilestoneData[]
   goal: GoalData | null
+  personalBest: PersonalBestData | null
   recentRuns: RecentRun[]
   cheers: CheerData[]
   storyUrl: string | null
+  athleteGoalChoice: string | null
+  themeColor: string
+  currentMood: number | null
+  favoriteSessionIds: string[]
 }
 
 // ─── Feel emoji mapping ─────────────────────────────────────────
@@ -76,18 +86,71 @@ const PRESET_MESSAGES = [
 
 // ─── Component ──────────────────────────────────────────────────
 
+// ─── Theme color mapping ────────────────────────────────────────
+
+const THEME_COLORS: Record<string, { from: string; ring: string; bg: string }> = {
+  teal:   { from: 'from-teal-50',   ring: 'ring-teal-400',   bg: 'bg-teal-400' },
+  blue:   { from: 'from-blue-50',   ring: 'ring-blue-400',   bg: 'bg-blue-400' },
+  purple: { from: 'from-purple-50', ring: 'ring-purple-400', bg: 'bg-purple-400' },
+  green:  { from: 'from-green-50',  ring: 'ring-green-400',  bg: 'bg-green-400' },
+  amber:  { from: 'from-amber-50',  ring: 'ring-amber-400',  bg: 'bg-amber-400' },
+  coral:  { from: 'from-orange-50', ring: 'ring-orange-400', bg: 'bg-orange-400' },
+}
+
+// ─── Mood options ────────────────────────────────────────────────
+
+const MOOD_OPTIONS = [
+  { value: 1, emoji: '😢', label: 'Sad' },
+  { value: 2, emoji: '😴', label: 'Tired' },
+  { value: 3, emoji: '😐', label: 'Okay' },
+  { value: 4, emoji: '😊', label: 'Happy' },
+  { value: 5, emoji: '🤩', label: 'Excited' },
+]
+
+// ─── Color picker options ────────────────────────────────────────
+
+const COLOR_OPTIONS = [
+  { key: 'teal', label: 'Teal', swatch: 'bg-teal-400' },
+  { key: 'blue', label: 'Blue', swatch: 'bg-blue-400' },
+  { key: 'purple', label: 'Purple', swatch: 'bg-purple-400' },
+  { key: 'green', label: 'Green', swatch: 'bg-green-400' },
+  { key: 'amber', label: 'Amber', swatch: 'bg-amber-400' },
+  { key: 'coral', label: 'Coral', swatch: 'bg-orange-400' },
+]
+
+// ─── Goal choice labels ─────────────────────────────────────────
+
+const GOAL_CHOICES = [
+  { key: 'run_further', icon: '📏', label: 'Run further', desc: 'Try to run a longer distance each time' },
+  { key: 'run_more', icon: '🔄', label: 'Run more often', desc: 'Try to run every week' },
+  { key: 'feel_stronger', icon: '💪', label: 'Feel stronger', desc: 'Focus on feeling good when you run' },
+]
+
 export default function MyJourneyDashboard({
   athlete,
   stats,
   milestones,
   goal,
+  personalBest,
   recentRuns,
   cheers,
   storyUrl,
+  athleteGoalChoice,
+  themeColor,
+  currentMood,
+  favoriteSessionIds,
 }: Props) {
   const [messageSent, setMessageSent] = useState<string | null>(null)
   const [messageError, setMessageError] = useState<string | null>(null)
   const [sendingMessage, setSendingMessage] = useState(false)
+  const [mood, setMood] = useState<number | null>(currentMood)
+  const [moodFeedback, setMoodFeedback] = useState<string | null>(null)
+  const [favorites, setFavorites] = useState<Set<string>>(new Set(favoriteSessionIds))
+  const [goalChoice, setGoalChoice] = useState<string | null>(athleteGoalChoice)
+  const [goalFeedback, setGoalFeedback] = useState<string | null>(null)
+  const [selectedColor, setSelectedColor] = useState(themeColor)
+  const [colorFeedback, setColorFeedback] = useState<string | null>(null)
+  const theme = THEME_COLORS[selectedColor] ?? THEME_COLORS.teal
 
   const handleSendMessage = useCallback(async (message: string) => {
     setSendingMessage(true)
@@ -103,8 +166,50 @@ export default function MyJourneyDashboard({
     }
   }, [athlete.id])
 
+  const handleMood = useCallback(async (value: number) => {
+    setMood(value)
+    setMoodFeedback(null)
+    const result = await saveAthleteMood(athlete.id, value)
+    if (result.success) {
+      setMoodFeedback('Got it!')
+      setTimeout(() => setMoodFeedback(null), 3000)
+    }
+  }, [athlete.id])
+
+  const handleFavorite = useCallback(async (sessionId: string) => {
+    const wasFav = favorites.has(sessionId)
+    const next = new Set(favorites)
+    if (wasFav) next.delete(sessionId); else next.add(sessionId)
+    setFavorites(next)
+    await toggleFavoriteRun(athlete.id, sessionId)
+  }, [athlete.id, favorites])
+
+  const handleGoalChoice = useCallback(async (choice: string) => {
+    setGoalChoice(choice)
+    setGoalFeedback(null)
+    const result = await setAthleteGoal(athlete.id, choice)
+    if (result.success) {
+      setGoalFeedback('Goal updated!')
+      setTimeout(() => setGoalFeedback(null), 3000)
+    }
+  }, [athlete.id])
+
+  const handleColorChange = useCallback(async (color: string) => {
+    setSelectedColor(color)
+    setColorFeedback(null)
+    const result = await setAthleteTheme(athlete.id, color)
+    if (result.success) {
+      setColorFeedback('Color saved!')
+      setTimeout(() => setColorFeedback(null), 3000)
+    }
+  }, [athlete.id])
+
   const formatRunDate = (dateStr: string) => {
-    const date = new Date(dateStr + 'T00:00:00')
+    // dateStr may be a full ISO timestamp (timestamptz) or YYYY-MM-DD
+    const date = dateStr.includes('T')
+      ? new Date(dateStr)
+      : new Date(dateStr + 'T12:00:00+08:00')
+    if (isNaN(date.getTime())) return '—'
     return date.toLocaleDateString('en-SG', {
       weekday: 'short',
       day: 'numeric',
@@ -114,7 +219,7 @@ export default function MyJourneyDashboard({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-teal-50 to-white pb-12">
+    <main className={`min-h-screen bg-gradient-to-b ${theme.from} to-white pb-12`}>
       <div className="max-w-lg mx-auto px-5 py-8">
 
         {/* ── Hero Section ─────────────────────────────────── */}
@@ -141,6 +246,39 @@ export default function MyJourneyDashboard({
           </p>
         </section>
 
+        {/* ── Mood Picker ─────────────────────────────────── */}
+        <section aria-label="How are you feeling today" className="mb-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span>😊</span> How are you feeling today?
+          </h2>
+          <div className="flex justify-between gap-2">
+            {MOOD_OPTIONS.map(m => {
+              const selected = mood === m.value
+              return (
+                <button
+                  key={m.value}
+                  onClick={() => handleMood(m.value)}
+                  className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all
+                    ${selected
+                      ? `bg-white border-2 ${theme.ring.replace('ring', 'border')} shadow-sm`
+                      : 'bg-white/60 border-2 border-transparent hover:bg-white'
+                    }`}
+                  aria-label={m.label}
+                  aria-pressed={selected}
+                >
+                  <span className="text-3xl">{m.emoji}</span>
+                  <span className="text-xs text-gray-600">{m.label}</span>
+                </button>
+              )
+            })}
+          </div>
+          <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
+            {moodFeedback && (
+              <p className="text-sm text-teal-700 font-medium text-center">{moodFeedback}</p>
+            )}
+          </div>
+        </section>
+
         {/* ── Stats Strip ──────────────────────────────────── */}
         <section aria-label="Your running stats" className="grid grid-cols-3 gap-3 mb-8">
           <StatCard
@@ -155,13 +293,34 @@ export default function MyJourneyDashboard({
             label="km"
             maxValue={Math.max(stats.totalKm, 10)}
           />
-          <StatCard
-            icon="🔥"
-            value={stats.currentStreak}
-            label={stats.currentStreak === 1 ? 'week' : 'weeks'}
-            maxValue={Math.max(stats.currentStreak, 4)}
-          />
+          <StreakVisual weeks={stats.currentStreak} />
         </section>
+
+        {/* ── Personal Best ─────────────────────────────────── */}
+        {personalBest && (
+          <section aria-label="Your personal best" className="mb-8">
+            <div className="bg-white border-l-4 border-amber-400 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
+              <span className="text-3xl flex-shrink-0">🏆</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-bold text-gray-900">
+                  Your longest run: {personalBest.distance_km.toFixed(1)} km
+                </p>
+                <p className="text-sm text-gray-500">
+                  on {formatRunDate(personalBest.date)}
+                </p>
+                {/* Visual distance bar */}
+                <div className="flex items-center gap-2 mt-1.5">
+                  <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-400 rounded-full"
+                      style={{ width: `${Math.min((personalBest.distance_km / 5) * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── Milestones Wall ──────────────────────────────── */}
         {milestones.length > 0 && (
@@ -182,6 +341,43 @@ export default function MyJourneyDashboard({
             </div>
           </section>
         )}
+
+        {/* ── Athlete Goal Choice ─────────────────────────── */}
+        <section aria-label="Your focus" className="mb-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span>🎯</span> What do you want to work on?
+          </h2>
+          <div className="space-y-2">
+            {GOAL_CHOICES.map(g => {
+              const selected = goalChoice === g.key
+              return (
+                <button
+                  key={g.key}
+                  onClick={() => handleGoalChoice(g.key)}
+                  className={`w-full text-left flex items-center gap-4 rounded-xl px-5 py-4 transition-all shadow-sm
+                    ${selected
+                      ? 'bg-teal-50 border-2 border-teal-400 ring-1 ring-teal-200'
+                      : 'bg-white border-2 border-gray-100 hover:border-teal-200 opacity-70'
+                    }`}
+                >
+                  <span className="text-2xl flex-shrink-0">{g.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                      {g.label}
+                      {selected && <span className="text-teal-500">✓</span>}
+                    </p>
+                    <p className="text-sm text-gray-500">{g.desc}</p>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+          <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
+            {goalFeedback && (
+              <p className="text-sm text-teal-700 font-medium text-center">{goalFeedback}</p>
+            )}
+          </div>
+        </section>
 
         {/* ── Goal Progress ───────────────────────────────── */}
         {goal && (
@@ -229,9 +425,10 @@ export default function MyJourneyDashboard({
                     className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-4 shadow-sm"
                   >
                     {feel && (
-                      <span className="text-2xl flex-shrink-0" title={feel.label}>
-                        {feel.emoji}
-                      </span>
+                      <div className="flex flex-col items-center flex-shrink-0 w-10">
+                        <span className="text-2xl">{feel.emoji}</span>
+                        <span className="text-[10px] text-gray-500 mt-0.5">{feel.label}</span>
+                      </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900">
@@ -250,6 +447,16 @@ export default function MyJourneyDashboard({
                         </span>
                       </div>
                     </div>
+                    {/* Heart favorite toggle */}
+                    <button
+                      onClick={() => handleFavorite(run.id)}
+                      className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors hover:bg-red-50"
+                      aria-label={favorites.has(run.id) ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <span className="text-xl">
+                        {favorites.has(run.id) ? '❤️' : '🤍'}
+                      </span>
+                    </button>
                   </div>
                 )
               })}
@@ -277,6 +484,35 @@ export default function MyJourneyDashboard({
             </div>
           </section>
         )}
+
+        {/* ── Theme Color Picker ─────────────────────────── */}
+        <section aria-label="Pick your color" className="mb-8">
+          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span>🎨</span> Pick your color
+          </h2>
+          <div className="flex justify-between gap-2">
+            {COLOR_OPTIONS.map(c => {
+              const selected = selectedColor === c.key
+              return (
+                <button
+                  key={c.key}
+                  onClick={() => handleColorChange(c.key)}
+                  className={`w-14 h-14 rounded-full ${c.swatch} flex items-center justify-center transition-all
+                    ${selected ? 'ring-4 ring-offset-2 ring-gray-400 scale-110' : 'opacity-60 hover:opacity-80'}`}
+                  aria-label={`${c.label}${selected ? ' (selected)' : ''}`}
+                  aria-pressed={selected}
+                >
+                  {selected && <span className="text-white text-lg font-bold drop-shadow-sm">✓</span>}
+                </button>
+              )
+            })}
+          </div>
+          <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
+            {colorFeedback && (
+              <p className="text-sm text-teal-700 font-medium text-center">{colorFeedback}</p>
+            )}
+          </div>
+        </section>
 
         {/* ── Send Message to Coach ───────────────────────── */}
         <section aria-label="Send a message to your coach" className="mb-8">
@@ -355,6 +591,48 @@ function StatCard({
           style={{ width: `${pct}%` }}
         />
       </div>
+    </div>
+  )
+}
+
+// ─── Streak Visual Sub-Component ────────────────────────────────
+
+function StreakVisual({ weeks }: { weeks: number }) {
+  // Build stacked shoe icons (max 5 visible)
+  const shoeCount = Math.min(weeks, 5)
+  const isGold = weeks >= 3
+  const borderColor = isGold ? 'border-amber-200' : 'border-teal-100'
+  const glowClass = weeks >= 5 ? 'ring-2 ring-amber-200' : ''
+
+  return (
+    <div className={`bg-white border ${borderColor} ${glowClass} rounded-xl px-3 py-4 text-center shadow-sm`}>
+      <div className="flex justify-center items-end gap-0.5 mb-1 h-8">
+        {weeks === 0 ? (
+          <span className="text-2xl opacity-30">👟</span>
+        ) : (
+          Array.from({ length: shoeCount }).map((_, i) => (
+            <span
+              key={i}
+              className={`text-lg leading-none ${isGold ? 'drop-shadow-sm' : ''}`}
+              style={{ marginBottom: `${i * 2}px` }}
+            >
+              👟
+            </span>
+          ))
+        )}
+      </div>
+      <p className="text-2xl font-bold text-gray-900">{weeks}</p>
+      <p className="text-sm text-gray-600 mb-2">
+        {weeks === 0 ? 'No streak yet' : weeks === 1 ? 'week' : 'weeks'}
+      </p>
+      {weeks > 0 && (
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full ${isGold ? 'bg-amber-400' : 'bg-teal-400'}`}
+            style={{ width: `${Math.min((weeks / 8) * 100, 100)}%` }}
+          />
+        </div>
+      )}
     </div>
   )
 }

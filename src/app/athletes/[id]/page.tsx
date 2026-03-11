@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Pencil, Share2 } from 'lucide-react'
+import { ChevronLeft, Pencil, Share2, QrCode } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import AthleteTabs from '@/components/athlete/AthleteTabs'
+import AthleteQrCode from '@/components/athlete/AthleteQrCode'
 import StickyHeader from '@/components/athlete/StickyHeader'
 import { formatDate } from '@/lib/utils/dates'
 import { calculateGoalProgress } from '@/lib/goals'
@@ -50,7 +51,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
   ] = await Promise.all([
     adminClient
       .from('athletes')
-      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact')
+      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact, athlete_pin')
       .eq('id', id)
       .single(),
 
@@ -213,6 +214,9 @@ export default async function AthleteHubPage({ params }: PageProps) {
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-gray-900">{athlete.name}</h1>
         <div className="flex items-center gap-1">
+          {!isReadOnly && athlete.athlete_pin && (
+            <AthleteQrCode athleteId={id} athleteName={athlete.name} />
+          )}
           <Link
             href={`/story/${id}`}
             className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"

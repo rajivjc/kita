@@ -16,7 +16,7 @@ export default async function MyJourneyPage({ params }: PageProps) {
   // Check if athlete exists and has a PIN set
   const { data: athlete } = await adminClient
     .from('athletes')
-    .select('id, name, photo_url, goal_type, goal_target, allow_public_sharing')
+    .select('id, name, photo_url, goal_type, goal_target, allow_public_sharing, athlete_goal_choice, theme_color')
     .eq('id', athleteId)
     .eq('active', true)
     .single()
@@ -43,12 +43,17 @@ export default async function MyJourneyPage({ params }: PageProps) {
 
   // ── Fetch dashboard data ──────────────────────────────────
 
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+
   const [
     { data: sessions },
     { data: milestones },
     { data: cheers },
     { count: totalRuns },
     { data: allSessionDates },
+    { data: todayMood },
+    { data: favorites },
   ] = await Promise.all([
     adminClient
       .from('sessions')
@@ -78,6 +83,17 @@ export default async function MyJourneyPage({ params }: PageProps) {
       .select('date, distance_km')
       .eq('athlete_id', athleteId)
       .eq('status', 'completed'),
+    adminClient
+      .from('athlete_moods')
+      .select('mood')
+      .eq('athlete_id', athleteId)
+      .gte('created_at', todayStart.toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1),
+    adminClient
+      .from('athlete_favorites')
+      .select('session_id')
+      .eq('athlete_id', athleteId),
   ])
 
   const allSessions = allSessionDates ?? []
@@ -101,6 +117,15 @@ export default async function MyJourneyPage({ params }: PageProps) {
   // Compute streak using the shared streaks module
   const streak = calculateWeeklyStreak(allSessions.map(s => s.date))
 
+  // Compute personal best (longest run)
+  let personalBest: { distance_km: number; date: string } | null = null
+  for (const s of allSessions) {
+    if ((s.distance_km ?? 0) > (personalBest?.distance_km ?? 0)) {
+      personalBest = { distance_km: s.distance_km as number, date: s.date }
+    }
+  }
+  if (personalBest && personalBest.distance_km <= 0) personalBest = null
+
   // Process milestones
   const processedMilestones = (milestones ?? []).map(m => ({
     id: m.id,
@@ -110,6 +135,8 @@ export default async function MyJourneyPage({ params }: PageProps) {
   }))
 
   const storyUrl = athlete.allow_public_sharing ? `/story/${athlete.id}` : null
+  const currentMood = todayMood?.[0]?.mood ?? null
+  const favoriteSessionIds = new Set((favorites ?? []).map(f => f.session_id))
 
   return (
     <MyJourneyDashboard
@@ -118,6 +145,10 @@ export default async function MyJourneyPage({ params }: PageProps) {
         name: athlete.name,
         photo_url: athlete.photo_url,
       }}
+      athleteGoalChoice={athlete.athlete_goal_choice ?? null}
+      themeColor={athlete.theme_color ?? 'teal'}
+      currentMood={currentMood}
+      favoriteSessionIds={Array.from(favoriteSessionIds)}
       stats={{
         totalRuns: totalRuns ?? 0,
         totalKm: Math.round(totalKm * 10) / 10,
@@ -125,6 +156,7 @@ export default async function MyJourneyPage({ params }: PageProps) {
       }}
       milestones={processedMilestones}
       goal={goalProgress}
+      personalBest={personalBest}
       recentRuns={(sessions ?? []).map(s => ({
         id: s.id,
         date: s.date,
