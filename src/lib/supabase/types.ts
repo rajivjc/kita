@@ -183,6 +183,18 @@ export interface Database {
         Update: Partial<AthleteMessage>
         Relationships: []
       }
+      athlete_moods: {
+        Row: AthleteMood & Record<string, unknown>
+        Insert: Omit<AthleteMood, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<AthleteMood>
+        Relationships: []
+      }
+      athlete_favorites: {
+        Row: AthleteFavorite & Record<string, unknown>
+        Insert: Omit<AthleteFavorite, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<AthleteFavorite>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -247,6 +259,8 @@ export interface Athlete {
   athlete_pin: string | null
   pin_attempts: number
   pin_locked_until: string | null
+  theme_color?: string
+  athlete_goal_choice?: 'run_further' | 'run_more' | 'feel_stronger' | null
   updated_by: string | null
   updated_at: string | null
   created_at: string | null
@@ -445,4 +459,18 @@ export interface AthleteMessage {
   message: string
   created_at: string
   viewed_by_coach_at: string | null
+}
+
+export interface AthleteMood {
+  id: string
+  athlete_id: string
+  mood: 1 | 2 | 3 | 4 | 5
+  created_at: string
+}
+
+export interface AthleteFavorite {
+  id: string
+  athlete_id: string
+  session_id: string
+  created_at: string
 }

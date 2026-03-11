@@ -170,3 +170,126 @@ export async function verifyAthleteCookie(athleteId: string): Promise<boolean> {
   const cookie = cookieStore.get(`${PIN_COOKIE_PREFIX}${athleteId}`)
   return cookie?.value === 'verified'
 }
+
+// ─── Athlete Mood ───────────────────────────────────────────────
+
+const MAX_MOOD_CHANGES_PER_DAY = 10
+
+export async function saveAthleteMood(
+  athleteId: string,
+  mood: number
+): Promise<{ error?: string; success?: boolean }> {
+  if (!await verifyAthleteCookie(athleteId)) {
+    return { error: 'Please sign in again.' }
+  }
+  if (!Number.isInteger(mood) || mood < 1 || mood > 5) {
+    return { error: 'Please pick a mood.' }
+  }
+
+  // Rate limit
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { count } = await adminClient
+    .from('athlete_moods')
+    .select('*', { count: 'exact', head: true })
+    .eq('athlete_id', athleteId)
+    .gte('created_at', dayAgo)
+
+  if ((count ?? 0) >= MAX_MOOD_CHANGES_PER_DAY) {
+    return { error: 'Mood already saved for today.' }
+  }
+
+  // Delete today's existing mood and insert new one
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  await adminClient
+    .from('athlete_moods')
+    .delete()
+    .eq('athlete_id', athleteId)
+    .gte('created_at', todayStart.toISOString())
+
+  const { error } = await adminClient
+    .from('athlete_moods')
+    .insert({ athlete_id: athleteId, mood: mood as 1 | 2 | 3 | 4 | 5 })
+
+  if (error) return { error: 'Could not save mood. Try again.' }
+  return { success: true }
+}
+
+// ─── Athlete Favorite Runs ──────────────────────────────────────
+
+export async function toggleFavoriteRun(
+  athleteId: string,
+  sessionId: string
+): Promise<{ error?: string; favorited?: boolean }> {
+  if (!await verifyAthleteCookie(athleteId)) {
+    return { error: 'Please sign in again.' }
+  }
+
+  // Check if already favorited
+  const { data: existing } = await adminClient
+    .from('athlete_favorites')
+    .select('id')
+    .eq('athlete_id', athleteId)
+    .eq('session_id', sessionId)
+    .limit(1)
+
+  if (existing && existing.length > 0) {
+    await adminClient.from('athlete_favorites').delete().eq('id', existing[0].id)
+    return { favorited: false }
+  }
+
+  const { error } = await adminClient
+    .from('athlete_favorites')
+    .insert({ athlete_id: athleteId, session_id: sessionId })
+
+  if (error) return { error: 'Could not save. Try again.' }
+  return { favorited: true }
+}
+
+// ─── Athlete Goal Choice ────────────────────────────────────────
+
+const VALID_GOALS = ['run_further', 'run_more', 'feel_stronger'] as const
+
+export async function setAthleteGoal(
+  athleteId: string,
+  choice: string
+): Promise<{ error?: string; success?: boolean }> {
+  if (!await verifyAthleteCookie(athleteId)) {
+    return { error: 'Please sign in again.' }
+  }
+  if (!VALID_GOALS.includes(choice as typeof VALID_GOALS[number])) {
+    return { error: 'Please pick a goal.' }
+  }
+
+  const { error } = await adminClient
+    .from('athletes')
+    .update({ athlete_goal_choice: choice as 'run_further' | 'run_more' | 'feel_stronger' })
+    .eq('id', athleteId)
+
+  if (error) return { error: 'Could not save goal. Try again.' }
+  return { success: true }
+}
+
+// ─── Athlete Theme Color ────────────────────────────────────────
+
+const VALID_COLORS = ['teal', 'blue', 'purple', 'green', 'amber', 'coral'] as const
+
+export async function setAthleteTheme(
+  athleteId: string,
+  color: string
+): Promise<{ error?: string; success?: boolean }> {
+  if (!await verifyAthleteCookie(athleteId)) {
+    return { error: 'Please sign in again.' }
+  }
+  if (!VALID_COLORS.includes(color as typeof VALID_COLORS[number])) {
+    return { error: 'Please pick a color.' }
+  }
+
+  const { error } = await adminClient
+    .from('athletes')
+    .update({ theme_color: color })
+    .eq('id', athleteId)
+
+  if (error) return { error: 'Could not save color. Try again.' }
+  return { success: true }
+}
