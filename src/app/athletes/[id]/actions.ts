@@ -9,7 +9,7 @@ import { parseValidDate } from '@/lib/utils/dates'
 import { getAthletePhotosPaginated, withSignedUrls, deleteMediaForSession, deleteMediaById } from '@/lib/media'
 import { sendPushToRole } from '@/lib/push'
 
-export async function addCoachNote(athleteId: string, content: string): Promise<{ error?: string }> {
+export async function addCoachNote(athleteId: string, content: string, includeInStory = false): Promise<{ error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Your session has expired. Please sign in again.' }
@@ -27,6 +27,7 @@ export async function addCoachNote(athleteId: string, content: string): Promise<
     content,
     note_type: 'general',
     visibility: 'all',
+    include_in_story: includeInStory,
   })
 
   if (error) return { error: 'Could not save the note. Please try again.' }
@@ -693,4 +694,111 @@ export async function loadMorePhotos(
     })),
     nextCursor,
   }
+}
+
+export async function toggleNoteStoryInclusion(
+  noteId: string,
+  includeInStory: boolean
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can manage story content.' }
+  }
+
+  const { data: note } = await adminClient
+    .from('coach_notes')
+    .select('athlete_id, coach_user_id')
+    .eq('id', noteId)
+    .single()
+
+  if (!note) return { error: 'Note not found.' }
+
+  // Only the note author or an admin can toggle
+  if (callerUser.role !== 'admin' && note.coach_user_id !== user.id) {
+    return { error: 'You can only manage your own notes.' }
+  }
+
+  const { error } = await adminClient
+    .from('coach_notes')
+    .update({ include_in_story: includeInStory })
+    .eq('id', noteId)
+
+  if (error) return { error: 'Could not update note. Please try again.' }
+
+  revalidatePath(`/athletes/${note.athlete_id}`)
+  revalidatePath(`/story/${note.athlete_id}`)
+  return {}
+}
+
+export async function addStoryUpdate(
+  athleteId: string,
+  content: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can add story updates.' }
+  }
+
+  const trimmed = content.trim()
+  if (!trimmed) return { error: 'Content cannot be empty.' }
+  if (trimmed.length > 500) return { error: 'Content cannot exceed 500 characters.' }
+
+  const { error } = await adminClient.from('story_updates').insert({
+    athlete_id: athleteId,
+    coach_user_id: user.id,
+    content: trimmed,
+  })
+
+  if (error) return { error: 'Could not save story update. Please try again.' }
+
+  revalidatePath(`/athletes/${athleteId}`)
+  revalidatePath(`/story/${athleteId}`)
+  return {}
+}
+
+export async function deleteStoryUpdate(
+  updateId: string,
+  athleteId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can delete story updates.' }
+  }
+
+  // Admins can delete any, coaches can only delete their own
+  let query = adminClient.from('story_updates').delete().eq('id', updateId)
+  if (callerUser.role !== 'admin') {
+    query = query.eq('coach_user_id', user.id)
+  }
+
+  const { error } = await query
+  if (error) return { error: 'Could not delete story update. Please try again.' }
+
+  revalidatePath(`/athletes/${athleteId}`)
+  revalidatePath(`/story/${athleteId}`)
+  return {}
 }

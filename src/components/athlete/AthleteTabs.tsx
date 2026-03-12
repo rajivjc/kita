@@ -12,6 +12,7 @@ const CuesTab = dynamic(() => import('./CuesTab'))
 const NotesTab = dynamic(() => import('./NotesTab'))
 const PhotosTab = dynamic(() => import('./PhotosTab'))
 const LogRunSheet = dynamic(() => import('./LogRunSheet'))
+const StoryUpdatesSection = dynamic(() => import('./StoryUpdatesSection'))
 
 export type AthleteData = {
   id: string
@@ -56,6 +57,8 @@ export type NoteData = {
   coach_user_id: string | null
   coach_email: string | null
   coach_name: string | null
+  visibility: 'all' | 'coaches_only'
+  include_in_story: boolean
 }
 
 export type MilestoneData = {
@@ -74,7 +77,15 @@ export type PhotoData = {
   created_at: string
 }
 
-type Tab = 'feed' | 'cues' | 'notes' | 'photos'
+export type StoryUpdateData = {
+  id: string
+  content: string
+  created_at: string
+  coach_name: string | null
+  coach_user_id: string | null
+}
+
+type Tab = 'feed' | 'cues' | 'notes' | 'photos' | 'story'
 
 type AthleteTabsProps = {
   athlete: AthleteData
@@ -94,6 +105,8 @@ type AthleteTabsProps = {
   addCoachNote: (athleteId: string, content: string) => Promise<{ error?: string }>
   isReadOnly?: boolean
   currentUserId?: string
+  isAdmin?: boolean
+  storyUpdates?: StoryUpdateData[]
   onDeletePhoto?: (photoId: string) => Promise<void>
 }
 
@@ -115,6 +128,8 @@ export default function AthleteTabs({
   addCoachNote,
   isReadOnly = false,
   currentUserId,
+  isAdmin = false,
+  storyUpdates = [],
   onDeletePhoto,
 }: AthleteTabsProps) {
   const router = useRouter()
@@ -129,6 +144,7 @@ export default function AthleteTabs({
     ...(!isReadOnly ? [{ key: 'cues' as Tab, label: 'Cues' }] : []),
     ...(!isReadOnly ? [{ key: 'notes' as Tab, label: 'Notes' }] : []),
     ...(photoCount > 0 ? [{ key: 'photos' as Tab, label: `Photos (${photoCount})` }] : []),
+    ...(!isReadOnly ? [{ key: 'story' as Tab, label: 'Story' }] : []),
   ]
 
   async function handleSaveNote() {
@@ -213,6 +229,14 @@ export default function AthleteTabs({
           onSaveNote={handleSaveNote}
           onCancelNote={() => { setShowNoteInput(false); setNoteText('') }}
           onNotesChanged={() => router.refresh()}
+        />
+      )}
+      {activeTab === 'story' && (
+        <StoryUpdatesSection
+          athleteId={athlete.id}
+          updates={storyUpdates}
+          currentUserId={currentUserId}
+          isAdmin={isAdmin}
         />
       )}
 

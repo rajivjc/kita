@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { BookOpen } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils/dates'
-import { updateCoachNote, deleteCoachNote } from '@/app/athletes/[id]/actions'
+import { updateCoachNote, deleteCoachNote, toggleNoteStoryInclusion } from '@/app/athletes/[id]/actions'
 import type { NoteData } from './AthleteTabs'
 
 type NotesTabProps = {
@@ -34,6 +35,8 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
   const [deleted, setDeleted] = useState(false)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [storyIncluded, setStoryIncluded] = useState(note.include_in_story)
+  const [togglingStory, setTogglingStory] = useState(false)
 
   async function handleSaveEdit() {
     if (!editText.trim()) return
@@ -55,7 +58,19 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
     onChanged?.()
   }
 
+  async function handleToggleStory() {
+    setTogglingStory(true)
+    const newValue = !storyIncluded
+    const result = await toggleNoteStoryInclusion(note.id, newValue)
+    setTogglingStory(false)
+    if (result.error) { setError(result.error); return }
+    setStoryIncluded(newValue)
+    onChanged?.()
+  }
+
   if (deleted) return null
+
+  const canToggleStory = isOwner && note.visibility === 'all'
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm border-l-[5px] border-l-blue-400">
@@ -110,9 +125,29 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
                 </span>
               )}
               <span className="text-xs text-gray-400">{formatDateTime(note.created_at)}</span>
+              {storyIncluded && (
+                <span className="inline-flex items-center gap-0.5 text-[10px] text-teal-600 font-medium">
+                  <BookOpen className="w-3 h-3" /> Story
+                </span>
+              )}
             </div>
             {isOwner && (
               <div className="flex items-center gap-2">
+                {canToggleStory && (
+                  <button
+                    onClick={handleToggleStory}
+                    disabled={togglingStory}
+                    title={storyIncluded ? 'Remove from story page' : 'Include in story page'}
+                    className={`text-xs transition-colors disabled:opacity-50 ${
+                      storyIncluded
+                        ? 'text-teal-600 hover:text-teal-700'
+                        : 'text-gray-400 hover:text-teal-600'
+                    }`}
+                  >
+                    <BookOpen className="w-3.5 h-3.5 inline mr-0.5" />
+                    {storyIncluded ? 'In story' : 'Add to story'}
+                  </button>
+                )}
                 <button
                   onClick={() => setEditing(true)}
                   className="text-xs text-gray-400 hover:text-teal-600 transition-colors"
