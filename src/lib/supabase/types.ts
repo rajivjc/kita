@@ -64,8 +64,14 @@ export interface Database {
       }
       coach_notes: {
         Row: CoachNote & Record<string, unknown>
-        Insert: Omit<CoachNote, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Insert: Omit<CoachNote, 'id' | 'created_at' | 'include_in_story'> & { id?: string; created_at?: string; include_in_story?: boolean }
         Update: Partial<CoachNote>
+        Relationships: []
+      }
+      story_updates: {
+        Row: StoryUpdate & Record<string, unknown>
+        Insert: Omit<StoryUpdate, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<StoryUpdate>
         Relationships: []
       }
       milestone_definitions: {
@@ -311,6 +317,15 @@ export interface CoachNote {
   content: string
   note_type: 'general' | 'milestone' | 'observation'
   visibility: 'all' | 'coaches_only'
+  include_in_story: boolean
+  created_at: string
+}
+
+export interface StoryUpdate {
+  id: string
+  athlete_id: string
+  coach_user_id: string | null
+  content: string
   created_at: string
 }
 

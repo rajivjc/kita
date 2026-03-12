@@ -48,6 +48,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
     { data: notes },
     { data: milestones },
     { data: cheers },
+    { data: storyUpdates },
   ] = await Promise.all([
     adminClient
       .from('athletes')
@@ -71,7 +72,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
 
     adminClient
       .from('coach_notes')
-      .select('id, content, created_at, coach_user_id, users(email, name)')
+      .select('id, content, created_at, coach_user_id, visibility, include_in_story, users(email, name)')
       .eq('athlete_id', id)
       .order('created_at', { ascending: false }),
 
@@ -87,12 +88,28 @@ export default async function AthleteHubPage({ params }: PageProps) {
       .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
       .order('created_at', { ascending: false })
       .limit(5),
+    adminClient
+      .from('story_updates')
+      .select('id, content, created_at, coach_user_id, users(name)')
+      .eq('athlete_id', id)
+      .order('created_at', { ascending: false })
+      .limit(20),
   ])
 
   const flatNotes = (notes ?? []).map((n: any) => ({
     ...n,
     coach_email: n.users?.email ?? null,
     coach_name: n.users?.name ?? null,
+    visibility: n.visibility ?? 'all',
+    include_in_story: n.include_in_story ?? false,
+  }))
+
+  const flatStoryUpdates = (storyUpdates ?? []).map((u: any) => ({
+    id: u.id,
+    content: u.content,
+    created_at: u.created_at,
+    coach_user_id: u.coach_user_id,
+    coach_name: u.users?.name ?? null,
   }))
 
   // Build a map of coach user_id -> display name from the users we already fetched
@@ -317,6 +334,8 @@ export default async function AthleteHubPage({ params }: PageProps) {
         addCoachNote={addCoachNote}
         isReadOnly={isReadOnly}
         currentUserId={user?.id}
+        isAdmin={currentUserRow?.role === 'admin'}
+        storyUpdates={flatStoryUpdates}
         onDeletePhoto={!isReadOnly ? async (photoId: string) => {
           'use server'
           await deletePhoto(photoId, id)
