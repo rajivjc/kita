@@ -255,29 +255,6 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
             </div>
           )}
 
-          {/* Milestone badges — unified amber style (matches feed page) */}
-          {badges.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {badges.map((m, i) => (
-                <span key={i} className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                  {m.icon ?? '🏆'} {m.label}
-                  {m.id && (
-                    <span
-                      role="link"
-                      tabIndex={0}
-                      className="ml-1 text-amber-400 hover:text-amber-600 cursor-pointer"
-                      onClick={e => { e.stopPropagation(); e.preventDefault(); window.open(`/milestone/${m.id}`, '_blank', 'noopener,noreferrer') }}
-                      onKeyDown={e => { if (e.key === 'Enter') { e.stopPropagation(); window.open(`/milestone/${m.id}`, '_blank', 'noopener,noreferrer') } }}
-                      title="Share this milestone"
-                    >
-                      ↗
-                    </span>
-                  )}
-                </span>
-              ))}
-            </div>
-          )}
-
           {/* Footer — coach + strava link + chevron */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
@@ -299,6 +276,28 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
           </div>
         </div>
       </button>
+
+      {/* Milestone badges — outside button so <a> links work correctly */}
+      {badges.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 px-4 pb-3 -mt-1">
+          {badges.map((m, i) => (
+            <span key={i} className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+              {m.icon ?? '🏆'} {m.label}
+              {m.id && (
+                <a
+                  href={`/milestone/${m.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-1 text-amber-400 hover:text-amber-600"
+                  title="Share this milestone"
+                >
+                  ↗
+                </a>
+              )}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Expanded panel — coaches only */}
       {expanded && !isReadOnly && (
