@@ -1,16 +1,19 @@
 'use client'
 
-import Link from 'next/link'
-
 export default function MilestoneShareLink({ milestoneId }: { milestoneId: string }) {
   return (
-    <Link
-      href={`/milestone/${milestoneId}`}
-      className="ml-0.5 text-amber-400 hover:text-amber-600"
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        window.open(`/milestone/${milestoneId}`, '_blank', 'noopener,noreferrer')
+      }}
+      className="ml-0.5 text-amber-400 hover:text-amber-600 bg-transparent border-none p-0 cursor-pointer"
       title="Share this milestone"
-      onClick={(e) => e.stopPropagation()}
+      aria-label="Share this milestone"
     >
       ↗
-    </Link>
+    </button>
   )
 }

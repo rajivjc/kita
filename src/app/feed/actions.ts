@@ -36,15 +36,25 @@ export async function toggleKudos(sessionId: string): Promise<{ given: boolean; 
     }
   }
 
-  // Get updated count
-  const { count } = await adminClient
-    .from('kudos')
-    .select('id', { count: 'exact', head: true })
-    .eq('session_id', sessionId)
+  // Get updated count and athlete_id for revalidation
+  const [{ count }, { data: session }] = await Promise.all([
+    adminClient
+      .from('kudos')
+      .select('id', { count: 'exact', head: true })
+      .eq('session_id', sessionId),
+    adminClient
+      .from('sessions')
+      .select('athlete_id')
+      .eq('id', sessionId)
+      .single(),
+  ])
 
   // Fire-and-forget: sync badges and revalidate without blocking the response
   syncBadges(user.id).catch(() => {})
   revalidatePath('/feed')
+  if (session?.athlete_id) {
+    revalidatePath(`/athletes/${session.athlete_id}`)
+  }
 
   return { given: !existing, count: count ?? 0 }
 }

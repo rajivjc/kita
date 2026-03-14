@@ -281,25 +281,28 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
         </div>
       </button>
 
-      {/* Milestone badges — outside button so <a> links work correctly */}
+      {/* Milestone badges — outside button so links work correctly */}
       {badges.length > 0 && (
         <div className="flex flex-wrap gap-1.5 px-4 pb-3 -mt-1">
-          {badges.map((m, i) => (
-            <span key={i} className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-              {m.icon ?? '🏆'} {m.label}
-              {m.id && (
-                <a
-                  href={`/milestone/${m.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-1 text-amber-400 hover:text-amber-600"
-                  title="Share this milestone"
-                >
-                  ↗
-                </a>
-              )}
-            </span>
-          ))}
+          {badges.map((m, i) => {
+            const badgeClasses = "inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full"
+            const content = <>{m.icon ?? '🏆'} {m.label}{m.id && <span className="ml-1 text-amber-400">↗</span>}</>
+
+            return m.id ? (
+              <a
+                key={i}
+                href={`/milestone/${m.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${badgeClasses} hover:bg-amber-100 transition-colors`}
+                title="View and share this milestone"
+              >
+                {content}
+              </a>
+            ) : (
+              <span key={i} className={badgeClasses}>{content}</span>
+            )
+          })}
         </div>
       )}
 
