@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useRef } from 'react'
 import { toggleKudos } from '@/app/feed/actions'
 
 type Props = {
@@ -14,14 +14,14 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
   const [count, setCount] = useState(initialCount)
   const [given, setGiven] = useState(initialGiven)
   const [animating, setAnimating] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const pendingRef = useRef(false)
 
   function handleClick(e: React.MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
 
-    // Prevent rapid double-taps while a request is in-flight
-    if (isPending) return
+    if (pendingRef.current) return
+    pendingRef.current = true
 
     // Optimistic update
     const newGiven = !given
@@ -33,8 +33,7 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
       setTimeout(() => setAnimating(false), 600)
     }
 
-    startTransition(async () => {
-      const result = await toggleKudos(sessionId)
+    toggleKudos(sessionId).then(result => {
       if (result.error) {
         // Revert on error
         setGiven(!newGiven)
@@ -43,10 +42,11 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
         setGiven(result.given)
         setCount(result.count)
       }
+      pendingRef.current = false
     })
   }
 
-  // Build giver summary text
+  // Build giver summary
   const names = giverNames ?? []
   const displayNames = names.slice(0, 3)
   const extraCount = names.length > 3 ? names.length - 3 : 0
@@ -69,9 +69,29 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
         {count > 0 && <span>{count}</span>}
       </button>
       {count > 0 && displayNames.length > 0 && (
-        <span className="text-[10px] text-gray-400 leading-tight">
-          {displayNames.join(', ')}{extraCount > 0 ? ` +${extraCount}` : ''}
-        </span>
+        <div className="flex items-center" aria-label={`High fives from ${names.join(', ')}`}>
+          {displayNames.map((name, i) => (
+            <span
+              key={i}
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 border-2 border-white text-[10px] font-bold text-gray-500 ${i > 0 ? '-ml-1.5' : ''}`}
+              title={name}
+              aria-hidden="true"
+            >
+              {name.charAt(0).toUpperCase()}
+            </span>
+          ))}
+          {extraCount > 0 && (
+            <span
+              className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 border-2 border-white text-[10px] font-bold text-gray-500 -ml-1.5"
+              aria-hidden="true"
+            >
+              +{extraCount}
+            </span>
+          )}
+          <span className="sr-only">
+            {names.join(', ')}{extraCount > 0 ? ` and ${extraCount} more` : ''}
+          </span>
+        </div>
       )}
     </div>
   )
