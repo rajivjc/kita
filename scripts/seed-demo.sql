@@ -31,9 +31,9 @@ DELETE FROM public.athletes;
 DELETE FROM public.users WHERE email != 'rajivjacob@gmail.com';
 DELETE FROM auth.users  WHERE email != 'rajivjacob@gmail.com';
 
--- Ensure milestone definitions exist (skip if already present)
-INSERT INTO public.milestone_definitions (label, type, condition, icon, display_order)
-SELECT * FROM (VALUES
+-- Re-create milestone definitions (milestones FK already deleted above)
+DELETE FROM public.milestone_definitions;
+INSERT INTO public.milestone_definitions (label, type, condition, icon, display_order) VALUES
   ('First Session',  'automatic', '{"metric":"session_count","threshold":1}'::jsonb,  '🏃', 1),
   ('5 Sessions',     'automatic', '{"metric":"session_count","threshold":5}'::jsonb,  '⭐', 2),
   ('10 Sessions',    'automatic', '{"metric":"session_count","threshold":10}'::jsonb, '🔥', 3),
@@ -43,9 +43,7 @@ SELECT * FROM (VALUES
   ('First 5K',       'automatic', '{"metric":"distance_km","threshold":5}'::jsonb,    '🎯', 7),
   ('First 10K',      'automatic', '{"metric":"distance_km","threshold":10}'::jsonb,   '🏆', 8),
   ('Personal Best',  'automatic', '{"metric":"longest_run"}'::jsonb,                    '⚡', 9),
-  ('Great Attitude', 'manual',    null,                                                '❤️', 10)
-) AS v(label, type, condition, icon, display_order)
-WHERE NOT EXISTS (SELECT 1 FROM public.milestone_definitions);
+  ('Great Attitude', 'manual',    null,                                                '❤️', 10);
 
 -- Ensure club_settings row exists
 INSERT INTO public.club_settings DEFAULT VALUES
