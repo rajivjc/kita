@@ -82,6 +82,7 @@ export interface CoachFeedData {
   milestonesBySession: Record<string, MilestoneBadge[]>
   celebrationMilestones: CelebrationMilestone[]
   kudosCounts: Record<string, number>
+  kudosGivers: Record<string, string[]>
   myKudos: Set<string>
   clubStats: {
     sessions: number
@@ -127,6 +128,7 @@ export interface CaregiverFeedData {
   sessions: FeedSession[]
   groups: Record<string, FeedSession[]>
   kudosCounts: Record<string, number>
+  kudosGivers: Record<string, string[]>
   myKudos: Set<string>
   clubStats: {
     sessions: number

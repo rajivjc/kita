@@ -26,6 +26,8 @@ type RunsTabProps = {
   milestonePins?: MilestonePin[]
   athleteId: string
   athleteName: string
+  kudosCounts?: Record<string, number>
+  kudosGivers?: Record<string, string[]>
   isReadOnly?: boolean
   onSessionUpdated?: () => void
   onLogRun?: () => void
@@ -69,6 +71,8 @@ type SessionCardProps = {
   onUpdated?: () => void
   badges?: MilestoneData[]
   photos?: PhotoData[]
+  kudosCount?: number
+  kudosGivers?: string[]
   onDeletePhoto?: (photoId: string) => Promise<void>
 }
 
@@ -104,7 +108,7 @@ function formatPace(distanceKm: number, durationSeconds: number): string {
   return `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} /km`
 }
 
-function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated, badges = [], photos = [], onDeletePhoto }: SessionCardProps) {
+function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated, badges = [], photos = [], kudosCount = 0, kudosGivers = [], onDeletePhoto }: SessionCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [feel, setFeel] = useState<Feel | null>(s.feel as Feel | null)
   const [note, setNote] = useState(s.note ?? '')
@@ -299,6 +303,18 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
         </div>
       )}
 
+      {/* Kudos indicator */}
+      {kudosCount > 0 && (
+        <div className="flex items-center gap-2 px-4 pb-2.5">
+          <span className="text-xs text-gray-400">🙌 {kudosCount}</span>
+          {kudosGivers.length > 0 && (
+            <span className="text-[10px] text-gray-400">
+              {kudosGivers.slice(0, 3).join(', ')}{kudosGivers.length > 3 ? ` +${kudosGivers.length - 3}` : ''}
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Expanded panel — coaches only */}
       {expanded && !isReadOnly && (
         <div className="border-t border-gray-100 px-4 py-4 bg-gray-50/80 space-y-4">
@@ -409,7 +425,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
   )
 }
 
-export default function RunsTab({ sessions, milestones, photosBySession, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, athleteName, isReadOnly = false, onSessionUpdated, onLogRun, onDeletePhoto }: RunsTabProps) {
+export default function RunsTab({ sessions, milestones, photosBySession, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, athleteName, kudosCounts, kudosGivers, isReadOnly = false, onSessionUpdated, onLogRun, onDeletePhoto }: RunsTabProps) {
   const milestonesBySession: Record<string, MilestoneData[]> = {}
   for (const m of milestones) {
     if (!m.session_id) continue
@@ -462,6 +478,8 @@ export default function RunsTab({ sessions, milestones, photosBySession, weeklyD
           onUpdated={onSessionUpdated}
           badges={milestonesBySession[item.data.id] ?? []}
           photos={photosBySession?.[item.data.id] ?? []}
+          kudosCount={kudosCounts?.[item.data.id] ?? 0}
+          kudosGivers={kudosGivers?.[item.data.id]}
           onDeletePhoto={onDeletePhoto}
         />
       ))}
