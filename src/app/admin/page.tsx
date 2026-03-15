@@ -65,9 +65,12 @@ export default async function AdminPage() {
     .eq('active', true)
     .order('name', { ascending: true })
 
-  // Build caregiver-to-athlete mapping
+  // Build caregiver-to-athlete mapping (by user ID, for current users)
   const caregiverAthleteMap: Record<string, string> = {}
+  // Build athlete ID-to-name mapping (for pending invitations)
+  const athleteNameMap: Record<string, string> = {}
   for (const a of athletes ?? []) {
+    athleteNameMap[a.id] = a.name
     if (a.caregiver_user_id) {
       caregiverAthleteMap[a.caregiver_user_id] = a.name
     }
@@ -116,7 +119,14 @@ export default async function AdminPage() {
               <div key={inv.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 py-3 bg-white">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">{inv.email}</p>
-                  <p className="text-xs text-gray-500 capitalize">{inv.role}</p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {inv.role}
+                    {inv.role === 'caregiver' && inv.athlete_id && athleteNameMap[inv.athlete_id] && (
+                      <span className="ml-1 inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700">
+                        Linked to {athleteNameMap[inv.athlete_id]}
+                      </span>
+                    )}
+                  </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <p className="text-xs text-gray-400">
