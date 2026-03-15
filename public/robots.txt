@@ -1,9 +1,3 @@
 User-agent: *
-Allow: /milestone/
-Allow: /story/
-Disallow: /feed
-Disallow: /athletes
-Disallow: /admin
-Disallow: /account
-Disallow: /notifications
+Allow: /
 Disallow: /api/
