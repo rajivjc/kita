@@ -101,14 +101,14 @@ export default function CoachFeed({ data, userId }: Props) {
           <CheerViewTracker
             unviewedCheerIds={recentCheers.filter(c => !c.viewed_at).map(c => c.id)}
           />
-          <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-2.5">Cheers from home 📣</p>
+          <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-2.5">Cheers from home 📣</p>
           <div className="space-y-2">
             {recentCheers.map(c => (
               <Link key={c.id} href={`/athletes/${c.athlete_id}`}>
                 <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 transition-colors">
                   <div className="min-w-0">
                     <p className="text-sm text-amber-800">&ldquo;{c.message}&rdquo;</p>
-                    <p className="text-[10px] text-amber-400">
+                    <p className="text-[10px] text-amber-600">
                       {formatDate(c.created_at)}
                     </p>
                   </div>
@@ -129,7 +129,7 @@ export default function CoachFeed({ data, userId }: Props) {
         return (
           <div className="bg-teal-50/40 border border-teal-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-bold text-teal-500 uppercase tracking-widest">Messages from athletes ✉️</p>
+              <p className="text-[11px] font-bold text-teal-700 uppercase tracking-widest">Messages from athletes ✉️</p>
               <span className="bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                 {athleteMessages.length}
               </span>
@@ -161,7 +161,7 @@ export default function CoachFeed({ data, userId }: Props) {
       {/* Today's Focus */}
       {coachFocus && coachFocus.items.length > 0 && (
         <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
+          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
           <div className="space-y-2">
             {coachFocus.items.map((item, i) => {
               const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 bg-orange-50/40'

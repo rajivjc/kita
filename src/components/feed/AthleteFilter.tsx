@@ -14,7 +14,7 @@ export default function AthleteFilter({ athletes, selected, onSelect }: Props) {
         onClick={() => onSelect(null)}
         className={`flex-shrink-0 min-h-[44px] px-4 rounded-full text-sm font-medium transition-colors ${
           selected === null
-            ? 'bg-teal-600 text-white'
+            ? 'bg-teal-700 text-white'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
         }`}
       >
@@ -27,7 +27,7 @@ export default function AthleteFilter({ athletes, selected, onSelect }: Props) {
           onClick={() => onSelect(a.id === selected ? null : a.id)}
           className={`flex-shrink-0 min-h-[44px] px-4 rounded-full text-sm font-medium transition-colors ${
             selected === a.id
-              ? 'bg-teal-600 text-white'
+              ? 'bg-teal-700 text-white'
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
