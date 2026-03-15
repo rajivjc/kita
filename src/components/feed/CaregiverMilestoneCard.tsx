@@ -11,7 +11,7 @@ export default function CaregiverMilestoneCard({ milestones, nextMilestone }: Pr
 
   return (
     <div className="bg-white border border-amber-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
-      <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-2.5">Milestones & progress</p>
+      <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-2.5">Milestones & progress</p>
 
       {milestones.length > 0 && (
         <div className="mb-3">

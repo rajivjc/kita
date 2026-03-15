@@ -61,12 +61,12 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
             : 'bg-gray-50 text-gray-400 border border-gray-200 px-3 py-2 hover:bg-red-50 hover:text-red-400 hover:border-red-200 active:bg-red-100 active:scale-[0.95]'
         } ${animating ? 'scale-110' : ''}`}
         title={given ? 'Remove high five' : 'Give a high five'}
-        aria-label={given ? 'Remove high five' : 'Give a high five'}
       >
         <span className={`text-sm transition-transform ${animating ? 'animate-bounce' : ''}`}>
           {given ? '🙌' : '👋'}
         </span>
         {count > 0 && <span>{count}</span>}
+        <span className="sr-only">{given ? 'Remove high five' : 'Give a high five'}</span>
       </button>
       {count > 0 && displayNames.length > 0 && (
         <div className="flex items-center" aria-label={`High fives from ${names.join(', ')}`}>

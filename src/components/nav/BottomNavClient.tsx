@@ -86,14 +86,14 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, unreadCo
                 </span>
               )}
             </span>
-            <span className="text-[11px] leading-none mt-0.5">{tab.label}</span>
+            <span className="text-xs leading-none mt-0.5">{tab.label}</span>
           </>
         )
 
         const baseClasses = `flex flex-1 flex-col items-center justify-center min-h-[44px] py-3 gap-1 font-medium transition-all duration-150 rounded-lg mx-0.5 active:scale-95 ${
           active
-            ? 'text-teal-600 bg-teal-50'
-            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+            ? 'text-teal-700 bg-teal-50'
+            : 'text-gray-500 hover:text-gray-600 hover:bg-gray-50'
         }`
 
         // In PWA standalone mode, use <a> tags for full page reloads to

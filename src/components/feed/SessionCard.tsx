@@ -36,7 +36,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
   const card = (
     <div className={`${cardBg} rounded-xl border border-gray-100 shadow-sm px-3.5 py-3 border-l-[5px] ${feelColor} hover:shadow-md active:scale-[0.98] transition-all duration-200`}>
       {s.strava_title && (
-        <p className="text-xs font-semibold text-orange-600 mb-1 truncate">{s.strava_title}</p>
+        <p className="text-xs font-semibold text-orange-700 mb-1 truncate">{s.strava_title}</p>
       )}
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="min-w-0">
@@ -61,7 +61,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
         {s.duration_seconds != null && (
           <span className="text-xs text-gray-500 font-medium">{formatDuration(s.duration_seconds)}</span>
         )}
-        <p className="text-xs text-gray-400">{formatDate(s.date)}</p>
+        <p className="text-xs text-gray-500">{formatDate(s.date)}</p>
       </div>
       {s.note && (
         <p className="text-xs text-gray-500 italic mt-1.5 line-clamp-1">&ldquo;{s.note}&rdquo;</p>
@@ -71,7 +71,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
           {badges.map((m, i) => (
             <span
               key={i}
-              className={`inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-semibold px-2 py-0.5 rounded-full ${m.id ? 'cursor-pointer hover:bg-amber-100 transition-colors' : ''}`}
+              className={`inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-semibold px-2 py-1 rounded-full ${m.id ? 'cursor-pointer hover:bg-amber-100 transition-colors' : ''}`}
               onClick={m.id ? (e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -88,7 +88,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
               } : undefined}
             >
               {m.icon || '🏆'} {m.label}
-              {m.id && <span className="ml-0.5 text-amber-400">↗</span>}
+              {m.id && <span className="ml-0.5 text-amber-600">↗</span>}
             </span>
           ))}
         </div>
