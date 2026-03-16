@@ -19,6 +19,7 @@ const PUBLIC_PATHS = [
   '/auth/accept-invite',
   '/auth/pwa-launch',
   '/setup',
+  '/about',
   '/strava/connected',
   '/api/strava/webhook',
   '/api/health',
