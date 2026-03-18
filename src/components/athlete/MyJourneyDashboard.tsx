@@ -155,6 +155,7 @@ export default function MyJourneyDashboard({
   const [goalFeedback, setGoalFeedback] = useState<string | null>(null)
   const [selectedColor, setSelectedColor] = useState(themeColor)
   const [colorFeedback, setColorFeedback] = useState<string | null>(null)
+  const [lastSentMessage, setLastSentMessage] = useState<{ message: string; time: string } | null>(null)
   const theme = THEME_COLORS[selectedColor] ?? THEME_COLORS.teal
 
   const handleSendMessage = useCallback(async (message: string) => {
@@ -166,6 +167,9 @@ export default function MyJourneyDashboard({
     if (result.success) {
       setMessageSent(message)
       setTimeout(() => setMessageSent(null), 4000)
+      const now = new Date()
+      const timeStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+      setLastSentMessage({ message, time: timeStr })
     } else {
       setMessageError(result.error ?? 'Could not send. Try again.')
     }
@@ -616,6 +620,11 @@ export default function MyJourneyDashboard({
               </p>
             )}
           </div>
+          {lastSentMessage && !messageSent && (
+            <p className="text-sm text-gray-500 text-center mt-2">
+              You sent &ldquo;{lastSentMessage.message}&rdquo; on {lastSentMessage.time} ✓
+            </p>
+          )}
         </section>
 
         {/* ── Share Button ────────────────────────────────── */}
