@@ -88,13 +88,16 @@ const PRESET_MESSAGES = [
 
 // ─── Theme color mapping ────────────────────────────────────────
 
-const THEME_COLORS: Record<string, { from: string; ring: string; bg: string }> = {
-  teal:   { from: 'from-teal-50',   ring: 'ring-teal-400',   bg: 'bg-teal-400' },
-  blue:   { from: 'from-blue-50',   ring: 'ring-blue-400',   bg: 'bg-blue-400' },
-  purple: { from: 'from-purple-50', ring: 'ring-purple-400', bg: 'bg-purple-400' },
-  green:  { from: 'from-green-50',  ring: 'ring-green-400',  bg: 'bg-green-400' },
-  amber:  { from: 'from-amber-50',  ring: 'ring-amber-400',  bg: 'bg-amber-400' },
-  coral:  { from: 'from-orange-50', ring: 'ring-orange-400', bg: 'bg-orange-400' },
+const THEME_COLORS: Record<string, {
+  from: string; ring: string; bg: string
+  border: string; borderLight: string; text: string; bgLight: string; bgDark: string
+}> = {
+  teal:   { from: 'from-teal-50',   ring: 'ring-teal-400',   bg: 'bg-teal-400',   border: 'border-teal-400',   borderLight: 'border-teal-200', text: 'text-teal-700',   bgLight: 'bg-teal-50',   bgDark: 'bg-teal-600' },
+  blue:   { from: 'from-blue-50',   ring: 'ring-blue-400',   bg: 'bg-blue-400',   border: 'border-blue-400',   borderLight: 'border-blue-200', text: 'text-blue-700',   bgLight: 'bg-blue-50',   bgDark: 'bg-blue-600' },
+  purple: { from: 'from-purple-50', ring: 'ring-purple-400', bg: 'bg-purple-400', border: 'border-purple-400', borderLight: 'border-purple-200', text: 'text-purple-700', bgLight: 'bg-purple-50', bgDark: 'bg-purple-600' },
+  green:  { from: 'from-green-50',  ring: 'ring-green-400',  bg: 'bg-green-400',  border: 'border-green-400',  borderLight: 'border-green-200', text: 'text-green-700',  bgLight: 'bg-green-50',  bgDark: 'bg-green-600' },
+  amber:  { from: 'from-amber-50',  ring: 'ring-amber-400',  bg: 'bg-amber-400',  border: 'border-amber-400',  borderLight: 'border-amber-200', text: 'text-amber-700',  bgLight: 'bg-amber-50',  bgDark: 'bg-amber-600' },
+  coral:  { from: 'from-orange-50', ring: 'ring-orange-400', bg: 'bg-orange-400', border: 'border-orange-400', borderLight: 'border-orange-200', text: 'text-orange-700', bgLight: 'bg-orange-50', bgDark: 'bg-orange-600' },
 }
 
 // ─── Mood options ────────────────────────────────────────────────
@@ -199,7 +202,7 @@ export default function MyJourneyDashboard({
     setColorFeedback(null)
     const result = await setAthleteTheme(athlete.id, color)
     if (result.success) {
-      setColorFeedback('Color saved!')
+      setColorFeedback('Nice choice!')
       setTimeout(() => setColorFeedback(null), 3000)
     }
   }, [athlete.id])
@@ -225,7 +228,7 @@ export default function MyJourneyDashboard({
         {/* ── Hero Section ─────────────────────────────────── */}
         <section className="text-center mb-8">
           {athlete.photo_url ? (
-            <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-teal-200">
+            <div className={`w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 ${theme.borderLight}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={athlete.photo_url}
@@ -234,14 +237,14 @@ export default function MyJourneyDashboard({
               />
             </div>
           ) : (
-            <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-teal-100 flex items-center justify-center border-4 border-teal-200">
+            <div className={`w-24 h-24 mx-auto mb-4 rounded-full ${theme.bgLight} flex items-center justify-center border-4 ${theme.borderLight}`}>
               <span className="text-4xl">🏃</span>
             </div>
           )}
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Hi {athlete.name}!
           </h1>
-          <p className="text-lg text-teal-700">
+          <p className={`text-lg ${theme.text}`}>
             Great to see you!
           </p>
         </section>
@@ -274,7 +277,7 @@ export default function MyJourneyDashboard({
           </div>
           <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
             {moodFeedback && (
-              <p className="text-sm text-teal-700 font-medium text-center">{moodFeedback}</p>
+              <p className={`text-sm ${theme.text} font-medium text-center`}>{moodFeedback}</p>
             )}
           </div>
         </section>
@@ -286,14 +289,18 @@ export default function MyJourneyDashboard({
             value={stats.totalRuns}
             label="runs"
             maxValue={Math.max(stats.totalRuns, 20)}
+            barColor={theme.bg}
+            borderColor={theme.borderLight}
           />
           <StatCard
             icon="📏"
             value={Number(stats.totalKm.toFixed(1))}
             label="km"
             maxValue={Math.max(stats.totalKm, 10)}
+            barColor={theme.bg}
+            borderColor={theme.borderLight}
           />
-          <StreakVisual weeks={stats.currentStreak} />
+          <StreakVisual weeks={stats.currentStreak} themeBarColor={theme.bg} themeBorderLight={theme.borderLight} />
         </section>
 
         {/* ── Personal Best ─────────────────────────────────── */}
@@ -356,15 +363,15 @@ export default function MyJourneyDashboard({
                   onClick={() => handleGoalChoice(g.key)}
                   className={`w-full text-left flex items-center gap-4 rounded-xl px-5 py-4 transition-all shadow-sm
                     ${selected
-                      ? 'bg-teal-50 border-2 border-teal-400 ring-1 ring-teal-200'
-                      : 'bg-white border-2 border-gray-100 hover:border-teal-200 opacity-70'
+                      ? `${theme.bgLight} border-2 ${theme.border} ring-1 ${theme.ring}`
+                      : `bg-white border-2 border-gray-100 hover:${theme.borderLight} opacity-70`
                     }`}
                 >
                   <span className="text-2xl flex-shrink-0">{g.icon}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
                       {g.label}
-                      {selected && <span className="text-teal-500">✓</span>}
+                      {selected && <span className={theme.text}>✓</span>}
                     </p>
                     <p className="text-sm text-gray-500">{g.desc}</p>
                   </div>
@@ -374,7 +381,7 @@ export default function MyJourneyDashboard({
           </div>
           <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
             {goalFeedback && (
-              <p className="text-sm text-teal-700 font-medium text-center">{goalFeedback}</p>
+              <p className={`text-sm ${theme.text} font-medium text-center`}>{goalFeedback}</p>
             )}
           </div>
         </section>
@@ -385,14 +392,14 @@ export default function MyJourneyDashboard({
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <span>🎯</span> Your goal
             </h2>
-            <div className="bg-white border border-teal-100 rounded-xl px-5 py-4 shadow-sm">
+            <div className={`bg-white border ${theme.borderLight} rounded-xl px-5 py-4 shadow-sm`}>
               <p className="text-base font-semibold text-gray-900 mb-2">
                 {goal.label}
               </p>
               {/* Visual progress bar */}
               <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden mb-2">
                 <div
-                  className="h-full bg-teal-500 rounded-full transition-all duration-500"
+                  className={`h-full ${theme.bg} rounded-full transition-all duration-500`}
                   style={{ width: `${Math.min(goal.pct, 100)}%` }}
                   role="progressbar"
                   aria-valuenow={goal.current}
@@ -402,7 +409,7 @@ export default function MyJourneyDashboard({
                 />
               </div>
               {/* Text alongside visual */}
-              <p className="text-sm text-teal-700">
+              <p className={`text-sm ${theme.text}`}>
                 {goal.current} of {goal.target} {goal.unit} done. {Math.max(0, goal.target - goal.current)} more to go!
               </p>
             </div>
@@ -422,7 +429,7 @@ export default function MyJourneyDashboard({
                 return (
                   <div
                     key={run.id}
-                    className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-4 shadow-sm"
+                    className={`bg-white border border-gray-100 border-l-4 ${theme.border} rounded-xl px-4 py-3 flex items-center gap-4 shadow-sm`}
                   >
                     {feel && (
                       <div className="flex flex-col items-center flex-shrink-0 w-10">
@@ -440,7 +447,7 @@ export default function MyJourneyDashboard({
                           <>
                             <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                               <div
-                                className="h-full bg-teal-400 rounded-full"
+                                className={`h-full ${theme.bg} rounded-full`}
                                 style={{ width: `${Math.min((km / 5) * 100, 100)}%` }}
                               />
                             </div>
@@ -517,7 +524,7 @@ export default function MyJourneyDashboard({
           </div>
           <div aria-live="polite" className="mt-2 min-h-[1.25rem]">
             {colorFeedback && (
-              <p className="text-sm text-teal-700 font-medium text-center">{colorFeedback}</p>
+              <p className={`text-sm ${theme.text} font-medium text-center`}>{colorFeedback}</p>
             )}
           </div>
         </section>
@@ -533,9 +540,9 @@ export default function MyJourneyDashboard({
                 key={msg}
                 onClick={() => handleSendMessage(msg)}
                 disabled={sendingMessage}
-                className="h-14 bg-white border-2 border-teal-200 hover:border-teal-400 hover:bg-teal-50
-                           disabled:opacity-40 text-teal-800 text-base font-medium rounded-xl
-                           transition-colors shadow-sm"
+                className={`h-14 bg-white border-2 ${theme.borderLight} hover:${theme.border} hover:${theme.bgLight}
+                           disabled:opacity-40 ${theme.text} text-base font-medium rounded-xl
+                           transition-colors shadow-sm`}
               >
                 {msg}
               </button>
@@ -544,7 +551,7 @@ export default function MyJourneyDashboard({
           {/* Feedback */}
           <div aria-live="polite" className="mt-3 min-h-[1.5rem]">
             {messageSent && (
-              <p className="text-base text-teal-700 font-medium text-center">
+              <p className={`text-base ${theme.text} font-medium text-center`}>
                 Message sent! Your coach will see it.
               </p>
             )}
@@ -561,8 +568,8 @@ export default function MyJourneyDashboard({
           <section className="text-center">
             <a
               href={storyUrl}
-              className="inline-flex items-center gap-2 h-14 px-8 bg-teal-600 hover:bg-teal-700
-                         text-white text-lg font-semibold rounded-xl transition-colors shadow-sm"
+              className={`inline-flex items-center gap-2 h-14 px-8 ${theme.bgDark} hover:opacity-90
+                         text-white text-lg font-semibold rounded-xl transition-colors shadow-sm`}
             >
               <span>🔗</span> Share my running story
             </a>
@@ -580,22 +587,26 @@ function StatCard({
   value,
   label,
   maxValue,
+  barColor,
+  borderColor,
 }: {
   icon: string
   value: number
   label: string
   maxValue: number
+  barColor: string
+  borderColor: string
 }) {
   const pct = maxValue > 0 ? Math.min((value / maxValue) * 100, 100) : 0
   return (
-    <div className="bg-white border border-teal-100 rounded-xl px-3 py-4 text-center shadow-sm">
+    <div className={`bg-white border ${borderColor} rounded-xl px-3 py-4 text-center shadow-sm`}>
       <span className="text-2xl block mb-1">{icon}</span>
       <p className="text-2xl font-bold text-gray-900">{value}</p>
       <p className="text-sm text-gray-600 mb-2">{label}</p>
       {/* Visual bar */}
       <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full bg-teal-400 rounded-full"
+          className={`h-full ${barColor} rounded-full`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -605,11 +616,11 @@ function StatCard({
 
 // ─── Streak Visual Sub-Component ────────────────────────────────
 
-function StreakVisual({ weeks }: { weeks: number }) {
+function StreakVisual({ weeks, themeBarColor, themeBorderLight }: { weeks: number; themeBarColor: string; themeBorderLight: string }) {
   // Build stacked shoe icons (max 5 visible)
   const shoeCount = Math.min(weeks, 5)
   const isGold = weeks >= 3
-  const borderColor = isGold ? 'border-amber-200' : 'border-teal-100'
+  const borderColor = isGold ? 'border-amber-200' : themeBorderLight
   const glowClass = weeks >= 5 ? 'ring-2 ring-amber-200' : ''
 
   return (
@@ -636,7 +647,7 @@ function StreakVisual({ weeks }: { weeks: number }) {
       {weeks > 0 && (
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full ${isGold ? 'bg-amber-400' : 'bg-teal-400'}`}
+            className={`h-full rounded-full ${isGold ? 'bg-amber-400' : themeBarColor}`}
             style={{ width: `${Math.min((weeks / 8) * 100, 100)}%` }}
           />
         </div>
