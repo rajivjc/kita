@@ -60,6 +60,7 @@ export default async function MyJourneyPage({ params }: PageProps) {
       .select('id, date, distance_km, feel')
       .eq('athlete_id', athleteId)
       .eq('status', 'completed')
+      .is('strava_deleted_at', null)
       .order('date', { ascending: false })
       .limit(5),
     adminClient
