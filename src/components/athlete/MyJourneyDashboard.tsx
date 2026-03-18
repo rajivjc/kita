@@ -436,15 +436,23 @@ export default function MyJourneyDashboard({
                       </p>
                       {/* Visual distance bar alongside number */}
                       <div className="flex items-center gap-2 mt-1">
-                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-teal-400 rounded-full"
-                            style={{ width: `${Math.min((km / 5) * 100, 100)}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-gray-500 flex-shrink-0 w-12 text-right">
-                          {km.toFixed(1)} km
-                        </span>
+                        {km > 0 ? (
+                          <>
+                            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-teal-400 rounded-full"
+                                style={{ width: `${Math.min((km / 5) * 100, 100)}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-500 flex-shrink-0 w-12 text-right">
+                              {km.toFixed(1)} km
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">
+                            No distance recorded
+                          </span>
+                        )}
                       </div>
                     </div>
                     {/* Heart favorite toggle */}
