@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { adminClient } from '@/lib/supabase/admin'
 import AthleteTabs from '@/components/athlete/AthleteTabs'
 import AthleteQrCode from '@/components/athlete/AthleteQrCode'
+import ExportButton from '@/components/athlete/ExportButton'
 import StickyHeader from '@/components/athlete/StickyHeader'
 import { formatDate } from '@/lib/utils/dates'
 import { calculateGoalProgress } from '@/lib/goals'
@@ -330,6 +331,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
           >
             <Share2 size={18} />
           </Link>
+          {!isReadOnly && <ExportButton athleteId={id} />}
           {!isReadOnly && (
             <Link
               href={`/athletes/${id}/edit`}
