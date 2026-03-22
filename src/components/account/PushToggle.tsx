@@ -110,8 +110,8 @@ export default function PushToggle({ vapidPublicKey }: Props) {
     return (
       <div className="flex items-center justify-between py-3">
         <div>
-          <p className="text-sm font-medium text-gray-900">Push Notifications</p>
-          <p className="text-xs text-gray-400">Not supported on this browser</p>
+          <p className="text-sm font-medium text-text-primary">Push Notifications</p>
+          <p className="text-xs text-text-hint">Not supported on this browser</p>
         </div>
       </div>
     )
@@ -121,8 +121,8 @@ export default function PushToggle({ vapidPublicKey }: Props) {
     return (
       <div className="flex items-center justify-between py-3">
         <div>
-          <p className="text-sm font-medium text-gray-900">Push Notifications</p>
-          <p className="text-xs text-gray-400">Blocked — enable in browser settings</p>
+          <p className="text-sm font-medium text-text-primary">Push Notifications</p>
+          <p className="text-xs text-text-hint">Blocked — enable in browser settings</p>
         </div>
       </div>
     )
@@ -131,8 +131,8 @@ export default function PushToggle({ vapidPublicKey }: Props) {
   return (
     <div className="flex items-center justify-between py-3">
       <div>
-        <p className="text-sm font-medium text-gray-900">Push Notifications</p>
-        <p className="text-xs text-gray-500">
+        <p className="text-sm font-medium text-text-primary">Push Notifications</p>
+        <p className="text-xs text-text-muted">
           {status === 'enabled' ? 'Milestones, alerts & cheers' : 'Get notified for milestones & alerts'}
         </p>
       </div>
@@ -140,14 +140,14 @@ export default function PushToggle({ vapidPublicKey }: Props) {
         onClick={status === 'enabled' ? handleDisable : handleEnable}
         disabled={isPending}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 ${
-          status === 'enabled' ? 'bg-teal-600' : 'bg-gray-200'
+          status === 'enabled' ? 'bg-teal-600' : 'bg-surface-alt'
         }`}
         role="switch"
         aria-checked={status === 'enabled'}
         aria-label="Toggle push notifications"
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-surface shadow-sm transition-transform ${
             status === 'enabled' ? 'translate-x-6' : 'translate-x-1'
           }`}
         />

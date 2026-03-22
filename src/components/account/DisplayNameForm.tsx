@@ -29,7 +29,7 @@ export default function DisplayNameForm({ currentName }: { currentName: string |
           name="name"
           defaultValue={currentName ?? ''}
           placeholder="e.g. Rajiv"
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="flex-1 border border-border-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
         />
         <SubmitButton />
       </div>

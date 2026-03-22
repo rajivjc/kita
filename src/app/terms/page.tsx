@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6 py-12">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
         {/* Back link */}
         <div className="mb-6">
           <Link
@@ -26,10 +26,10 @@ export default function TermsPage() {
         </p>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">
           Terms of Service
         </h1>
-        <p className="text-sm text-gray-400 mb-8">
+        <p className="text-sm text-text-hint mb-8">
           Last updated: 21 March 2026
         </p>
 
@@ -53,10 +53,10 @@ export default function TermsPage() {
         </div>
 
         {/* Detailed sections */}
-        <div className="space-y-8 text-base text-gray-700 leading-relaxed">
+        <div className="space-y-8 text-base text-text-secondary leading-relaxed">
           {/* What this app is */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               What this app is
             </h2>
             <p>
@@ -72,7 +72,7 @@ export default function TermsPage() {
 
           {/* Who can use it */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Who can use it
             </h2>
             <p>
@@ -83,10 +83,10 @@ export default function TermsPage() {
 
           {/* Your responsibilities */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Your responsibilities
             </h2>
-            <ul className="space-y-2 list-disc list-inside text-gray-700">
+            <ul className="space-y-2 list-disc list-inside text-text-secondary">
               <li>Log accurate information.</li>
               <li>
                 Do not share athletes&apos; personal information (medical notes,
@@ -99,7 +99,7 @@ export default function TermsPage() {
 
           {/* Athlete data */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Athlete data
             </h2>
             <p>
@@ -114,7 +114,7 @@ export default function TermsPage() {
 
           {/* Photos and content */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Photos and content
             </h2>
             <p>
@@ -130,7 +130,7 @@ export default function TermsPage() {
 
           {/* Availability */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Availability
             </h2>
             <p>
@@ -141,7 +141,7 @@ export default function TermsPage() {
 
           {/* Limitation of liability */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Limitation of liability
             </h2>
             <p>
@@ -153,7 +153,7 @@ export default function TermsPage() {
 
           {/* Changes to these terms */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Changes to these terms
             </h2>
             <p>
@@ -164,11 +164,11 @@ export default function TermsPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-10 pt-6 border-t border-gray-100 text-center">
-          <p className="text-sm text-gray-400">
+        <div className="mt-10 pt-6 border-t border-border-subtle text-center">
+          <p className="text-sm text-text-hint">
             Last updated: 21 March 2026
           </p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-text-muted mt-2">
             <Link
               href="/privacy"
               className="text-teal-600 hover:text-teal-700 font-medium underline"
@@ -176,7 +176,7 @@ export default function TermsPage() {
               Privacy Policy
             </Link>
           </p>
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-4">
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-4">
             SOSG Running Club
           </p>
         </div>

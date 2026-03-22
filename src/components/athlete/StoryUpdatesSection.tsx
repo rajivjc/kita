@@ -63,8 +63,8 @@ export default function StoryUpdatesSection({
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-3">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+      <div className="bg-surface-raised rounded-xl border border-border p-4 space-y-3">
+        <p className="text-xs font-medium text-text-muted uppercase tracking-wide">
           Add story update
         </p>
         <textarea
@@ -73,10 +73,10 @@ export default function StoryUpdatesSection({
           placeholder="Write a short update for the public story page…"
           rows={2}
           maxLength={500}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm resize-none transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none"
         />
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[10px] text-text-hint">
             {content.length}/500
           </span>
           <button
@@ -93,8 +93,8 @@ export default function StoryUpdatesSection({
       {updates.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-3xl mb-2">📖</p>
-          <p className="text-sm font-medium text-gray-900 mb-1">No story updates yet</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-sm font-medium text-text-primary mb-1">No story updates yet</p>
+          <p className="text-xs text-text-muted">
             Story updates appear on the public story page as a timeline.
           </p>
         </div>
@@ -105,17 +105,17 @@ export default function StoryUpdatesSection({
             return (
               <div
                 key={update.id}
-                className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm"
+                className="bg-surface rounded-xl border border-border-subtle p-4 shadow-sm"
               >
-                <p className="text-sm text-gray-800">{update.content}</p>
+                <p className="text-sm text-text-primary">{update.content}</p>
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
                     {update.coach_name && (
-                      <span className="text-xs font-medium text-gray-500">
+                      <span className="text-xs font-medium text-text-muted">
                         {update.coach_name}
                       </span>
                     )}
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-text-hint">
                       {formatDate(update.created_at)}
                     </span>
                   </div>
@@ -123,7 +123,7 @@ export default function StoryUpdatesSection({
                     <button
                       onClick={() => handleDelete(update.id)}
                       disabled={deletingId === update.id}
-                      className="text-xs text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                      className="text-xs text-text-hint hover:text-red-500 transition-colors disabled:opacity-50"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

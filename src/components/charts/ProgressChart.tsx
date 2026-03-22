@@ -39,10 +39,10 @@ function VolumeTooltip({ active, payload }: { active?: boolean; payload?: Array<
   if (!active || !payload?.[0]) return null
   const data = payload[0].payload
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-3 py-2 text-xs">
-      <p className="font-semibold text-gray-900">Week of {data.weekLabel}</p>
+    <div className="bg-surface border border-border rounded-lg shadow-sm px-3 py-2 text-xs">
+      <p className="font-semibold text-text-primary">Week of {data.weekLabel}</p>
       <p className="text-teal-600">{data.totalKm} km</p>
-      <p className="text-gray-500">{data.sessionCount} run{data.sessionCount !== 1 ? 's' : ''}</p>
+      <p className="text-text-muted">{data.sessionCount} run{data.sessionCount !== 1 ? 's' : ''}</p>
     </div>
   )
 }
@@ -51,8 +51,8 @@ function FeelTooltip({ active, payload }: { active?: boolean; payload?: Array<{ 
   if (!active || !payload?.[0]) return null
   const data = payload[0].payload
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-3 py-2 text-xs">
-      <p className="font-semibold text-gray-900">{data.dateLabel}</p>
+    <div className="bg-surface border border-border rounded-lg shadow-sm px-3 py-2 text-xs">
+      <p className="font-semibold text-text-primary">{data.dateLabel}</p>
       <p style={{ color: FEEL_COLORS[data.feel] }}>
         {FEEL_EMOJI[data.feel]} Feel: {data.feel}/5
       </p>
@@ -64,10 +64,10 @@ function DistanceTooltip({ active, payload }: { active?: boolean; payload?: Arra
   if (!active || !payload?.[0]) return null
   const data = payload[0].payload
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-3 py-2 text-xs">
-      <p className="font-semibold text-gray-900">{data.dateLabel}</p>
+    <div className="bg-surface border border-border rounded-lg shadow-sm px-3 py-2 text-xs">
+      <p className="font-semibold text-text-primary">{data.dateLabel}</p>
       <p className="text-teal-600">{data.distanceKm} km</p>
-      <p className="text-gray-500">Total: {data.cumulativeKm} km</p>
+      <p className="text-text-muted">Total: {data.cumulativeKm} km</p>
     </div>
   )
 }
@@ -121,7 +121,7 @@ export default function ProgressChart({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
+    <div className="bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-3">
       {/* Chart toggle */}
       {availableViews.length > 1 && (
         <div className="flex gap-1 mb-3">
@@ -132,7 +132,7 @@ export default function ProgressChart({
               className={`text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors ${
                 activeView === v.key
                   ? 'bg-teal-50 text-teal-700'
-                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                  : 'text-text-hint hover:text-text-secondary hover:bg-surface-raised'
               }`}
             >
               {v.label}
@@ -144,7 +144,7 @@ export default function ProgressChart({
       {/* Volume chart */}
       {activeView === 'volume' && hasVolume && (
         <>
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+          <p className="text-[11px] font-bold text-text-hint uppercase tracking-widest mb-2">
             Weekly distance
           </p>
           <ResponsiveContainer width="100%" height={height}>
@@ -174,7 +174,7 @@ export default function ProgressChart({
       {/* Feel trend chart */}
       {activeView === 'feel' && hasFeel && (
         <>
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+          <p className="text-[11px] font-bold text-text-hint uppercase tracking-widest mb-2">
             How runs felt
           </p>
           <ResponsiveContainer width="100%" height={height}>
@@ -213,7 +213,7 @@ export default function ProgressChart({
       {/* Distance progress (cumulative) */}
       {activeView === 'distance' && hasDistance && (
         <>
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+          <p className="text-[11px] font-bold text-text-hint uppercase tracking-widest mb-2">
             Distance progress
           </p>
           <ResponsiveContainer width="100%" height={height}>

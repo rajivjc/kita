@@ -12,7 +12,7 @@ export default function StoryChapter({ chapter }: StoryChapterProps) {
       </h2>
       <div className="space-y-2">
         {chapter.paragraphs.map((p, i) => (
-          <p key={i} className="text-sm text-gray-600 leading-relaxed">
+          <p key={i} className="text-sm text-text-secondary leading-relaxed">
             {p}
           </p>
         ))}

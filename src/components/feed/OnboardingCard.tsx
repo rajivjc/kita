@@ -123,7 +123,7 @@ export default function OnboardingCard({
     <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-lg font-bold text-text-primary">
             Welcome, {firstName}!
           </p>
           <p className="text-sm text-teal-700 mt-0.5">
@@ -179,7 +179,7 @@ export default function OnboardingCard({
                 )}
               </span>
               <span className={`text-sm font-medium ${
-                step.completed ? 'text-teal-600 line-through' : 'text-gray-900'
+                step.completed ? 'text-teal-600 line-through' : 'text-text-primary'
               }`}>
                 {step.label}
               </span>

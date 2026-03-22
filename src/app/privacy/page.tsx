@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6 py-12">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
         {/* Back link */}
         <div className="mb-6">
           <Link
@@ -27,10 +27,10 @@ export default function PrivacyPage() {
         </p>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">
           Privacy Policy
         </h1>
-        <p className="text-sm text-gray-400 mb-8">
+        <p className="text-sm text-text-hint mb-8">
           Last updated: 21 March 2026
         </p>
 
@@ -52,10 +52,10 @@ export default function PrivacyPage() {
         </div>
 
         {/* Detailed sections */}
-        <div className="space-y-8 text-base text-gray-700 leading-relaxed">
+        <div className="space-y-8 text-base text-text-secondary leading-relaxed">
           {/* Who we are */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Who we are
             </h2>
             <p>
@@ -72,14 +72,14 @@ export default function PrivacyPage() {
 
           {/* What we collect and why */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               What we collect and why
             </h2>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">
+            <p className="font-medium text-text-primary mt-4 mb-2">
               Coaches and admins
             </p>
-            <ul className="space-y-1 list-disc list-inside text-gray-700">
+            <ul className="space-y-1 list-disc list-inside text-text-secondary">
               <li>Email address (for login)</li>
               <li>Name</li>
               <li>
@@ -92,15 +92,15 @@ export default function PrivacyPage() {
               </li>
             </ul>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">Caregivers</p>
-            <ul className="space-y-1 list-disc list-inside text-gray-700">
+            <p className="font-medium text-text-primary mt-4 mb-2">Caregivers</p>
+            <ul className="space-y-1 list-disc list-inside text-text-secondary">
               <li>Email address (for login)</li>
               <li>Name</li>
               <li>Cheers messages you send</li>
             </ul>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">Athletes</p>
-            <ul className="space-y-1 list-disc list-inside text-gray-700">
+            <p className="font-medium text-text-primary mt-4 mb-2">Athletes</p>
+            <ul className="space-y-1 list-disc list-inside text-text-secondary">
               <li>Name and date of birth</li>
               <li>Photo (if uploaded by a coach)</li>
               <li>
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
 
           {/* What we do NOT collect */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               What we do not collect
             </h2>
             <p>
@@ -136,10 +136,10 @@ export default function PrivacyPage() {
 
           {/* Where your data is stored */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Where your data is stored
             </h2>
-            <ul className="space-y-1 list-disc list-inside text-gray-700">
+            <ul className="space-y-1 list-disc list-inside text-text-secondary">
               <li>
                 <span className="font-medium">Supabase</span> &mdash; database
                 and file storage, Singapore region
@@ -160,11 +160,11 @@ export default function PrivacyPage() {
 
           {/* Who can see what */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Who can see what
             </h2>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">
+            <p className="font-medium text-text-primary mt-4 mb-2">
               Coaches and admins
             </p>
             <p>
@@ -172,14 +172,14 @@ export default function PrivacyPage() {
               info, and mood trends.
             </p>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">Caregivers</p>
+            <p className="font-medium text-text-primary mt-4 mb-2">Caregivers</p>
             <p>
               Can only see their linked athlete&apos;s sessions, milestones,
               goal progress, and public information. They cannot see medical
               notes, coaching cues, or coach-only notes.
             </p>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">
+            <p className="font-medium text-text-primary mt-4 mb-2">
               Athletes (via PIN-protected page)
             </p>
             <p>
@@ -188,7 +188,7 @@ export default function PrivacyPage() {
               notes.
             </p>
 
-            <p className="font-medium text-gray-800 mt-4 mb-2">
+            <p className="font-medium text-text-primary mt-4 mb-2">
               Public milestone and story pages
             </p>
             <p>
@@ -201,7 +201,7 @@ export default function PrivacyPage() {
 
           {/* Strava integration */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Strava integration
             </h2>
             <p>
@@ -218,11 +218,11 @@ export default function PrivacyPage() {
 
           {/* Cookies */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Cookies
             </h2>
             <p className="mb-3">We use essential cookies only:</p>
-            <ul className="space-y-1 list-disc list-inside text-gray-700">
+            <ul className="space-y-1 list-disc list-inside text-text-secondary">
               <li>
                 Supabase authentication cookies (keep you logged in, HttpOnly,
                 Secure, 1-year expiry)
@@ -239,7 +239,7 @@ export default function PrivacyPage() {
 
           {/* Data sharing */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Data sharing
             </h2>
             <p>
@@ -251,7 +251,7 @@ export default function PrivacyPage() {
 
           {/* Data retention and deletion */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Data retention and deletion
             </h2>
             <p>
@@ -267,7 +267,7 @@ export default function PrivacyPage() {
 
           {/* Children and young athletes */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Children and young athletes
             </h2>
             <p>
@@ -282,7 +282,7 @@ export default function PrivacyPage() {
 
           {/* Changes to this policy */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Changes to this policy
             </h2>
             <p>
@@ -293,7 +293,7 @@ export default function PrivacyPage() {
 
           {/* Contact */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-xl font-semibold text-text-primary mb-3">
               Contact
             </h2>
             <p>
@@ -304,11 +304,11 @@ export default function PrivacyPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-10 pt-6 border-t border-gray-100 text-center">
-          <p className="text-sm text-gray-400">
+        <div className="mt-10 pt-6 border-t border-border-subtle text-center">
+          <p className="text-sm text-text-hint">
             Last updated: 21 March 2026
           </p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-text-muted mt-2">
             <Link
               href="/terms"
               className="text-teal-600 hover:text-teal-700 font-medium underline"
@@ -316,7 +316,7 @@ export default function PrivacyPage() {
               Terms of Service
             </Link>
           </p>
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-4">
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-4">
             SOSG Running Club
           </p>
         </div>

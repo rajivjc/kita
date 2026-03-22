@@ -180,12 +180,12 @@ export default async function AccountPage({
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6 pb-28 space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">My Account</h1>
+      <h1 className="text-2xl font-bold text-text-primary">My Account</h1>
 
       {/* Email */}
       <section>
-        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-1">Signed in as</p>
-        <p className="text-sm font-medium text-gray-800">{user.email}</p>
+        <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-1">Signed in as</p>
+        <p className="text-sm font-medium text-text-primary">{user.email}</p>
       </section>
 
       {searchParams?.connected === 'strava' && (
@@ -197,7 +197,7 @@ export default async function AccountPage({
 
       {/* Display name */}
       <section>
-        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-3">Display name</p>
+        <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Display name</p>
         {searchParams.setup === 'name' && (
           <div className="mb-3 rounded-lg bg-teal-50 border border-teal-200 px-4 py-3 text-sm text-teal-800">
             👋 Welcome! Please set your display name before getting started.
@@ -208,24 +208,24 @@ export default async function AccountPage({
 
       {/* Push notifications */}
       <section>
-        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-1">Notifications</p>
+        <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-1">Notifications</p>
         <PushToggle vapidPublicKey={process.env.VAPID_PUBLIC_KEY ?? ''} />
       </section>
 
       {/* Coaching stats — only for coaches and admins */}
       {!isCaregiver && (
         <section>
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-3">Your coaching stats</p>
+          <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Your coaching stats</p>
           <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl border border-teal-100 shadow-sm px-4 py-5 border-t-4 border-t-teal-500">
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col items-center text-center">
                 <span className="text-lg mb-1">🏃</span>
-                <span className="text-2xl font-bold text-gray-900">{totalSessions}</span>
+                <span className="text-2xl font-bold text-text-primary">{totalSessions}</span>
                 <span className="text-[11px] text-teal-700 font-medium mt-0.5">sessions</span>
               </div>
               <div className="flex flex-col items-center text-center">
                 <span className="text-lg mb-1">👥</span>
-                <span className="text-2xl font-bold text-gray-900">{totalAthletes}</span>
+                <span className="text-2xl font-bold text-text-primary">{totalAthletes}</span>
                 <span className="text-[11px] text-teal-700 font-medium mt-0.5">athletes</span>
               </div>
               <div className="flex flex-col items-center text-center">
@@ -251,10 +251,10 @@ export default async function AccountPage({
       {/* Coach badges */}
       {!isCaregiver && (
         <section>
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-1">
+          <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-1">
             Your badges ({earnedBadgeKeys.size}/{BADGE_DEFINITIONS.length})
           </p>
-          <p className="text-[11px] text-gray-400 mb-3">
+          <p className="text-[11px] text-text-hint mb-3">
             Earn badges by coaching sessions and engaging with athletes
           </p>
           <div className="grid grid-cols-3 gap-3">
@@ -266,12 +266,12 @@ export default async function AccountPage({
                   className={`relative rounded-xl border px-3 py-3.5 text-center transition-all ${
                     earned
                       ? 'bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200 shadow-md ring-1 ring-amber-200/50'
-                      : 'bg-gray-50/80 border-gray-100'
+                      : 'bg-surface-raised/80 border-border-subtle'
                   }`}
                 >
                   <span className={`text-3xl block mb-1.5 ${earned ? '' : 'grayscale opacity-30'}`}>{badge.icon}</span>
-                  <p className={`text-xs font-semibold ${earned ? 'text-gray-900' : 'text-gray-300'}`}>{badge.label}</p>
-                  <p className={`text-[10px] mt-0.5 line-clamp-1 ${earned ? 'text-gray-500' : 'text-gray-300'}`}>{badge.description}</p>
+                  <p className={`text-xs font-semibold ${earned ? 'text-text-primary' : 'text-text-hint'}`}>{badge.label}</p>
+                  <p className={`text-[10px] mt-0.5 line-clamp-1 ${earned ? 'text-text-muted' : 'text-text-hint'}`}>{badge.description}</p>
                   {!earned && (
                     <span className="absolute top-1.5 right-1.5 text-[10px] opacity-40">🔒</span>
                   )}
@@ -292,7 +292,7 @@ export default async function AccountPage({
                 👟
               </div>
               <div>
-                <p className="text-lg font-bold text-gray-900">{caregiverAthlete.name}</p>
+                <p className="text-lg font-bold text-text-primary">{caregiverAthlete.name}</p>
                 {caregiverAthlete.running_goal && (
                   <p className="text-xs text-amber-700 italic">&ldquo;{caregiverAthlete.running_goal}&rdquo;</p>
                 )}
@@ -307,15 +307,15 @@ export default async function AccountPage({
             {/* Stats grid */}
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="bg-white/60 rounded-xl px-3 py-3 text-center">
-                <p className="text-2xl font-bold text-gray-900">{totalAthleteSessions}</p>
+                <p className="text-2xl font-bold text-text-primary">{totalAthleteSessions}</p>
                 <p className="text-[10px] text-amber-600 font-medium mt-0.5">total runs</p>
               </div>
               <div className="bg-white/60 rounded-xl px-3 py-3 text-center">
-                <p className="text-2xl font-bold text-gray-900">{totalAthleteKm.toFixed(1)}</p>
+                <p className="text-2xl font-bold text-text-primary">{totalAthleteKm.toFixed(1)}</p>
                 <p className="text-[10px] text-amber-600 font-medium mt-0.5">total km</p>
               </div>
               <div className="bg-white/60 rounded-xl px-3 py-3 text-center">
-                <p className="text-2xl font-bold text-gray-900">{athleteMilestones.length}</p>
+                <p className="text-2xl font-bold text-text-primary">{athleteMilestones.length}</p>
                 <p className="text-[10px] text-amber-600 font-medium mt-0.5">milestones</p>
               </div>
             </div>
@@ -324,13 +324,13 @@ export default async function AccountPage({
             <div className="bg-white/60 rounded-xl px-4 py-3 mb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">This month</p>
+                  <p className="text-sm font-semibold text-text-primary">This month</p>
                   <p className="text-xs text-amber-600">{thisMonthRuns} run{thisMonthRuns !== 1 ? 's' : ''} &middot; {thisMonthKm.toFixed(1)} km</p>
                 </div>
                 <div className="text-right">
                   {runsTrend > 0 && <span className="text-xs font-semibold text-green-600">↑ {runsTrend} more than last month</span>}
                   {runsTrend < 0 && <span className="text-xs font-semibold text-orange-500">↓ {Math.abs(runsTrend)} fewer than last month</span>}
-                  {runsTrend === 0 && lastMonthRuns > 0 && <span className="text-xs text-gray-400">Same as last month</span>}
+                  {runsTrend === 0 && lastMonthRuns > 0 && <span className="text-xs text-text-hint">Same as last month</span>}
                 </div>
               </div>
             </div>
@@ -381,14 +381,14 @@ export default async function AccountPage({
 
           {/* Latest run */}
           {latestSession && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-4">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Latest run</p>
+            <div className="bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-4">
+              <p className="text-[11px] font-bold text-text-hint uppercase tracking-widest mb-3">Latest run</p>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xl font-bold text-gray-900">
+                  <p className="text-xl font-bold text-text-primary">
                     {latestSession.distance_km != null ? formatDistance(latestSession.distance_km * 1000) : '—'}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{formatDate(latestSession.date)}</p>
+                  <p className="text-xs text-text-muted mt-0.5">{formatDate(latestSession.date)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   {latestSession.feel && (
@@ -397,7 +397,7 @@ export default async function AccountPage({
                 </div>
               </div>
               {latestSession.note && (
-                <p className="text-xs text-gray-500 italic mt-2 line-clamp-2">&ldquo;{latestSession.note}&rdquo;</p>
+                <p className="text-xs text-text-muted italic mt-2 line-clamp-2">&ldquo;{latestSession.note}&rdquo;</p>
               )}
             </div>
           )}
@@ -430,26 +430,26 @@ export default async function AccountPage({
       {/* Strava — only for coaches/admins */}
       {!isCaregiver && (
         <section>
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-3">Strava</p>
+          <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Strava</p>
           <StravaStatus connection={connection ?? null} />
         </section>
       )}
 
       {/* Getting started guide */}
       <section>
-        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-3">Getting started</p>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-4 space-y-2.5">
+        <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Getting started</p>
+        <div className="bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-4 space-y-2.5">
           {isCaregiver ? (
             <>
               <div className="flex items-center gap-3">
                 <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${caregiverAthlete ? 'bg-amber-500 text-white' : 'border-2 border-amber-300'}`}>
                   {caregiverAthlete && <span className="text-[10px]">&#10003;</span>}
                 </span>
-                <span className={`text-sm ${caregiverAthlete ? 'text-amber-600 line-through' : 'text-gray-900 font-medium'}`}>View your athlete&apos;s progress</span>
+                <span className={`text-sm ${caregiverAthlete ? 'text-amber-600 line-through' : 'text-text-primary font-medium'}`}>View your athlete&apos;s progress</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-amber-300 flex items-center justify-center text-xs" />
-                <Link href="/feed" className="text-sm text-gray-900 font-medium hover:text-amber-700">Send your first cheer</Link>
+                <Link href="/feed" className="text-sm text-text-primary font-medium hover:text-amber-700">Send your first cheer</Link>
               </div>
             </>
           ) : (
@@ -458,13 +458,13 @@ export default async function AccountPage({
                 <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${connection ? 'bg-teal-500 text-white' : 'border-2 border-teal-300'}`}>
                   {connection && <span className="text-[10px]">&#10003;</span>}
                 </span>
-                <span className={`text-sm ${connection ? 'text-teal-600 line-through' : 'text-gray-900 font-medium'}`}>Connect Strava for auto-sync</span>
+                <span className={`text-sm ${connection ? 'text-teal-600 line-through' : 'text-text-primary font-medium'}`}>Connect Strava for auto-sync</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${totalSessions > 0 ? 'bg-teal-500 text-white' : 'border-2 border-teal-300'}`}>
                   {totalSessions > 0 && <span className="text-[10px]">&#10003;</span>}
                 </span>
-                <span className={`text-sm ${totalSessions > 0 ? 'text-teal-600 line-through' : 'text-gray-900 font-medium'}`}>Log your first run</span>
+                <span className={`text-sm ${totalSessions > 0 ? 'text-teal-600 line-through' : 'text-text-primary font-medium'}`}>Log your first run</span>
               </div>
             </>
           )}
@@ -475,14 +475,14 @@ export default async function AccountPage({
       <section>
         <Link
           href="/setup"
-          className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-4 hover:border-teal-200 transition-colors text-left w-full"
+          className="flex items-center gap-3 bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-4 hover:border-teal-200 transition-colors text-left w-full"
         >
           <span className="text-xl flex-shrink-0">📱</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900">Install app on your device</p>
-            <p className="text-xs text-gray-500">Setup guide for iPhone, Android &amp; desktop</p>
+            <p className="text-sm font-semibold text-text-primary">Install app on your device</p>
+            <p className="text-xs text-text-muted">Setup guide for iPhone, Android &amp; desktop</p>
           </div>
-          <span className="text-gray-300 flex-shrink-0">&#x203A;</span>
+          <span className="text-text-hint flex-shrink-0">&#x203A;</span>
         </Link>
       </section>
 
@@ -490,14 +490,14 @@ export default async function AccountPage({
       <section>
         <Link
           href={isCaregiver ? '/about/caregiver' : '/about'}
-          className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-4 hover:border-teal-200 transition-colors text-left w-full"
+          className="flex items-center gap-3 bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-4 hover:border-teal-200 transition-colors text-left w-full"
         >
           <span className="text-xl flex-shrink-0">💚</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900">{isCaregiver ? 'Our Running Club' : 'Why I Built This'}</p>
-            <p className="text-xs text-gray-500">The story behind SOSG Running Club</p>
+            <p className="text-sm font-semibold text-text-primary">{isCaregiver ? 'Our Running Club' : 'Why I Built This'}</p>
+            <p className="text-xs text-text-muted">The story behind SOSG Running Club</p>
           </div>
-          <span className="text-gray-300 flex-shrink-0">&#x203A;</span>
+          <span className="text-text-hint flex-shrink-0">&#x203A;</span>
         </Link>
       </section>
 

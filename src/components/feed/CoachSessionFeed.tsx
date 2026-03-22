@@ -66,8 +66,8 @@ export default function CoachSessionFeed({ sessions, groups, milestonesBySession
     return (
       <div className="text-center py-16">
         <p className="text-4xl mb-3">👟</p>
-        <p className="text-base font-semibold text-gray-900 mb-1">The club is quiet today</p>
-        <p className="text-sm text-gray-500">Be the first to log a run!</p>
+        <p className="text-base font-semibold text-text-primary mb-1">The club is quiet today</p>
+        <p className="text-sm text-text-muted">Be the first to log a run!</p>
       </div>
     )
   }

@@ -58,7 +58,7 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
         className={`inline-flex items-center gap-1.5 text-xs font-medium rounded-full transition-all duration-150 select-none min-h-[36px] ${
           given
             ? 'bg-red-50 text-red-500 border border-red-200 px-3 py-2 active:bg-red-100 active:scale-[0.95]'
-            : 'bg-gray-50 text-gray-400 border border-gray-200 px-3 py-2 hover:bg-red-50 hover:text-red-400 hover:border-red-200 active:bg-red-100 active:scale-[0.95]'
+            : 'bg-surface-raised text-text-hint border border-border px-3 py-2 hover:bg-red-50 hover:text-red-400 hover:border-red-200 active:bg-red-100 active:scale-[0.95]'
         } ${animating ? 'scale-110' : ''}`}
         title={given ? 'Remove high five' : 'Give a high five'}
       >
@@ -73,7 +73,7 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
           {displayNames.map((name, i) => (
             <span
               key={i}
-              className={`inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 border-2 border-white text-[10px] font-bold text-gray-500 ${i > 0 ? '-ml-1.5' : ''}`}
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-alt border-2 border-white text-[10px] font-bold text-text-muted ${i > 0 ? '-ml-1.5' : ''}`}
               title={name}
               aria-hidden="true"
             >
@@ -82,7 +82,7 @@ export default function KudosButton({ sessionId, initialCount, initialGiven, giv
           ))}
           {extraCount > 0 && (
             <span
-              className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 border-2 border-white text-[10px] font-bold text-gray-500 -ml-1.5"
+              className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-alt border-2 border-white text-[10px] font-bold text-text-muted -ml-1.5"
               aria-hidden="true"
             >
               +{extraCount}

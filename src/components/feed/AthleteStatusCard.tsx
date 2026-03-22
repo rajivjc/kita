@@ -60,15 +60,15 @@ export default function AthleteStatusCard({
           {avatar ?? '🏃'}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">
+          <p className="text-sm font-semibold text-text-primary truncate">
             {athleteName}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5 truncate">{detail}</p>
+          <p className="text-xs text-text-muted mt-0.5 truncate">{detail}</p>
         </div>
         {rightContent && (
           <div className="flex-shrink-0">{rightContent}</div>
         )}
-        <span className="text-gray-400 flex-shrink-0 text-lg">&#x203A;</span>
+        <span className="text-text-hint flex-shrink-0 text-lg">&#x203A;</span>
       </div>
     </Link>
   )

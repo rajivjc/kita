@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className="min-h-dvh pb-16">
+      <body className="min-h-dvh pb-16 bg-bg text-text-primary">
         {/* Inline PWA splash screen — renders before React hydrates */}
         <div
           id="pwa-splash"

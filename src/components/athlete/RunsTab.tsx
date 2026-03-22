@@ -11,7 +11,7 @@ import StravaActivityLink from '@/components/feed/StravaActivityLink'
 import PhotoLightbox from './PhotoLightbox'
 
 const ProgressChart = dynamic(() => import('@/components/charts/ProgressChart'), {
-  loading: () => <div className="h-[200px] animate-pulse bg-gray-100 rounded-xl" />,
+  loading: () => <div className="h-[200px] animate-pulse bg-surface-alt rounded-xl" />,
   ssr: false,
 })
 
@@ -167,7 +167,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
     : null
 
   return (
-    <div className={`bg-white rounded-xl border border-gray-100 border-l-[5px] ${borderColor} shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md`}>
+    <div className={`bg-surface rounded-xl border border-border-subtle border-l-[5px] ${borderColor} shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md`}>
       <button
         className="w-full text-left"
         onClick={() => !isReadOnly && setExpanded((v) => !v)}
@@ -181,11 +181,11 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
           {/* Top row — distance hero + feel + date */}
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-gray-900 leading-none">
+              <span className="text-2xl font-bold text-text-primary leading-none">
                 {s.distance_km != null ? formatDistance(s.distance_km * 1000) : '—'}
               </span>
               {s.duration_seconds != null && (
-                <span className="text-sm text-gray-500 font-medium">
+                <span className="text-sm text-text-muted font-medium">
                   {formatDuration(s.duration_seconds)}
                 </span>
               )}
@@ -197,7 +197,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
                 </span>
               )}
               {feel == null && !isReadOnly && (
-                <span className="text-xs text-gray-400 italic">Rate run</span>
+                <span className="text-xs text-text-hint italic">Rate run</span>
               )}
             </div>
           </div>
@@ -205,7 +205,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
           {/* Stats row — pace + HR + date + strava */}
           <div className="flex items-center gap-3 mb-1 flex-wrap">
             {pace && (
-              <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-medium text-text-muted bg-surface-alt px-2 py-0.5 rounded-full">
                 {pace}
               </span>
             )}
@@ -214,20 +214,20 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
                 {s.avg_heart_rate} bpm{s.max_heart_rate != null ? ` / ${s.max_heart_rate} max` : ''}
               </span>
             )}
-            <span className="text-xs text-gray-400">{formatDate(s.date)}</span>
+            <span className="text-xs text-text-hint">{formatDate(s.date)}</span>
             {s.sync_source === 'strava_webhook' && (
               <span className="flex items-center gap-1 text-xs text-orange-500 font-medium">
                 <StravaLogo /> Strava
               </span>
             )}
             {s.sync_source === 'manual' && (
-              <span className="text-xs text-gray-400 font-medium">Manual</span>
+              <span className="text-xs text-text-hint font-medium">Manual</span>
             )}
           </div>
 
           {/* Note */}
           {note && (
-            <p className="text-sm text-gray-600 mt-2 line-clamp-2 italic">&ldquo;{note}&rdquo;</p>
+            <p className="text-sm text-text-secondary mt-2 line-clamp-2 italic">&ldquo;{note}&rdquo;</p>
           )}
 
           {/* Session photos — clickable to open lightbox */}
@@ -252,7 +252,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
                 </button>
               ))}
               {photos.length > 0 && (
-                <span className="flex items-center text-[10px] text-gray-400 pl-1">
+                <span className="flex items-center text-[10px] text-text-hint pl-1">
                   Tap to view
                 </span>
               )}
@@ -263,7 +263,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
               {s.coach_name && (
-                <span className="text-xs text-gray-400">👟 {s.coach_name}</span>
+                <span className="text-xs text-text-hint">👟 {s.coach_name}</span>
               )}
               {s.strava_activity_id && (
                 <span onClick={(e) => e.stopPropagation()}>
@@ -274,7 +274,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
             {!isReadOnly && (
               <ChevronRight
                 size={16}
-                className={`text-gray-300 transition-transform ${expanded ? 'rotate-90' : ''}`}
+                className={`text-text-hint transition-transform ${expanded ? 'rotate-90' : ''}`}
               />
             )}
           </div>
@@ -309,9 +309,9 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
       {/* Kudos indicator */}
       {kudosCount > 0 && (
         <div className="flex items-center gap-2 px-4 pb-2.5">
-          <span className="text-xs text-gray-400">🙌 {kudosCount}</span>
+          <span className="text-xs text-text-hint">🙌 {kudosCount}</span>
           {kudosGivers.length > 0 && (
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] text-text-hint">
               {kudosGivers.slice(0, 3).join(', ')}{kudosGivers.length > 3 ? ` +${kudosGivers.length - 3}` : ''}
             </span>
           )}
@@ -320,51 +320,51 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
 
       {/* Expanded panel — coaches only */}
       {expanded && !isReadOnly && (
-        <div className="border-t border-gray-100 px-4 py-4 bg-gray-50/80 space-y-4">
+        <div className="border-t border-border-subtle px-4 py-4 bg-surface-raised/80 space-y-4">
           {s.sync_source === 'manual' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Date</p>
+                <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Date</p>
                 <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
                   max={new Date().toISOString().split('T')[0]}
                   onKeyDown={(e) => e.preventDefault()}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
+                  className="border border-border rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Distance (km)</p>
+                <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Distance (km)</p>
                 <input type="number" step="0.01" value={distanceKm} onChange={(e) => setDistanceKm(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
+                  className="border border-border rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Duration (mins)</p>
+                <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Duration (mins)</p>
                 <input type="number" step="1" value={durationMins} onChange={(e) => setDurationMins(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
+                  className="border border-border rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none w-full" />
               </div>
             </div>
           )}
           <div>
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Rate this run <span className="font-normal normal-case">(1 = Very hard, 5 = Great)</span></p>
+            <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">Rate this run <span className="font-normal normal-case">(1 = Very hard, 5 = Great)</span></p>
             <div className="flex gap-2">
               {([1, 2, 3, 4, 5] as Feel[]).map((v) => (
                 <button key={v} onClick={() => setFeel(v)}
                   className={`flex-1 flex flex-col items-center py-2.5 rounded-xl transition-all duration-200 ${
-                    feel === v ? 'bg-teal-50 ring-2 ring-teal-400 shadow-sm scale-105' : 'bg-white border border-gray-200 hover:bg-gray-50 active:scale-95'
+                    feel === v ? 'bg-teal-50 ring-2 ring-teal-400 shadow-sm scale-105' : 'bg-surface border border-border hover:bg-surface-raised active:scale-95'
                   }`}
                   aria-label={FEEL_LABELS[v]} aria-pressed={feel === v}>
                   <span className="text-2xl">{FEEL_EMOJI[v]}</span>
-                  <span className="text-xs text-gray-400 mt-1">{FEEL_LABELS[v]}</span>
+                  <span className="text-xs text-text-hint mt-1">{FEEL_LABELS[v]}</span>
                 </button>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
               Session note <span className="font-normal normal-case">(optional)</span>
             </p>
             <textarea value={note} onChange={(e) => setNote(e.target.value)}
               placeholder="How did it go? Any observations about this run…"
               rows={2}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none" />
+              className="w-full border border-border rounded-lg px-3 py-2 text-sm resize-none transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none" />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex items-center justify-between">
@@ -388,7 +388,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
                     {deleting ? 'Deleting…' : 'Yes, delete'}
                   </button>
                   <button onClick={() => setConfirmingDelete(false)} disabled={deleting}
-                    className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1.5 transition-colors">
+                    className="text-xs text-text-muted hover:text-text-secondary px-2 py-1.5 transition-colors">
                     Cancel
                   </button>
                 </div>
@@ -396,7 +396,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
             )}
             <div className="flex gap-3">
               <button onClick={() => { setExpanded(false); setFeel(s.feel as Feel | null); setNote(s.note ?? ''); setDate(toDateOnly(s.date)); setDistanceKm(s.distance_km != null ? String(s.distance_km) : ''); setDurationMins(s.duration_seconds != null ? String(Math.round(s.duration_seconds / 60)) : '') }}
-                className="text-sm text-gray-500 px-4 py-2 hover:text-gray-700 transition-colors">Cancel</button>
+                className="text-sm text-text-muted px-4 py-2 hover:text-text-secondary transition-colors">Cancel</button>
               <button onClick={handleSave} disabled={saving}
                 className="bg-teal-600 hover:bg-teal-700 active:scale-[0.97] disabled:opacity-60 text-white text-sm font-medium rounded-lg px-5 py-2 transition-all duration-150 shadow-sm">
                 {saving ? (
@@ -467,8 +467,8 @@ export default function RunsTab({ sessions, milestones, photosBySession, weeklyD
       {feedItems.length === 0 && (
         <div className="text-center py-12">
           <p className="text-4xl mb-3">👟</p>
-          <p className="text-sm font-semibold text-gray-900 mb-1">Ready for the first run?</p>
-          <p className="text-xs text-gray-500">Sessions will appear here once logged or synced from Strava.</p>
+          <p className="text-sm font-semibold text-text-primary mb-1">Ready for the first run?</p>
+          <p className="text-xs text-text-muted">Sessions will appear here once logged or synced from Strava.</p>
         </div>
       )}
       {feedItems.map((item) => (

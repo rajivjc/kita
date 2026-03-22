@@ -54,7 +54,7 @@ export default function AthleteCard({
       className={`flex items-center gap-4 rounded-xl shadow-sm p-4 hover:shadow-md active:scale-[0.98] transition-all duration-200 ${
         needsAttention
           ? 'bg-amber-50/60 border border-amber-200/80 hover:border-amber-300'
-          : 'bg-white border border-gray-100 hover:border-gray-200'
+          : 'bg-surface border border-border-subtle hover:border-border'
       }`}
     >
       {/* Avatar */}
@@ -89,26 +89,26 @@ export default function AthleteCard({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-gray-900 truncate">{name}</p>
+        <p className="font-semibold text-text-primary truncate">{name}</p>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-sm text-gray-500">{totalSessions} run{totalSessions !== 1 ? 's' : ''}</span>
+          <span className="text-sm text-text-muted">{totalSessions} run{totalSessions !== 1 ? 's' : ''}</span>
           {lastSessionDate ? (
             <>
-              <span className="text-gray-300">·</span>
-              <span className={`text-sm ${needsAttention ? 'text-amber-600 font-medium' : 'text-gray-400'}`}>
+              <span className="text-text-hint">·</span>
+              <span className={`text-sm ${needsAttention ? 'text-amber-600 font-medium' : 'text-text-hint'}`}>
                 Last run {formatDate(lastSessionDate)}
               </span>
             </>
           ) : (
             <>
-              <span className="text-gray-300">·</span>
+              <span className="text-text-hint">·</span>
               <span className="text-sm text-amber-600 font-medium">No runs yet</span>
             </>
           )}
         </div>
         {recentFeels.length > 0 && (
           <div className="flex items-center gap-1.5 mt-1.5">
-            <span className="text-[10px] text-gray-400 font-medium mr-0.5">Recent feel</span>
+            <span className="text-[10px] text-text-hint font-medium mr-0.5">Recent feel</span>
             {[...recentFeels].reverse().map((feel, i) => (
               <span
                 key={i}
@@ -121,7 +121,7 @@ export default function AthleteCard({
       </div>
 
       {/* Chevron */}
-      <ChevronRight size={18} className="text-gray-300 flex-shrink-0" aria-hidden="true" />
+      <ChevronRight size={18} className="text-text-hint flex-shrink-0" aria-hidden="true" />
     </Link>
   )
 }

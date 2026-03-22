@@ -28,7 +28,7 @@ export default function OnTrackCloud({ athletes, maxVisible = 8 }: Props) {
         <Link
           key={a.athleteId}
           href={`/athletes/${a.athleteId}`}
-          className="inline-flex items-center gap-1.5 rounded-full bg-green-50 text-[13px] font-medium text-gray-900 hover:bg-green-100 transition-colors min-h-[44px]"
+          className="inline-flex items-center gap-1.5 rounded-full bg-green-50 text-[13px] font-medium text-text-primary hover:bg-green-100 transition-colors min-h-[44px]"
           style={{
             padding: '8px 14px',
             border: '0.5px solid #BBF7D0',
@@ -47,7 +47,7 @@ export default function OnTrackCloud({ athletes, maxVisible = 8 }: Props) {
       ))}
       {overflow > 0 && (
         <span
-          className="inline-flex items-center rounded-full bg-gray-100 text-[13px] font-medium text-gray-500 min-h-[44px]"
+          className="inline-flex items-center rounded-full bg-surface-alt text-[13px] font-medium text-text-muted min-h-[44px]"
           style={{
             padding: '8px 14px',
             border: '0.5px solid #E5E7EB',

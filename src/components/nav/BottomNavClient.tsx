@@ -69,7 +69,7 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, unreadCo
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border">
       <div className="flex max-w-2xl mx-auto">
       {tabs.map((tab) => {
         const active = pathname === tab.href || pathname.startsWith(tab.href + '/')
@@ -93,7 +93,7 @@ export default function BottomNavClient({ isAdmin, isCaregiver = false, unreadCo
         const baseClasses = `flex flex-1 flex-col items-center justify-center min-h-[44px] py-3 gap-1 font-medium transition-all duration-150 rounded-lg mx-0.5 active:scale-95 ${
           active
             ? 'text-teal-700 bg-teal-50'
-            : 'text-gray-500 hover:text-gray-600 hover:bg-gray-50'
+            : 'text-text-muted hover:text-text-secondary hover:bg-surface-raised'
         }`
 
         // In PWA standalone mode, use <a> tags for full page reloads to

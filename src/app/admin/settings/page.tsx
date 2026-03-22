@@ -36,9 +36,9 @@ export default async function AdminSettingsPage() {
         Admin
       </Link>
 
-      <h1 className="text-2xl font-bold text-gray-900">Club Settings</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Club Settings</h1>
 
-      <div className="bg-white border border-gray-200 rounded-xl px-4 py-4">
+      <div className="bg-surface border border-border rounded-xl px-4 py-4">
         <ClubSettingsForm
           name={settings?.name ?? 'SOSG Running Club'}
           homeLocation={settings?.home_location ?? null}

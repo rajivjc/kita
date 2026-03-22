@@ -76,7 +76,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
         <>
         <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-lg font-bold text-gray-900">
+            <p className="text-lg font-bold text-text-primary">
               {greeting}, {firstName}
             </p>
             {coachFocus && coachFocus.streak.current > 0 && (
@@ -189,20 +189,16 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           {priorities.unmatchedStravaCount > 0 && (
             <Link
               href="/notifications"
-              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px]"
-              style={{
-                backgroundColor: 'var(--color-warning-light)',
-                borderLeft: '3px solid var(--color-warning)',
-              }}
+              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px] bg-amber-50 border-l-4 border-l-amber-500"
             >
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-text-primary">
                 {priorities.unmatchedStravaCount} unmatched Strava activit{priorities.unmatchedStravaCount === 1 ? 'y' : 'ies'} — tap to resolve
               </p>
             </Link>
           )}
 
-          <div className="mt-2 mb-5 border-t border-gray-200 pt-5">
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide" style={{ letterSpacing: '0.5px' }}>Recent activity</p>
+          <div className="mt-2 mb-5 border-t border-border pt-5">
+            <p className="text-[11px] font-semibold text-text-hint uppercase tracking-wide" style={{ letterSpacing: '0.5px' }}>Recent activity</p>
           </div>
         </>
       )}
@@ -258,7 +254,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
                   <Link
                     key={name}
                     href={`/athletes/${athleteMsg.athlete_id}`}
-                    className="inline-flex items-center gap-1 bg-white/70 hover:bg-white text-teal-700 text-xs font-medium px-2.5 py-1 rounded-full border border-teal-200 transition-colors"
+                    className="inline-flex items-center gap-1 bg-white/70 hover:bg-surface text-teal-700 text-xs font-medium px-2.5 py-1 rounded-full border border-teal-200 transition-colors"
                   >
                     {name}
                     <span className="text-teal-400">&#x203A;</span>
@@ -272,22 +268,22 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
 
       {/* Today's Focus */}
       {coachFocus && coachFocus.items.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
-          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
+        <div className="bg-surface border border-border-subtle rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <p className="text-[11px] font-bold text-text-muted uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
           <div className="space-y-2">
             {coachFocus.items.map((item, i) => {
               const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 bg-orange-50/40'
                 : item.type === 'personal_best' || item.type === 'best_week_ever' ? 'hover:bg-teal-50 bg-teal-50/40'
-                : 'hover:bg-gray-50'
+                : 'hover:bg-surface-raised'
               return (
                 <Link key={i} href={`/athletes/${item.athleteId}`}>
                   <div className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${bgClass}`}>
                     <span className="text-base flex-shrink-0">{item.type === 'approaching_milestone' ? '⭐' : item.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{item.title}</p>
-                      <p className="text-xs text-gray-500">{item.subtitle}</p>
+                      <p className="text-sm font-medium text-text-primary truncate">{item.title}</p>
+                      <p className="text-xs text-text-muted">{item.subtitle}</p>
                     </div>
-                    <span className="text-gray-300 flex-shrink-0 text-sm">&#x203A;</span>
+                    <span className="text-text-hint flex-shrink-0 text-sm">&#x203A;</span>
                   </div>
                 </Link>
               )

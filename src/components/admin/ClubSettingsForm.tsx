@@ -38,7 +38,7 @@ export default function ClubSettingsForm({
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="name" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+        <label htmlFor="name" className="text-[10px] font-medium text-text-muted uppercase tracking-wide">
           Club name
         </label>
         <input
@@ -47,12 +47,12 @@ export default function ClubSettingsForm({
           type="text"
           required
           defaultValue={name}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="home_location" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+        <label htmlFor="home_location" className="text-[10px] font-medium text-text-muted uppercase tracking-wide">
           Home location
         </label>
         <input
@@ -61,27 +61,27 @@ export default function ClubSettingsForm({
           type="text"
           defaultValue={homeLocation ?? ''}
           placeholder="e.g. East Coast Park, Singapore"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="session_day" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+          <label htmlFor="session_day" className="text-[10px] font-medium text-text-muted uppercase tracking-wide">
             Regular session day
           </label>
           <select
             id="session_day"
             name="session_day"
             defaultValue={sessionDay ?? ''}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+            className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
           >
             <option value="">Not set</option>
             {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
         <div>
-          <label htmlFor="session_time" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+          <label htmlFor="session_time" className="text-[10px] font-medium text-text-muted uppercase tracking-wide">
             Session time
           </label>
           <input
@@ -90,13 +90,13 @@ export default function ClubSettingsForm({
             type="text"
             defaultValue={sessionTime ?? ''}
             placeholder="e.g. 8:00 AM"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+            className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="strava_club_id" className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+        <label htmlFor="strava_club_id" className="text-[10px] font-medium text-text-muted uppercase tracking-wide">
           Strava Club ID <span className="normal-case font-normal">(optional)</span>
         </label>
         <input
@@ -105,7 +105,7 @@ export default function ClubSettingsForm({
           type="number"
           defaultValue={stravaClubId ?? ''}
           placeholder="Numeric Strava club ID"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
         />
       </div>
 

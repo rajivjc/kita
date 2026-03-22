@@ -17,7 +17,7 @@ function NoteCard({ note }: { note: Props['notes'][number] }) {
       <div className="flex gap-3">
         <span className="text-amber-300 text-2xl leading-none font-serif select-none" aria-hidden="true">&ldquo;</span>
         <div className="flex-1 min-w-0">
-          <p className={`text-sm text-gray-700 leading-relaxed ${!expanded && isLong ? 'line-clamp-3' : ''}`}>
+          <p className={`text-sm text-text-secondary leading-relaxed ${!expanded && isLong ? 'line-clamp-3' : ''}`}>
             {note.content}
           </p>
           {isLong && (
@@ -30,11 +30,11 @@ function NoteCard({ note }: { note: Props['notes'][number] }) {
           )}
           <div className="flex items-center gap-2 mt-2">
             {note.coach_name && (
-              <span className="text-xs font-medium text-gray-500">
+              <span className="text-xs font-medium text-text-muted">
                 — {note.coach_name}
               </span>
             )}
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] text-text-hint">
               {formatDate(note.created_at)}
             </span>
           </div>
@@ -48,7 +48,7 @@ export default function CaregiverNotesCard({ notes, athleteFirstName }: Props) {
   if (notes.length === 0) return null
 
   return (
-    <div className="bg-white border border-amber-100 rounded-xl px-4 py-4 mb-5 shadow-sm">
+    <div className="bg-surface border border-amber-100 rounded-xl px-4 py-4 mb-5 shadow-sm">
       <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-3">
         What coaches are saying about {athleteFirstName}
       </p>

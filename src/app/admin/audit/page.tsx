@@ -115,7 +115,7 @@ function roleBadgeColor(role: string | null): string {
     case 'caregiver':
       return 'bg-amber-50 text-amber-700 border-amber-200'
     default:
-      return 'bg-gray-50 text-gray-600 border-gray-200'
+      return 'bg-surface-raised text-text-secondary border-border'
   }
 }
 
@@ -144,28 +144,28 @@ export default async function AuditPage() {
       <div>
         <Link
           href="/admin"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-3"
+          className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-text-secondary mb-3"
         >
           <ChevronLeft className="w-4 h-4" />
           Admin
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Activity Log</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Activity Log</h1>
       </div>
 
       {auditEntries.length === 0 ? (
-        <p className="text-sm text-gray-500">No activity recorded yet.</p>
+        <p className="text-sm text-text-muted">No activity recorded yet.</p>
       ) : (
-        <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+        <div className="divide-y divide-gray-100 border border-border rounded-xl overflow-hidden">
           {auditEntries.map((entry) => (
-            <div key={entry.id} className="px-4 py-3 bg-white">
+            <div key={entry.id} className="px-4 py-3 bg-surface">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm text-gray-900">
+                  <p className="text-sm text-text-primary">
                     {describeAction(entry)}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     {entry.actor_email && (
-                      <span className="text-xs text-gray-500 truncate">
+                      <span className="text-xs text-text-muted truncate">
                         {entry.actor_email}
                       </span>
                     )}
@@ -177,7 +177,7 @@ export default async function AuditPage() {
                   </div>
                 </div>
                 <span
-                  className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0"
+                  className="text-xs text-text-hint whitespace-nowrap flex-shrink-0"
                   title={formatFullTimestamp(entry.created_at)}
                   aria-label={formatFullTimestamp(entry.created_at)}
                 >

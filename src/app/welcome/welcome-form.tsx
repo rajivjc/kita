@@ -49,7 +49,7 @@ export default function WelcomeForm({ role }: { role: string }) {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="name" className="block text-sm font-medium text-text-secondary mb-1">
           What should we call you?
         </label>
         <input
@@ -60,7 +60,7 @@ export default function WelcomeForm({ role }: { role: string }) {
           autoFocus
           placeholder={role === 'caregiver' ? 'e.g. Sarah' : 'e.g. Coach Rajiv'}
           autoComplete="name"
-          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+          className="block w-full rounded-lg border border-border-strong px-3 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
         />
         {state.error && (
           <p className="mt-1 text-sm text-red-600" role="alert">
@@ -72,7 +72,7 @@ export default function WelcomeForm({ role }: { role: string }) {
       <SubmitButton />
 
       {role === 'coach' && (
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-text-hint text-center">
           You can connect Strava later from the feed.
         </p>
       )}

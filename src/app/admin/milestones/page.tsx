@@ -36,28 +36,28 @@ export default async function AdminMilestonesPage() {
         Admin
       </Link>
 
-      <h1 className="text-2xl font-bold text-gray-900">Milestone Definitions</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Milestone Definitions</h1>
 
       {/* Create new */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Add a milestone</h2>
-        <div className="bg-white border border-gray-200 rounded-xl px-4 py-4">
+        <h2 className="text-lg font-semibold text-text-primary mb-4">Add a milestone</h2>
+        <div className="bg-surface border border-border rounded-xl px-4 py-4">
           <MilestoneDefinitionForm />
         </div>
       </section>
 
       {/* Existing definitions */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        <h2 className="text-lg font-semibold text-text-primary mb-4">
           All milestones
-          <span className="text-sm font-normal text-gray-400 ml-2">
+          <span className="text-sm font-normal text-text-hint ml-2">
             {(definitions ?? []).length} defined
           </span>
         </h2>
         {(definitions ?? []).length === 0 ? (
-          <p className="text-sm text-gray-500">No milestone definitions yet.</p>
+          <p className="text-sm text-text-muted">No milestone definitions yet.</p>
         ) : (
-          <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+          <div className="divide-y divide-gray-100 border border-border rounded-xl overflow-hidden">
             {(definitions ?? []).map((def) => (
               <MilestoneDefinitionRow
                 key={def.id}

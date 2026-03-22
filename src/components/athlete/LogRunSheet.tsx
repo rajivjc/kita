@@ -145,16 +145,16 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
       />
 
       {/* Sheet */}
-      <div className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl z-50 max-w-2xl mx-auto shadow-2xl max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
+      <div className={`fixed bottom-0 left-0 right-0 bg-surface rounded-t-2xl z-50 max-w-2xl mx-auto shadow-2xl max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-out ${visible ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="p-6">
           {/* Handle bar */}
           <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-4" />
-          <h2 className="text-base font-semibold text-gray-900 mb-5 text-center">Log a run</h2>
+          <h2 className="text-base font-semibold text-text-primary mb-5 text-center">Log a run</h2>
 
           <form action={handleAction} className="space-y-4">
             {/* Title */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                 Title <span className="font-normal normal-case">(optional)</span>
               </label>
               <input
@@ -162,13 +162,13 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                 name="title"
                 defaultValue={defaultTitle}
                 placeholder="e.g. Sunday long run"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
               />
             </div>
 
             {/* Date */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                 Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -178,14 +178,14 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                 defaultValue={today}
                 max={today}
                 onKeyDown={(e) => e.preventDefault()}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
               />
             </div>
 
             {/* Distance and Duration side by side */}
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                   Distance (km) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -195,11 +195,11 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                   step="0.01"
                   required
                   placeholder="e.g. 3.5"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                   Duration (mins) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -208,7 +208,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                   min="0"
                   required
                   placeholder="e.g. 30"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
                 />
               </div>
             </div>
@@ -216,7 +216,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
             {/* Heart Rate side by side */}
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                   Avg HR <span className="font-normal normal-case">(bpm, optional)</span>
                 </label>
                 <input
@@ -225,11 +225,11 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                   min="30"
                   max="250"
                   placeholder="e.g. 145"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                   Max HR <span className="font-normal normal-case">(bpm, optional)</span>
                 </label>
                 <input
@@ -238,14 +238,14 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                   min="30"
                   max="250"
                   placeholder="e.g. 170"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
                 />
               </div>
             </div>
 
             {/* Feel */}
             <div>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+              <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
                 How did it feel? <span className="font-normal normal-case">(optional)</span>
               </p>
               <div className="flex gap-2">
@@ -257,7 +257,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                     className={`flex-1 flex flex-col items-center py-2 rounded-xl text-2xl transition-all duration-200 ${
                       selectedFeel === value
                         ? 'bg-teal-50 ring-2 ring-teal-400 scale-105'
-                        : 'bg-white border border-gray-200 hover:bg-gray-50 active:scale-95'
+                        : 'bg-surface border border-border hover:bg-surface-raised active:scale-95'
                     }`}
                     aria-label={label}
                     aria-pressed={selectedFeel === value}
@@ -270,20 +270,20 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
 
             {/* Note */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <label className="block text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
                 Note <span className="font-normal normal-case">(optional)</span>
               </label>
               <textarea
                 name="note"
                 rows={2}
                 placeholder="How did the run go? Any observations…"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             {/* Photo */}
             <div>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+              <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
                 Photo <span className="font-normal normal-case">(optional)</span>
               </p>
               {photoPreview ? (
@@ -308,7 +308,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={compressing}
-                  className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-600 text-sm rounded-lg px-3 py-2.5 transition-colors"
+                  className="flex items-center gap-2 bg-surface-raised hover:bg-surface-alt border border-border text-text-secondary text-sm rounded-lg px-3 py-2.5 transition-colors"
                 >
                   <Camera size={16} />
                   {compressing ? 'Compressing…' : 'Add a photo'}
@@ -329,7 +329,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
               <button
                 type="button"
                 onClick={handleClose}
-                className="text-sm text-gray-500 px-3 py-2"
+                className="text-sm text-text-muted px-3 py-2"
               >
                 Cancel
               </button>

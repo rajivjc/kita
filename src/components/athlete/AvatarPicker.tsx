@@ -99,7 +99,7 @@ export default function AvatarPicker({
                   className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all duration-150 motion-reduce:transition-none ${
                     isSelected
                       ? `ring-2 ${themeRing} ${themeBgLight} scale-105 motion-reduce:scale-100`
-                      : 'bg-white hover:bg-gray-50 ring-1 ring-gray-200'
+                      : 'bg-surface hover:bg-surface-raised ring-1 ring-gray-200'
                   }`}
                 >
                   {opt.key}

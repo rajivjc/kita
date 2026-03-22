@@ -55,40 +55,40 @@ export default async function UnmatchedRunPage({
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/notifications"
-          className="text-gray-400 hover:text-gray-600 text-sm font-medium"
+          className="text-text-hint hover:text-text-secondary text-sm font-medium"
         >
           &larr; Notifications
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Link Run to Athlete</h1>
+        <h1 className="text-xl font-bold text-text-primary">Link Run to Athlete</h1>
       </div>
 
       {/* Activity details */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-4">
-        <h2 className="font-semibold text-gray-900 mb-2">
+      <div className="bg-surface rounded-xl border border-border shadow-sm p-4 mb-4">
+        <h2 className="font-semibold text-text-primary mb-2">
           {activity.name || 'Untitled Run'}
         </h2>
-        <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+        <div className="grid grid-cols-2 gap-2 text-sm text-text-secondary">
           {activity.start_date && (
             <div>
-              <span className="text-gray-400">Date:</span>{' '}
+              <span className="text-text-hint">Date:</span>{' '}
               {formatDate(activity.start_date)}
             </div>
           )}
           {distanceKm && (
             <div>
-              <span className="text-gray-400">Distance:</span>{' '}
+              <span className="text-text-hint">Distance:</span>{' '}
               {distanceKm} km
             </div>
           )}
           {activity.moving_time && (
             <div>
-              <span className="text-gray-400">Duration:</span>{' '}
+              <span className="text-text-hint">Duration:</span>{' '}
               {formatDuration(activity.moving_time)}
             </div>
           )}
           {activity.average_heartrate && (
             <div>
-              <span className="text-gray-400">Avg HR:</span>{' '}
+              <span className="text-text-hint">Avg HR:</span>{' '}
               {Math.round(activity.average_heartrate)} bpm
             </div>
           )}

@@ -43,7 +43,7 @@ export default async function AcceptInvitePage({
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-500 to-emerald-600 px-4 py-8">
-      <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl text-center">
+      <div className="w-full max-w-sm rounded-3xl bg-surface p-8 shadow-2xl text-center">
         {/* Running icon — matches login page */}
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center">
@@ -77,17 +77,17 @@ export default async function AcceptInvitePage({
           </div>
         </div>
 
-        <h1 className="text-xl font-bold text-gray-900 mb-2">
+        <h1 className="text-xl font-bold text-text-primary mb-2">
           Welcome to SOSG Running Club
         </h1>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-text-secondary mb-6">
           You have been invited to join as <strong>{roleLabel}</strong>.
         </p>
 
         <AcceptInviteButton token={token} />
 
         <noscript>
-          <p className="text-sm text-gray-600 mt-4">
+          <p className="text-sm text-text-secondary mt-4">
             JavaScript is required to accept this invitation.{' '}
             <a
               href={`/login?email=${encodeURIComponent(invitation.email)}`}
@@ -98,7 +98,7 @@ export default async function AcceptInvitePage({
           </p>
         </noscript>
 
-        <p className="text-xs text-gray-400 mt-4">
+        <p className="text-xs text-text-hint mt-4">
           By accepting, you will be signed in automatically.
         </p>
       </div>

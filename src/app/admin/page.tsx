@@ -78,56 +78,56 @@ export default async function AdminPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-6 pb-28 space-y-10">
-      <h1 className="text-2xl font-bold text-gray-900">Admin</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Admin</h1>
 
       {/* Quick links */}
       <section>
         <div className="grid grid-cols-3 gap-3">
           <Link
             href="/admin/milestones"
-            className="bg-white border border-gray-200 rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
           >
             <span className="text-2xl">🏆</span>
-            <p className="text-sm font-semibold text-gray-900 mt-2">Milestones</p>
-            <p className="text-xs text-gray-500 mt-0.5">Create and manage milestone definitions</p>
+            <p className="text-sm font-semibold text-text-primary mt-2">Milestones</p>
+            <p className="text-xs text-text-muted mt-0.5">Create and manage milestone definitions</p>
           </Link>
           <Link
             href="/admin/settings"
-            className="bg-white border border-gray-200 rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
           >
             <span className="text-2xl">⚙️</span>
-            <p className="text-sm font-semibold text-gray-900 mt-2">Settings</p>
-            <p className="text-xs text-gray-500 mt-0.5">Club name, location, session schedule</p>
+            <p className="text-sm font-semibold text-text-primary mt-2">Settings</p>
+            <p className="text-xs text-text-muted mt-0.5">Club name, location, session schedule</p>
           </Link>
           <Link
             href="/admin/audit"
-            className="bg-white border border-gray-200 rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
           >
             <span className="text-2xl">📋</span>
-            <p className="text-sm font-semibold text-gray-900 mt-2">Activity Log</p>
-            <p className="text-xs text-gray-500 mt-0.5">View recent admin and coach actions</p>
+            <p className="text-sm font-semibold text-text-primary mt-2">Activity Log</p>
+            <p className="text-xs text-text-muted mt-0.5">View recent admin and coach actions</p>
           </Link>
         </div>
       </section>
 
       {/* Invite form */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Invite someone</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">Invite someone</h2>
         <AdminInviteForm athletes={athletes ?? []} />
       </section>
 
       {/* Pending invitations */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Pending invitations</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">Pending invitations</h2>
         {invitations.length === 0 ? (
-          <p className="text-sm text-gray-500">No pending invitations.</p>
+          <p className="text-sm text-text-muted">No pending invitations.</p>
         ) : (
-          <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+          <div className="divide-y divide-gray-100 border border-border rounded-xl overflow-hidden">
             {invitations.map((inv) => (
-              <div key={inv.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 py-3 bg-white">
+              <div key={inv.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 py-3 bg-surface">
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{inv.email}</p>
-                  <p className="text-xs text-gray-500 capitalize">
+                  <p className="text-sm font-medium text-text-primary truncate">{inv.email}</p>
+                  <p className="text-xs text-text-muted capitalize">
                     {inv.role}
                     {inv.role === 'caregiver' && inv.athlete_id && athleteNameMap[inv.athlete_id] && (
                       <span className="ml-1 inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700">
@@ -137,7 +137,7 @@ export default async function AdminPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-text-hint">
                     {inv.created_at ? new Date(inv.created_at).toLocaleDateString('en-SG') : ''}
                   </p>
                   <CancelInviteButton invitationId={inv.id} email={inv.email} />
@@ -150,11 +150,11 @@ export default async function AdminPage() {
 
       {/* Current users */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Current users</h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">Current users</h2>
         {activeUsers.length === 0 ? (
-          <p className="text-sm text-gray-500">No users yet.</p>
+          <p className="text-sm text-text-muted">No users yet.</p>
         ) : (
-          <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+          <div className="divide-y divide-gray-100 border border-border rounded-xl overflow-hidden">
             {activeUsers.map((u) => (
               <UserRow
                 key={u.id}

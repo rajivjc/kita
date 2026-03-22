@@ -52,11 +52,11 @@ export default function WorkingOnCard({
   if (!workingOn && !editing) {
     if (isReadOnly) return null
     return (
-      <div className="mb-6 bg-gray-50 border border-dashed border-gray-200 rounded-xl px-4 py-4">
-        <p className="text-sm font-medium text-gray-700 mb-1">
+      <div className="mb-6 bg-surface-raised border border-dashed border-border rounded-xl px-4 py-4">
+        <p className="text-sm font-medium text-text-secondary mb-1">
           What is {firstName} working on right now?
         </p>
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs text-text-muted mb-3">
           Add a short status to help caregivers understand what stage {firstName} is at.
         </p>
         <button
@@ -72,18 +72,18 @@ export default function WorkingOnCard({
   // Edit mode
   if (editing) {
     return (
-      <div className="mb-6 bg-white border border-teal-200 rounded-xl px-4 py-4 shadow-sm">
+      <div className="mb-6 bg-surface border border-teal-200 rounded-xl px-4 py-4 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-bold text-teal-700 uppercase tracking-widest">Working on</p>
           <button
             onClick={handleCancel}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-1 text-text-hint hover:text-text-secondary transition-colors"
             aria-label="Cancel editing"
           >
             <X size={16} />
           </button>
         </div>
-        <label className="block text-sm text-gray-700 mb-1">
+        <label className="block text-sm text-text-secondary mb-1">
           What is {firstName} working on right now?
         </label>
         <textarea
@@ -92,9 +92,9 @@ export default function WorkingOnCard({
           placeholder="e.g. Walk-run intervals, building to 2 min running / 1 min walking"
           rows={2}
           maxLength={300}
-          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 resize-none mb-3"
+          className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 resize-none mb-3"
         />
-        <label className="block text-sm text-gray-700 mb-1">
+        <label className="block text-sm text-text-secondary mb-1">
           Recent progress (optional)
         </label>
         <textarea
@@ -103,15 +103,15 @@ export default function WorkingOnCard({
           placeholder="e.g. Can now run for 90 seconds without stopping"
           rows={2}
           maxLength={300}
-          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 resize-none mb-2"
+          className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 resize-none mb-2"
         />
-        <p className="text-[10px] text-gray-400 mb-3">
+        <p className="text-[10px] text-text-hint mb-3">
           Visible to {firstName}&apos;s caregiver.
         </p>
         <div className="flex items-center justify-end gap-2">
           <button
             onClick={handleCancel}
-            className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 transition-colors"
+            className="text-sm text-text-muted hover:text-text-secondary px-3 py-1.5 transition-colors"
           >
             Cancel
           </button>
@@ -142,11 +142,11 @@ export default function WorkingOnCard({
           </button>
         )}
       </div>
-      <p className="text-sm text-gray-800">{workingOn}</p>
+      <p className="text-sm text-text-primary">{workingOn}</p>
       {recentProgress && (
         <div className="mt-2">
           <p className="text-[11px] font-semibold text-teal-600 mb-0.5">Recent progress</p>
-          <p className="text-sm text-gray-700">{recentProgress}</p>
+          <p className="text-sm text-text-secondary">{recentProgress}</p>
         </div>
       )}
       {updatedAt && (

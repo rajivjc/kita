@@ -42,12 +42,12 @@ export default function AthleteSearch({ athletes }: AthleteSearchProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search athletes..."
-          className="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] transition-all duration-200 [&::-webkit-search-cancel-button]:hidden"
+          className="block w-full rounded-xl border border-border bg-surface-raised px-4 py-2.5 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-surface focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] transition-all duration-200 [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button
             onClick={() => setQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-0.5 rounded-full hover:bg-gray-200 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-hint hover:text-text-secondary p-0.5 rounded-full hover:bg-surface-alt transition-colors"
             aria-label="Clear search"
           >
             <X size={16} />
@@ -58,12 +58,12 @@ export default function AthleteSearch({ athletes }: AthleteSearchProps) {
       {filtered.some((a) => isInactive(a.lastSessionDate)) && (
         <div className="flex items-center gap-2 mb-3 px-1">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-300 flex-shrink-0" />
-          <span className="text-xs text-gray-500">Highlighted athletes have not run in the past 2 weeks</span>
+          <span className="text-xs text-text-muted">Highlighted athletes have not run in the past 2 weeks</span>
         </div>
       )}
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-gray-400 text-center py-8">
+        <p className="text-sm text-text-hint text-center py-8">
           No athletes match &ldquo;{query}&rdquo;
         </p>
       ) : (

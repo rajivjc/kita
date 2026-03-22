@@ -68,7 +68,7 @@ export default function CaregiverOnboardingCard({
     <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-lg font-bold text-text-primary">
             Welcome, {firstName}!
           </p>
           <p className="text-sm text-amber-700 mt-0.5">
@@ -124,7 +124,7 @@ export default function CaregiverOnboardingCard({
                 )}
               </span>
               <span className={`text-sm font-medium ${
-                step.completed ? 'text-amber-600 line-through' : 'text-gray-900'
+                step.completed ? 'text-amber-600 line-through' : 'text-text-primary'
               }`}>
                 {step.label}
               </span>

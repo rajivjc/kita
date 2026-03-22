@@ -68,17 +68,17 @@ export default function MilestoneDefinitionRow({
   }
 
   return (
-    <div className={`px-4 py-3 bg-white ${!isActive ? 'opacity-60' : ''}`}>
+    <div className={`px-4 py-3 bg-surface ${!isActive ? 'opacity-60' : ''}`}>
       {!editing ? (
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <span className="text-xl flex-shrink-0">{icon ?? '🏆'}</span>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{label}</p>
+              <p className="text-sm font-medium text-text-primary truncate">{label}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{type}</span>
+                <span className="text-[10px] uppercase tracking-wide text-text-hint font-semibold">{type}</span>
                 {condition?.metric && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-muted">
                     {METRIC_LABELS[condition.metric] ?? condition.metric} &ge; {condition.threshold}
                   </span>
                 )}
@@ -98,7 +98,7 @@ export default function MilestoneDefinitionRow({
               className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${
                 isActive
                   ? 'bg-green-50 text-green-700 hover:bg-green-100'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  : 'bg-surface-alt text-text-muted hover:bg-surface-alt'
               }`}
             >
               {toggling ? '...' : isActive ? 'Active' : 'Inactive'}
@@ -109,33 +109,33 @@ export default function MilestoneDefinitionRow({
         <div className="space-y-3">
           <div className="grid grid-cols-[3rem_1fr] gap-3">
             <div>
-              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Icon</label>
+              <label className="text-[10px] font-medium text-text-muted uppercase tracking-wide">Icon</label>
               <input
                 type="text"
                 value={editIcon}
                 onChange={(e) => setEditIcon(e.target.value)}
                 maxLength={4}
-                className="w-full border border-gray-200 rounded-lg px-2 py-2 text-center text-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                className="w-full border border-border rounded-lg px-2 py-2 text-center text-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Label</label>
+              <label className="text-[10px] font-medium text-text-muted uppercase tracking-wide">Label</label>
               <input
                 type="text"
                 value={editLabel}
                 onChange={(e) => setEditLabel(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
               />
             </div>
           </div>
           {type === 'automatic' && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Metric</label>
+                <label className="text-[10px] font-medium text-text-muted uppercase tracking-wide">Metric</label>
                 <select
                   value={editMetric}
                   onChange={(e) => setEditMetric(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                 >
                   <option value="session_count">Session count</option>
                   <option value="distance_km">Single-run distance (km)</option>
@@ -143,7 +143,7 @@ export default function MilestoneDefinitionRow({
                 </select>
               </div>
               <div>
-                <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Threshold</label>
+                <label className="text-[10px] font-medium text-text-muted uppercase tracking-wide">Threshold</label>
                 <input
                   type="number"
                   value={editThreshold}
@@ -151,7 +151,7 @@ export default function MilestoneDefinitionRow({
                   min="0.01"
                   step={editMetric === 'session_count' ? '1' : '0.01'}
                   placeholder="e.g. 10"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function MilestoneDefinitionRow({
             </button>
             <button
               onClick={() => { setEditing(false); setEditLabel(label); setEditIcon(icon ?? ''); setEditMetric(condition?.metric ?? ''); setEditThreshold(condition?.threshold?.toString() ?? ''); setError(null) }}
-              className="text-xs text-gray-500 hover:text-gray-700 px-3 py-2 transition-colors"
+              className="text-xs text-text-muted hover:text-text-secondary px-3 py-2 transition-colors"
             >
               Cancel
             </button>

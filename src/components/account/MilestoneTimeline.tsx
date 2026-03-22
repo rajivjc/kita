@@ -55,8 +55,8 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
   if (sortedDefs.length === 0 && otherEarned.length === 0) return null
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-4">
-      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
+    <div className="bg-surface rounded-xl border border-border-subtle shadow-sm px-4 py-4">
+      <p className="text-[11px] font-bold text-text-hint uppercase tracking-widest mb-4">
         Milestone Journey
       </p>
 
@@ -74,7 +74,7 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
               {!isLast && (
                 <div
                   className={`absolute left-[15px] top-[32px] w-0.5 h-[calc(100%-16px)] ${
-                    isEarned ? 'bg-amber-300' : 'bg-gray-200 border-dashed'
+                    isEarned ? 'bg-amber-300' : 'bg-surface-alt border-dashed'
                   }`}
                   style={!isEarned ? { backgroundImage: 'repeating-linear-gradient(to bottom, #e5e7eb 0, #e5e7eb 4px, transparent 4px, transparent 8px)' , backgroundColor: 'transparent' } : undefined}
                 />
@@ -85,7 +85,7 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
                 className={`relative z-10 w-[30px] h-[30px] rounded-full flex items-center justify-center flex-shrink-0 ${
                   isEarned
                     ? 'bg-amber-100 ring-2 ring-amber-300'
-                    : 'bg-gray-50 border-2 border-gray-200'
+                    : 'bg-surface-raised border-2 border-border'
                 }`}
               >
                 <span className={`text-sm ${isEarned ? '' : 'grayscale opacity-30'}`}>
@@ -99,7 +99,7 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
               {/* Content */}
               <div className={`flex-1 min-w-0 pb-4 ${isLast ? 'pb-0' : ''}`}>
                 <div className="flex items-center justify-between">
-                  <p className={`text-sm font-semibold ${isEarned ? 'text-gray-900' : 'text-gray-400'}`}>
+                  <p className={`text-sm font-semibold ${isEarned ? 'text-text-primary' : 'text-text-hint'}`}>
                     {def.label}
                   </p>
                   {isEarned && earnedData && (
@@ -116,13 +116,13 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
                 ) : (
                   <div className="mt-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                      <div className="flex-1 bg-surface-alt rounded-full h-1.5">
                         <div
                           className="bg-gray-300 h-1.5 rounded-full transition-all"
                           style={{ width: `${threshold > 0 ? (progress / threshold) * 100 : 0}%` }}
                         />
                       </div>
-                      <span className="text-[10px] text-gray-400 flex-shrink-0">
+                      <span className="text-[10px] text-text-hint flex-shrink-0">
                         {progress}/{threshold} runs
                       </span>
                     </div>
@@ -135,13 +135,13 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
 
         {/* Other earned milestones (distance, etc.) at the bottom */}
         {otherEarned.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
+          <div className="mt-3 pt-3 border-t border-border-subtle space-y-2">
             {otherEarned.map(m => (
               <Link key={m.id} href={`/milestone/${m.id}`}>
                 <div className="flex items-center gap-3 bg-amber-50/50 hover:bg-amber-50 rounded-lg px-3 py-2.5 transition-colors">
                   <span className="text-xl flex-shrink-0">{m.icon}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900">{m.label}</p>
+                    <p className="text-sm font-semibold text-text-primary">{m.label}</p>
                     <p className="text-[10px] text-amber-500">{formatDate(m.achieved_at)}</p>
                   </div>
                   <span className="text-xs text-amber-400">Share ↗</span>

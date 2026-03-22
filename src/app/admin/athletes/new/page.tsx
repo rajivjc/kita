@@ -27,7 +27,7 @@ export default async function NewAthletePage() {
       >
         ← Athletes
       </Link>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Add athlete</h1>
+      <h1 className="text-2xl font-bold text-text-primary mb-6">Add athlete</h1>
       <AddAthleteForm />
     </main>
   )

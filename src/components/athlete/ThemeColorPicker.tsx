@@ -47,7 +47,7 @@ export default function ThemeColorPicker({
 
   return (
     <section aria-label="Pick your color" className="mb-8">
-      <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+      <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
         <span>🎨</span> Pick your color
       </h2>
       <div className="flex justify-between gap-2">

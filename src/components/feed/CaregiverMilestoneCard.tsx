@@ -10,7 +10,7 @@ export default function CaregiverMilestoneCard({ milestones, nextMilestone }: Pr
   if (milestones.length === 0 && !nextMilestone) return null
 
   return (
-    <div className="bg-white border border-amber-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+    <div className="bg-surface border border-amber-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
       <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-2.5">Milestones & progress</p>
 
       {milestones.length > 0 && (
@@ -30,7 +30,7 @@ export default function CaregiverMilestoneCard({ milestones, nextMilestone }: Pr
       {nextMilestone && (
         <div className="bg-amber-50/40 rounded-lg px-3 py-2.5">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-gray-800">
+            <span className="text-xs font-semibold text-text-primary">
               {nextMilestone.icon} {nextMilestone.label}
             </span>
             <span className="text-[10px] text-amber-600 font-medium">

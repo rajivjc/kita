@@ -92,19 +92,19 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
   }
 
   return (
-    <div className={`px-4 py-3 bg-white ${!active ? 'opacity-50' : ''}`}>
+    <div className={`px-4 py-3 bg-surface ${!active ? 'opacity-50' : ''}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">{email}</p>
+          <p className="text-sm font-medium text-text-primary truncate">{email}</p>
           <div className="flex flex-wrap items-center gap-2 mt-0.5">
             {isSelf ? (
-              <p className="text-xs text-gray-500 capitalize">{currentRole}</p>
+              <p className="text-xs text-text-muted capitalize">{currentRole}</p>
             ) : (
               <select
                 value={currentRole}
                 onChange={handleRoleChange}
                 disabled={roleChanging}
-                className="text-xs text-gray-600 border border-gray-200 rounded px-1.5 py-0.5 bg-white focus:outline-none focus:ring-1 focus:ring-teal-500 disabled:opacity-50"
+                className="text-xs text-text-secondary border border-border rounded px-1.5 py-0.5 bg-surface focus:outline-none focus:ring-1 focus:ring-teal-500 disabled:opacity-50"
               >
                 <option value="coach">Coach</option>
                 <option value="caregiver">Caregiver</option>
@@ -125,7 +125,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
           {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-text-hint">
             {new Date(createdAt).toLocaleDateString('en-SG')}
           </p>
           {!isSelf && (
@@ -162,7 +162,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
           <select
             value={selectedAthleteId}
             onChange={(e) => setSelectedAthleteId(e.target.value)}
-            className="w-full text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full text-sm border border-border-strong rounded-lg px-3 py-1.5 bg-surface focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             <option value="">Select athlete…</option>
             {athletes.map((a) => (
@@ -179,7 +179,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
             </button>
             <button
               onClick={handleCancelCaregiver}
-              className="text-xs text-gray-500 px-3 py-1.5"
+              className="text-xs text-text-muted px-3 py-1.5"
             >
               Cancel
             </button>

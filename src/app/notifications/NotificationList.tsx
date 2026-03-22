@@ -144,10 +144,10 @@ export function NotificationList({ variant, notification }: Props) {
     <div
       className={`rounded-xl border shadow-sm px-4 py-3 flex items-start gap-3 transition-all duration-500 ease-in-out ${
         showDismissedStyle
-          ? 'bg-gray-50 border-gray-200 opacity-60 scale-[0.98]'
+          ? 'bg-surface-raised border-border opacity-60 scale-[0.98]'
           : isRead
-            ? 'bg-gray-50 border-gray-200'
-            : 'bg-white border-teal-200'
+            ? 'bg-surface-raised border-border'
+            : 'bg-surface border-teal-200'
       } ${clickTarget ? 'cursor-pointer' : ''}`}
       onClick={handleClick}
     >
@@ -155,16 +155,16 @@ export function NotificationList({ variant, notification }: Props) {
       <div className="flex-1 min-w-0">
         <p className={`text-sm transition-all duration-500 ${
           showDismissedStyle
-            ? 'text-gray-400 line-through'
+            ? 'text-text-hint line-through'
             : isRead
-              ? 'text-gray-500'
-              : 'text-gray-900 font-medium'
+              ? 'text-text-muted'
+              : 'text-text-primary font-medium'
         }`}>
           {message}
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-text-hint mt-1">
           {relativeTime(n.created_at)}
-          {showDismissedStyle && <span className="ml-2 text-gray-300 italic">dismissed</span>}
+          {showDismissedStyle && <span className="ml-2 text-text-hint italic">dismissed</span>}
         </p>
         {clickTarget && !isRead && clickHint && (
           <p className="text-xs text-teal-600 mt-1">{clickHint}</p>
@@ -175,7 +175,7 @@ export function NotificationList({ variant, notification }: Props) {
           {isUnmatched && n.payload.unmatched_id && (
             <button
               disabled={busy}
-              className="text-xs text-gray-500 font-medium hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className="text-xs text-text-muted font-medium hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               onClick={handleDismissAsNotCoaching}
             >
               {busy ? 'Skipping…' : 'Not coaching'}

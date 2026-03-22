@@ -30,21 +30,21 @@ export default function AppContextCard() {
         <X size={16} />
       </button>
 
-      <h2 className="text-lg font-bold text-gray-900">Your coaching hub</h2>
+      <h2 className="text-lg font-bold text-text-primary">Your coaching hub</h2>
       <p className="text-sm text-teal-700 mb-3">Everything you need to support your athletes</p>
 
       <div className="space-y-2.5">
         <div className="flex items-center gap-3">
           <Activity size={20} className="text-teal-500 flex-shrink-0" />
-          <span className="text-sm text-gray-700">Log runs and track every session</span>
+          <span className="text-sm text-text-secondary">Log runs and track every session</span>
         </div>
         <div className="flex items-center gap-3">
           <TrendingUp size={20} className="text-teal-500 flex-shrink-0" />
-          <span className="text-sm text-gray-700">See progress, milestones, and mood trends</span>
+          <span className="text-sm text-text-secondary">See progress, milestones, and mood trends</span>
         </div>
         <div className="flex items-center gap-3">
           <MessageCircle size={20} className="text-teal-500 flex-shrink-0" />
-          <span className="text-sm text-gray-700">Coordinate with coaches and caregivers</span>
+          <span className="text-sm text-text-secondary">Coordinate with coaches and caregivers</span>
         </div>
       </div>
     </div>

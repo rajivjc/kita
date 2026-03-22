@@ -46,8 +46,8 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
     return (
       <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100/60">
         <p className="text-2xl mb-1">🎉</p>
-        <p className="text-sm font-medium text-gray-700">All cheers sent today!</p>
-        <p className="text-xs text-gray-500 mt-0.5">Come back tomorrow to send more.</p>
+        <p className="text-sm font-medium text-text-secondary">All cheers sent today!</p>
+        <p className="text-xs text-text-muted mt-0.5">Come back tomorrow to send more.</p>
       </div>
     )
   }
@@ -56,8 +56,8 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
     return (
       <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100/60">
         <p className="text-2xl mb-1">🎉</p>
-        <p className="text-sm font-medium text-gray-700">Cheer sent!</p>
-        <p className="text-xs text-gray-500 mt-0.5">{remaining - 1} left today.</p>
+        <p className="text-sm font-medium text-text-secondary">Cheer sent!</p>
+        <p className="text-xs text-text-muted mt-0.5">{remaining - 1} left today.</p>
       </div>
     )
   }
@@ -71,7 +71,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs text-gray-500">{remaining} left today</p>
+        <p className="text-xs text-text-muted">{remaining} left today</p>
       </div>
 
       {error && (
@@ -85,7 +85,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
             key={i}
             onClick={() => handleSend(msg.full)}
             disabled={isPending}
-            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200/80 text-gray-700 text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
+            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200/80 text-text-secondary text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
           >
             <span className="text-base">{msg.emoji}</span>
             <span>{msg.text}</span>
@@ -101,7 +101,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
           onChange={(e) => setCustomText(e.target.value.slice(0, 100))}
           placeholder="Write your own message..."
           maxLength={100}
-          className="flex-1 border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-300 focus:shadow-[0_0_0_3px_rgba(251,146,60,0.08)] bg-white placeholder:text-gray-400"
+          className="flex-1 border border-border rounded-xl px-3.5 py-2.5 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-300 focus:shadow-[0_0_0_3px_rgba(251,146,60,0.08)] bg-surface placeholder:text-text-hint"
         />
         <button
           onClick={() => handleSend(customText)}

@@ -96,12 +96,12 @@ export function ResolveForm({
       </div>
 
       <div className="relative flex items-center justify-center mb-5">
-        <div className="border-t border-gray-200 w-full" />
-        <span className="absolute bg-gray-50 px-3 text-xs text-gray-400 uppercase tracking-wide">or link manually</span>
+        <div className="border-t border-border w-full" />
+        <span className="absolute bg-surface-raised px-3 text-xs text-text-hint uppercase tracking-wide">or link manually</span>
       </div>
 
       {/* Manual link */}
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-text-secondary mb-2">
         Select an athlete
       </label>
 
@@ -110,12 +110,12 @@ export function ResolveForm({
         placeholder="Search athletes..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+        className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
       />
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm max-h-64 overflow-y-auto mb-4">
+      <div className="bg-surface rounded-xl border border-border shadow-sm max-h-64 overflow-y-auto mb-4">
         {filtered.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-4">
+          <p className="text-sm text-text-hint text-center py-4">
             No athletes found
           </p>
         ) : (
@@ -128,7 +128,7 @@ export function ResolveForm({
               className={`w-full text-left px-4 py-3 text-sm border-b border-gray-50 last:border-b-0 transition-colors ${
                 selectedId === a.id
                   ? 'bg-teal-50 text-teal-900 font-medium'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-text-secondary hover:bg-surface-raised'
               }`}
             >
               {a.name}
@@ -152,15 +152,15 @@ export function ResolveForm({
 
       {/* Dismiss as not a coaching run */}
       <div className="relative flex items-center justify-center my-5">
-        <div className="border-t border-gray-200 w-full" />
-        <span className="absolute bg-gray-50 px-3 text-xs text-gray-400 uppercase tracking-wide">or</span>
+        <div className="border-t border-border w-full" />
+        <span className="absolute bg-surface-raised px-3 text-xs text-text-hint uppercase tracking-wide">or</span>
       </div>
 
       <button
         type="button"
         onClick={handleDismiss}
         disabled={busy}
-        className="w-full border border-gray-300 text-gray-500 font-medium rounded-lg py-2.5 text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full border border-border-strong text-text-muted font-medium rounded-lg py-2.5 text-sm hover:bg-surface-raised disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {dismissing ? 'Skipping...' : 'Skip — not a coaching run'}
       </button>
