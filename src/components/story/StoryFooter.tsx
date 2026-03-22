@@ -21,7 +21,7 @@ export default function StoryFooter({
         url={storyUrl}
         buttonText="Share this story"
       />
-      <p className="text-xs text-gray-300 font-medium uppercase tracking-widest">
+      <p className="text-xs text-text-hint font-medium uppercase tracking-widest">
         SOSG Running Club — Growing Together
       </p>
       <p className="text-[10px] text-white/40 text-center max-w-xs">

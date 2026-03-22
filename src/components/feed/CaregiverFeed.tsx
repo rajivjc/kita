@@ -85,7 +85,7 @@ export default function CaregiverFeed({ data, userId }: Props) {
       {/* Card 1 — Athlete Status */}
       <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-lg font-bold text-text-primary">
             {greeting}, {firstName}
           </p>
           {caregiverAthlete && athleteStreak && athleteStreak.current > 0 && (
@@ -126,12 +126,12 @@ export default function CaregiverFeed({ data, userId }: Props) {
                 </p>
                 <div className="flex items-center gap-4 bg-white/50 rounded-lg px-4 py-3">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">{caregiverRecentSessions.length}</p>
+                    <p className="text-2xl font-bold text-text-primary">{caregiverRecentSessions.length}</p>
                     <p className="text-xs text-amber-600 font-medium">run{caregiverRecentSessions.length !== 1 ? 's' : ''}</p>
                   </div>
                   <div className="w-px self-stretch bg-amber-200/60" />
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-text-primary">
                       {caregiverRecentSessions.reduce((sum, s) => sum + (s.distance_km ?? 0), 0).toFixed(1)}
                     </p>
                     <p className="text-xs text-amber-600 font-medium">km</p>
@@ -222,8 +222,8 @@ export default function CaregiverFeed({ data, userId }: Props) {
       {sessions.length === 0 && (
         <div className="text-center py-16">
           <p className="text-4xl mb-3">👟</p>
-          <p className="text-base font-semibold text-gray-900 mb-1">The club is quiet today</p>
-          <p className="text-sm text-gray-500">Be the first to log a run!</p>
+          <p className="text-base font-semibold text-text-primary mb-1">The club is quiet today</p>
+          <p className="text-sm text-text-muted">Be the first to log a run!</p>
         </div>
       )}
 

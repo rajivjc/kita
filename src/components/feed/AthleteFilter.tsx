@@ -15,7 +15,7 @@ export default function AthleteFilter({ athletes, selected, onSelect }: Props) {
         className={`flex-shrink-0 min-h-[44px] px-4 rounded-full text-sm font-medium transition-colors ${
           selected === null
             ? 'bg-teal-700 text-white'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            : 'bg-surface-alt text-text-secondary hover:bg-surface-alt'
         }`}
       >
         All
@@ -28,7 +28,7 @@ export default function AthleteFilter({ athletes, selected, onSelect }: Props) {
           className={`flex-shrink-0 min-h-[44px] px-4 rounded-full text-sm font-medium transition-colors ${
             selected === a.id
               ? 'bg-teal-700 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : 'bg-surface-alt text-text-secondary hover:bg-surface-alt'
           }`}
         >
           {a.name.split(' ')[0]}

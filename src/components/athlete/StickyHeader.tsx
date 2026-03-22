@@ -44,7 +44,7 @@ export default function StickyHeader({
 
       {/* Sticky header — appears when sentinel scrolls out of view */}
       <div
-        className={`fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 transition-all duration-200 ${
+        className={`fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-border transition-all duration-200 ${
           visible
             ? 'translate-y-0 opacity-100'
             : '-translate-y-full opacity-0 pointer-events-none'
@@ -59,12 +59,12 @@ export default function StickyHeader({
             >
               <ChevronLeft size={18} />
             </Link>
-            <p className="text-sm font-semibold text-gray-900 truncate">{athleteName}</p>
+            <p className="text-sm font-semibold text-text-primary truncate">{athleteName}</p>
           </div>
           {showEdit && (
             <Link
               href={`/athletes/${athleteId}/edit`}
-              className="p-1.5 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all flex-shrink-0"
+              className="p-1.5 text-text-hint hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all flex-shrink-0"
               aria-label="Edit athlete profile"
             >
               <Pencil size={16} />

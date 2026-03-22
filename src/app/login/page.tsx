@@ -158,7 +158,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-teal-500 to-emerald-600 px-4 py-8">
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl p-8">
+      <div className="w-full max-w-sm bg-surface rounded-3xl shadow-2xl p-8">
         {isRevoked && (
           <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 text-center">
             Your access has been revoked. Please contact your administrator.
@@ -207,7 +207,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
+        <h1 className="text-2xl font-bold text-center text-text-primary mb-1">
           SOSG Running Club
         </h1>
         <p className="text-sm text-teal-600 text-center font-medium mb-6">
@@ -229,8 +229,8 @@ export default function LoginPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Check your email</h2>
-            <p className="text-gray-600 text-sm">
+            <h2 className="text-xl font-semibold text-text-primary">Check your email</h2>
+            <p className="text-text-secondary text-sm">
               We sent a 6-digit code to<br />
               <span className="font-medium">{sentEmail}</span>
             </p>
@@ -238,7 +238,7 @@ export default function LoginPage() {
             {/* OTP code input */}
             <form onSubmit={handleVerifyOtp} className="w-full space-y-3 pt-2">
               <div>
-                <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="otp" className="block text-sm font-medium text-text-secondary mb-1">
                   Enter the code from your email
                 </label>
                 <input
@@ -254,7 +254,7 @@ export default function LoginPage() {
                     if (otpState === 'error') setOtpState('idle')
                   }}
                   placeholder="000000"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-center text-lg font-mono tracking-[0.3em] placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  className="block w-full rounded-lg border border-border-strong px-3 py-2.5 text-center text-lg font-mono tracking-[0.3em] placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                 />
                 {otpState === 'error' && (
                   <p className="mt-1 text-sm text-red-600" role="alert">
@@ -293,19 +293,19 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleResend}
                 disabled={resendCooldown > 0}
-                className="text-sm text-teal-600 hover:text-teal-700 font-medium disabled:text-gray-400 disabled:cursor-default bg-transparent border-none p-0 min-w-0 min-h-0 w-auto"
+                className="text-sm text-teal-600 hover:text-teal-700 font-medium disabled:text-text-hint disabled:cursor-default bg-transparent border-none p-0 min-w-0 min-h-0 w-auto"
               >
                 {resendCooldown > 0
                   ? `Resend code in ${resendCooldown}s`
                   : 'Resend code'}
               </button>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-hint">
                 Don&apos;t see it? Check your spam or promotions folder.
               </p>
               <button
                 type="button"
                 onClick={handleChangeEmail}
-                className="text-xs text-gray-400 hover:text-gray-600 bg-transparent border-none p-0 min-w-0 min-h-0 w-auto"
+                className="text-xs text-text-hint hover:text-text-secondary bg-transparent border-none p-0 min-w-0 min-h-0 w-auto"
               >
                 Use a different email
               </button>
@@ -314,7 +314,7 @@ export default function LoginPage() {
         ) : (
           <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">
                 Email address
               </label>
               <input
@@ -326,7 +326,7 @@ export default function LoginPage() {
                 placeholder="your@email.com"
                 required
                 autoComplete="email"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className="block w-full rounded-lg border border-border-strong px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               />
               {pageState === 'error' && (
                 <p className="mt-1 text-sm text-red-600" role="alert">
@@ -380,7 +380,7 @@ export default function LoginPage() {
               )}
             </button>
 
-            <p className="text-xs text-gray-400 text-center">
+            <p className="text-xs text-text-hint text-center">
               We&apos;ll email you a 6-digit code to sign in. No password needed.
             </p>
           </form>

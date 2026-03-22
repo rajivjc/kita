@@ -50,11 +50,11 @@ export default async function EditAthletePage({ params }: PageProps) {
       >
         ← {athlete.name}
       </Link>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit profile</h1>
+      <h1 className="text-2xl font-bold text-text-primary mb-6">Edit profile</h1>
       <EditAthleteForm athlete={athlete} onUpdate={handleUpdate} />
 
-      <div className="mt-10 pt-6 border-t border-gray-200">
-        <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-3">Danger zone</p>
+      <div className="mt-10 pt-6 border-t border-border">
+        <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Danger zone</p>
         <DeleteAthleteButton athleteId={id} athleteName={athlete.name} />
       </div>
     </main>

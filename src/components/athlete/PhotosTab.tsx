@@ -173,8 +173,8 @@ export default function PhotosTab({
     return (
       <div className="text-center py-12">
         <p className="text-4xl mb-3">📷</p>
-        <p className="text-sm font-semibold text-gray-900 mb-1">No photos yet</p>
-        <p className="text-xs text-gray-500">Photos from Strava syncs and manual uploads will appear here.</p>
+        <p className="text-sm font-semibold text-text-primary mb-1">No photos yet</p>
+        <p className="text-xs text-text-muted">Photos from Strava syncs and manual uploads will appear here.</p>
       </div>
     )
   }
@@ -186,16 +186,16 @@ export default function PhotosTab({
     <div>
       {/* Toolbar — selection mode actions */}
       {selectionMode ? (
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 -mx-4 px-4 py-3 mb-3 flex items-center justify-between gap-3">
+        <div className="sticky top-0 z-10 bg-surface border-b border-border -mx-4 px-4 py-3 mb-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
               onClick={clearSelection}
-              className="p-2 -m-2 text-gray-500 hover:text-gray-700"
+              className="p-2 -m-2 text-text-muted hover:text-text-secondary"
               aria-label="Exit selection"
             >
               <X size={20} />
             </button>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-text-secondary">
               {selectedCount} selected
             </span>
           </div>
@@ -210,7 +210,7 @@ export default function PhotosTab({
               <button
                 onClick={() => handleShare(Array.from(selectedIds))}
                 disabled={downloading}
-                className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 active:scale-[0.97] text-gray-700 text-xs font-medium rounded-lg px-3 py-2 transition-all duration-150 disabled:opacity-50"
+                className="flex items-center gap-1.5 bg-surface-alt hover:bg-surface-alt active:scale-[0.97] text-text-secondary text-xs font-medium rounded-lg px-3 py-2 transition-all duration-150 disabled:opacity-50"
               >
                 <Share2 size={14} />
                 Share
@@ -230,7 +230,7 @@ export default function PhotosTab({
         </div>
       ) : (
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs text-gray-400 font-medium">{totalCount} photo{totalCount !== 1 ? 's' : ''}</p>
+          <p className="text-xs text-text-hint font-medium">{totalCount} photo{totalCount !== 1 ? 's' : ''}</p>
           <div className="flex items-center gap-2">
             {photos.length > 1 && (
               <button
@@ -244,7 +244,7 @@ export default function PhotosTab({
               <button
                 onClick={() => handleDownload(photos.map(p => p.id))}
                 disabled={downloading}
-                className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 active:scale-[0.97] border border-gray-200 text-gray-600 text-xs font-medium rounded-lg px-3 py-2 transition-all duration-150 disabled:opacity-50"
+                className="flex items-center gap-1.5 bg-surface-raised hover:bg-surface-alt active:scale-[0.97] border border-border text-text-secondary text-xs font-medium rounded-lg px-3 py-2 transition-all duration-150 disabled:opacity-50"
               >
                 <Download size={14} />
                 {downloading ? downloadProgress || 'Downloading...' : 'Download all'}
@@ -257,7 +257,7 @@ export default function PhotosTab({
       {/* Photo grid grouped by month */}
       {groups.map((group) => (
         <div key={group.month} className="mb-5">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-2">
             {group.month}
           </h3>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
@@ -283,7 +283,7 @@ export default function PhotosTab({
                       setSelectedIds(new Set([photo.id]))
                     }
                   }}
-                  className={`relative aspect-square rounded-lg overflow-hidden bg-gray-100 focus:ring-2 focus:ring-teal-500 focus:outline-none transition-all ${
+                  className={`relative aspect-square rounded-lg overflow-hidden bg-surface-alt focus:ring-2 focus:ring-teal-500 focus:outline-none transition-all ${
                     selectionMode
                       ? isSelected
                         ? 'ring-2 ring-teal-500 ring-offset-1'
@@ -327,8 +327,8 @@ export default function PhotosTab({
       {cursor && (
         <div ref={sentinelRef} className="flex justify-center py-6">
           {loadingMore ? (
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <div className="w-4 h-4 border-2 border-gray-300 border-t-teal-500 rounded-full animate-spin" />
+            <div className="flex items-center gap-2 text-xs text-text-hint">
+              <div className="w-4 h-4 border-2 border-border-strong border-t-teal-500 rounded-full animate-spin" />
               Loading more photos...
             </div>
           ) : (
@@ -339,7 +339,7 @@ export default function PhotosTab({
 
       {/* "End of photos" indicator */}
       {!cursor && photos.length > 0 && photos.length >= 24 && (
-        <p className="text-center text-xs text-gray-300 py-4">All photos loaded</p>
+        <p className="text-center text-xs text-text-hint py-4">All photos loaded</p>
       )}
 
       {/* Toast notification */}

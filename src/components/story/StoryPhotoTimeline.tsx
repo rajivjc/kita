@@ -31,7 +31,7 @@ export default function StoryPhotoTimeline({ photos }: StoryPhotoTimelineProps) 
               className="w-24 h-24 rounded-xl object-cover shadow-sm"
               loading="lazy"
             />
-            <figcaption className="text-[10px] text-gray-400 text-center mt-1">
+            <figcaption className="text-[10px] text-text-hint text-center mt-1">
               {photo.month} {photo.year}
             </figcaption>
           </figure>

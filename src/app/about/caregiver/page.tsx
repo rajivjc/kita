@@ -20,19 +20,19 @@ export default function CaregiverAboutPage() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6 py-12">
       <CloseButton />
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-2xl px-8 py-10 sm:px-12 sm:py-14">
         {/* Section label */}
         <p className="text-xs font-bold text-teal-500 uppercase tracking-widest mb-4">
           About
         </p>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        <h1 className="text-3xl font-bold text-text-primary mb-8">
           Our Running Club
         </h1>
 
         {/* Body */}
-        <div className="space-y-5 text-base text-gray-700 leading-relaxed">
+        <div className="space-y-5 text-base text-text-secondary leading-relaxed">
           <p>
             This app exists because every run deserves to be remembered.
           </p>
@@ -70,7 +70,7 @@ export default function CaregiverAboutPage() {
             url={`${appUrl}/about/caregiver`}
             buttonText="Share this"
           />
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest">
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest">
             SOSG Running Club — Growing Together
           </p>
         </div>

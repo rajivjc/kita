@@ -48,7 +48,7 @@ export default function DeleteAthleteButton({ athleteId, athleteName }: Props) {
             <button
               onClick={() => setConfirming(false)}
               disabled={busy}
-              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1.5 transition-colors"
+              className="text-xs text-text-muted hover:text-text-secondary px-2 py-1.5 transition-colors"
             >
               Cancel
             </button>

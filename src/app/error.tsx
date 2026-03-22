@@ -15,8 +15,8 @@ export default function GlobalError({
 
   return (
     <main className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-      <p className="text-sm text-gray-500 mb-6">
+      <h1 className="text-2xl font-bold text-text-primary mb-2">Something went wrong</h1>
+      <p className="text-sm text-text-muted mb-6">
         Don&apos;t worry — let&apos;s try again.
       </p>
       <button

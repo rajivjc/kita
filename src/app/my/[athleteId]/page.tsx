@@ -23,10 +23,10 @@ export default async function MyJourneyPage({ params }: PageProps) {
 
   if (!athlete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+      <div className="min-h-screen flex items-center justify-center bg-surface-raised px-6">
         <div className="text-center">
-          <p className="text-xl font-semibold text-gray-900 mb-2">Page not found</p>
-          <p className="text-base text-gray-600">
+          <p className="text-xl font-semibold text-text-primary mb-2">Page not found</p>
+          <p className="text-base text-text-secondary">
             This link may not be correct. Please check with your coach.
           </p>
         </div>

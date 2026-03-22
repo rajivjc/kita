@@ -58,13 +58,13 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
   return (
     <>
     <form action={handleAction} className="space-y-5">
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-text-muted">
         Changes are saved immediately and visible to all coaches.
       </p>
 
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-secondary mb-1">
           Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -72,14 +72,14 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
           name="name"
           required
           defaultValue={athlete.name}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
         />
       </div>
 
       {/* Date of birth */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Date of birth <span className="text-xs text-gray-400 font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-text-secondary mb-1">
+          Date of birth <span className="text-xs text-text-hint font-normal">(optional)</span>
         </label>
         <input
           type="date"
@@ -87,21 +87,21 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
           defaultValue={athlete.date_of_birth ?? ''}
           max={new Date().toISOString().split('T')[0]}
           onKeyDown={(e) => e.preventDefault()}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
         />
       </div>
 
       {/* Running goal */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Running goal <span className="text-xs text-gray-400 font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-text-secondary mb-1">
+          Running goal <span className="text-xs text-text-hint font-normal">(optional)</span>
         </label>
         <input
           type="text"
           name="running_goal"
           defaultValue={athlete.running_goal ?? ''}
           placeholder="e.g. Complete 5km without stopping"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
         />
       </div>
 
@@ -110,11 +110,11 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
         <p className="text-xs font-semibold text-teal-700">Track goal progress</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Goal type</label>
+            <label className="block text-xs text-text-muted mb-1">Goal type</label>
             <select
               name="goal_type"
               defaultValue={athlete.goal_type ?? ''}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] bg-white"
+              className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] bg-surface"
             >
               <option value="">None</option>
               <option value="distance_total">Total distance (km)</option>
@@ -123,7 +123,7 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
             </select>
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Target</label>
+            <label className="block text-xs text-text-muted mb-1">Target</label>
             <input
               type="number"
               name="goal_target"
@@ -131,7 +131,7 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
               min="0"
               defaultValue={athlete.goal_target ?? ''}
               placeholder="e.g. 25"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+              className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
             />
           </div>
         </div>
@@ -140,43 +140,43 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
 
       {/* Communication notes */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Communication notes <span className="text-xs text-gray-400 font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-text-secondary mb-1">
+          Communication notes <span className="text-xs text-text-hint font-normal">(optional)</span>
         </label>
         <textarea
           name="communication_notes"
           rows={2}
           defaultValue={athlete.communication_notes ?? ''}
           placeholder="e.g. Responds well to visual cues, prefers short instructions"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] resize-none"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] resize-none"
         />
       </div>
 
       {/* Medical notes */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Medical notes <span className="text-xs text-gray-400 font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-text-secondary mb-1">
+          Medical notes <span className="text-xs text-text-hint font-normal">(optional)</span>
         </label>
         <textarea
           name="medical_notes"
           rows={2}
           defaultValue={athlete.medical_notes ?? ''}
           placeholder="e.g. Asthma — carry inhaler, no running in high humidity"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] resize-none"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] resize-none"
         />
       </div>
 
       {/* Emergency contact */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Emergency contact <span className="text-xs text-gray-400 font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-text-secondary mb-1">
+          Emergency contact <span className="text-xs text-text-hint font-normal">(optional)</span>
         </label>
         <input
           type="text"
           name="emergency_contact"
           defaultValue={athlete.emergency_contact ?? ''}
           placeholder="e.g. Mum — +65 9123 4567"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
         />
       </div>
 
@@ -185,7 +185,7 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold text-teal-700">📣 Share achievements</p>
           {athlete.sharing_disabled_by_caregiver ? (
-            <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-text-hint bg-surface-alt px-2 py-0.5 rounded-full">
               Disabled by caregiver
             </span>
           ) : (
@@ -198,12 +198,12 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
                 onChange={(e) => setSharingEnabled(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/40 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
+              <div className="w-9 h-5 bg-surface-alt peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500/40 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface after:border-border-strong after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-600" />
             </label>
           )}
         </div>
         {athlete.sharing_disabled_by_caregiver ? (
-          <p className="text-[10px] text-gray-500">
+          <p className="text-[10px] text-text-muted">
             {athlete.name}&apos;s caregiver turned this off. They can re-enable it from their dashboard.
           </p>
         ) : (
@@ -292,7 +292,7 @@ function AthletePinSection({ athleteId, athleteName }: { athleteId: string; athl
 
       <div className="flex items-end gap-3">
         <div className="flex-1">
-          <label className="block text-xs text-gray-500 mb-1">4-digit PIN</label>
+          <label className="block text-xs text-text-muted mb-1">4-digit PIN</label>
           <input
             type="text"
             inputMode="numeric"
@@ -301,7 +301,7 @@ function AthletePinSection({ athleteId, athleteName }: { athleteId: string; athl
             value={pin}
             onChange={e => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
             placeholder="e.g. 1234"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
         <button
@@ -322,7 +322,7 @@ function AthletePinSection({ athleteId, athleteName }: { athleteId: string; athl
       )}
 
       <div className="pt-2 border-t border-teal-100 space-y-2">
-        <p className="text-[10px] text-gray-500">
+        <p className="text-[10px] text-text-muted">
           Page link: <span className="font-mono text-teal-700">/my/{athleteId.slice(0, 8)}…</span>
         </p>
         <button

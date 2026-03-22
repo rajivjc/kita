@@ -165,7 +165,7 @@ export default function AthleteTabs({
   return (
     <>
       {/* Tab bar */}
-      <div className="flex border-b border-gray-200 mb-4" role="tablist">
+      <div className="flex border-b border-border mb-4" role="tablist">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -175,7 +175,7 @@ export default function AthleteTabs({
             className={`relative px-5 py-3 text-sm font-semibold cursor-pointer transition-colors ${
               activeTab === tab.key
                 ? 'text-teal-600'
-                : 'text-gray-400 hover:text-gray-600'
+                : 'text-text-hint hover:text-text-secondary'
             }`}
           >
             {tab.label}

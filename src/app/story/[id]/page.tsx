@@ -89,10 +89,10 @@ export default async function StoryPage({ params }: PageProps) {
     if (user) {
       return (
         <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
+          <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
             <span className="text-5xl mb-4">🔒</span>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">This profile is private</h1>
-            <p className="text-sm text-gray-500 mb-6">
+            <h1 className="text-xl font-bold text-text-primary mb-2">This profile is private</h1>
+            <p className="text-sm text-text-muted mb-6">
               Sharing is not enabled for this athlete yet. Ask the coach to enable sharing.
             </p>
             <Link
@@ -101,7 +101,7 @@ export default async function StoryPage({ params }: PageProps) {
             >
               Back to home
             </Link>
-            <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
+            <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
           </div>
         </div>
       )
@@ -109,10 +109,10 @@ export default async function StoryPage({ params }: PageProps) {
 
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
+        <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
           <span className="text-5xl mb-4">🔒</span>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">This profile is private</h1>
-          <p className="text-sm text-gray-500 mb-6">
+          <h1 className="text-xl font-bold text-text-primary mb-2">This profile is private</h1>
+          <p className="text-sm text-text-muted mb-6">
             This athlete&apos;s running journey is not publicly shared.
           </p>
           <Link
@@ -121,7 +121,7 @@ export default async function StoryPage({ params }: PageProps) {
           >
             Sign in
           </Link>
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
         </div>
       </div>
     )
@@ -145,7 +145,7 @@ export default async function StoryPage({ params }: PageProps) {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
       <CloseButton />
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg px-8 py-10">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-lg px-8 py-10">
         {/* Hero */}
         <StoryHero
           athleteName={athlete.name}
@@ -205,8 +205,8 @@ export default async function StoryPage({ params }: PageProps) {
         {/* Running goal */}
         {athlete.running_goal && (
           <div className="text-center mb-6">
-            <p className="text-xs text-gray-400 font-medium uppercase mb-1">Goal</p>
-            <p className="text-sm text-gray-600">{athlete.running_goal}</p>
+            <p className="text-xs text-text-hint font-medium uppercase mb-1">Goal</p>
+            <p className="text-sm text-text-secondary">{athlete.running_goal}</p>
           </div>
         )}
 

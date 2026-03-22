@@ -14,7 +14,7 @@ export default function StoryCoachReflection({ reflection }: StoryCoachReflectio
 
   return (
     <blockquote className="border-l-4 border-teal-300 bg-teal-50/50 rounded-r-xl pl-4 pr-4 py-3">
-      <p className="text-sm text-gray-700 leading-relaxed italic">
+      <p className="text-sm text-text-secondary leading-relaxed italic">
         &ldquo;{reflection.content}&rdquo;
       </p>
       <footer className="mt-2 flex items-center gap-2">
@@ -23,7 +23,7 @@ export default function StoryCoachReflection({ reflection }: StoryCoachReflectio
             {reflection.coach_name}
           </span>
         )}
-        <span className="text-[10px] text-gray-400">{date}</span>
+        <span className="text-[10px] text-text-hint">{date}</span>
       </footer>
     </blockquote>
   )

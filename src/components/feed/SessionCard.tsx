@@ -30,27 +30,27 @@ interface Props {
 export default function SessionCard({ session: s, badges, kudosCount, kudosGivers, myKudos, isReadOnly, userId }: Props) {
   const hasMilestone = badges.length > 0
   const feelColor = s.feel ? (FEEL_BORDER[s.feel] ?? 'border-l-gray-200') : 'border-l-gray-200'
-  const cardBg = hasMilestone ? 'bg-amber-50/40' : 'bg-white'
+  const cardBg = hasMilestone ? 'bg-amber-50/40' : 'bg-surface'
   const pace = formatPace(s.distance_km, s.duration_seconds)
 
   const card = (
-    <div className={`${cardBg} rounded-xl border border-gray-100 shadow-sm px-3.5 py-3 border-l-[5px] ${feelColor} hover:shadow-md active:scale-[0.98] transition-all duration-200`}>
+    <div className={`${cardBg} rounded-xl border border-border-subtle shadow-sm px-3.5 py-3 border-l-[5px] ${feelColor} hover:shadow-md active:scale-[0.98] transition-all duration-200`}>
       {s.strava_title && (
         <p className="text-xs font-semibold text-orange-700 mb-1 truncate">{s.strava_title}</p>
       )}
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="min-w-0">
-          <p className="text-xs text-gray-500 leading-tight">
+          <p className="text-xs text-text-muted leading-tight">
             {s.coach_name ? `${s.coach_name} ran with` : 'Run with'}
           </p>
-          <p className="text-sm font-bold text-gray-900 truncate">{s.athlete_name}</p>
+          <p className="text-sm font-bold text-text-primary truncate">{s.athlete_name}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           {s.distance_km != null && (
-            <span className="text-lg font-bold text-gray-900 leading-none">{formatDistance(s.distance_km * 1000)}</span>
+            <span className="text-lg font-bold text-text-primary leading-none">{formatDistance(s.distance_km * 1000)}</span>
           )}
           {pace && (
-            <span className="text-xs font-medium text-gray-500 leading-none">{pace}</span>
+            <span className="text-xs font-medium text-text-muted leading-none">{pace}</span>
           )}
           {s.feel != null && (
             <span className="text-lg flex-shrink-0">{FEEL_EMOJI[s.feel]}</span>
@@ -59,12 +59,12 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
       </div>
       <div className="flex items-center gap-2 flex-wrap">
         {s.duration_seconds != null && (
-          <span className="text-xs text-gray-500 font-medium">{formatDuration(s.duration_seconds)}</span>
+          <span className="text-xs text-text-muted font-medium">{formatDuration(s.duration_seconds)}</span>
         )}
-        <p className="text-xs text-gray-500">{formatDate(s.date)}</p>
+        <p className="text-xs text-text-muted">{formatDate(s.date)}</p>
       </div>
       {s.note && (
-        <p className="text-xs text-gray-500 italic mt-1.5 line-clamp-1">&ldquo;{s.note}&rdquo;</p>
+        <p className="text-xs text-text-muted italic mt-1.5 line-clamp-1">&ldquo;{s.note}&rdquo;</p>
       )}
       {badges.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-2">
@@ -94,7 +94,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
         </div>
       )}
       {userId && (
-        <div className="mt-2 pt-1.5 border-t border-gray-100" onClick={e => e.preventDefault()}>
+        <div className="mt-2 pt-1.5 border-t border-border-subtle" onClick={e => e.preventDefault()}>
           <KudosButton
             sessionId={s.id}
             initialCount={kudosCount}

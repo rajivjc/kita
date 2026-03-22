@@ -145,29 +145,14 @@ export default function InstallBanner() {
     <div
       role="banner"
       aria-label="Install app"
-      style={{
-        background: 'var(--color-accent-lighter)',
-        borderBottom: '1px solid var(--color-border)',
-        padding: '10px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        fontSize: 'var(--type-body-sm-size)',
-        color: 'var(--color-text-secondary)',
-        lineHeight: 1.4,
-      }}
+      className="bg-accent-bg border-b border-border flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary leading-snug"
     >
-      <p style={{ margin: 0, flex: 1 }}>
+      <p className="m-0 flex-1">
         For the best experience, install SOSG Run on your device.{' '}
         {!deferredPrompt && (
           <Link
             href="/setup"
-            style={{
-              color: 'var(--color-accent)',
-              fontWeight: 600,
-              textDecoration: 'underline',
-              textUnderlineOffset: 2,
-            }}
+            className="text-accent font-semibold underline underline-offset-2"
           >
             Learn how
           </Link>
@@ -177,14 +162,7 @@ export default function InstallBanner() {
       {deferredPrompt && (
         <button
           onClick={handleInstall}
-          className="btn-primary"
-          style={{
-            width: 'auto',
-            padding: '6px 14px',
-            fontSize: 'var(--type-body-sm-size)',
-            minHeight: 32,
-            flexShrink: 0,
-          }}
+          className="btn-primary w-auto px-3.5 py-1.5 text-sm min-h-8 shrink-0"
         >
           Install
         </button>
@@ -193,20 +171,7 @@ export default function InstallBanner() {
       <button
         onClick={dismiss}
         aria-label="Dismiss install banner"
-        style={{
-          flexShrink: 0,
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: 16,
-          color: 'var(--color-text-secondary)',
-          padding: 0,
-          minWidth: 44,
-          minHeight: 44,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="shrink-0 bg-transparent border-none cursor-pointer text-base text-text-secondary p-0 min-w-11 min-h-11 flex items-center justify-center"
       >
         &#x2715;
       </button>

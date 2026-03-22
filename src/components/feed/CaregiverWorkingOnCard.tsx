@@ -20,11 +20,11 @@ export default function CaregiverWorkingOnCard({
       <p className="text-[11px] font-bold text-teal-700 uppercase tracking-widest mb-2">
         What {athleteFirstName} is working on
       </p>
-      <p className="text-sm text-gray-800">{workingOn}</p>
+      <p className="text-sm text-text-primary">{workingOn}</p>
       {recentProgress && (
         <div className="mt-2.5">
           <p className="text-[11px] font-semibold text-teal-600 mb-0.5">Recent progress</p>
-          <p className="text-sm text-gray-700">{recentProgress}</p>
+          <p className="text-sm text-text-secondary">{recentProgress}</p>
         </div>
       )}
       {updatedAt && (

@@ -65,10 +65,10 @@ export default function PinEntry({ athleteId, athleteName }: Props) {
     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white flex items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
         {/* Athlete name */}
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-text-primary mb-2">
           {athleteName}&apos;s Running Journey
         </h1>
-        <p className="text-base text-gray-600 mb-8">
+        <p className="text-base text-text-secondary mb-8">
           Enter your 4-number PIN to see your page.
         </p>
 
@@ -86,9 +86,9 @@ export default function PinEntry({ athleteId, athleteName }: Props) {
               onChange={e => handleDigitChange(i, e.target.value)}
               onKeyDown={e => handleKeyDown(i, e)}
               aria-label={`PIN digit ${i + 1}`}
-              className="w-16 h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl
+              className="w-16 h-16 text-center text-2xl font-bold border-2 border-border-strong rounded-xl
                          focus:outline-none focus:ring-3 focus:ring-teal-500 focus:border-teal-500
-                         bg-white text-gray-900 transition-colors"
+                         bg-surface text-text-primary transition-colors"
               disabled={loading}
             />
           ))}
@@ -111,7 +111,7 @@ export default function PinEntry({ athleteId, athleteName }: Props) {
           {loading ? 'Checking…' : 'Open my page'}
         </button>
 
-        <p className="text-sm text-gray-400 mt-6">
+        <p className="text-sm text-text-hint mt-6">
           Ask your coach if you need help with your PIN.
         </p>
       </div>

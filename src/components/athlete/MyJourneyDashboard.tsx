@@ -232,7 +232,7 @@ export default function MyJourneyDashboard({
             />
           )}
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+          <h1 className="text-2xl font-bold text-text-primary mb-1">
             Hi {athlete.name}!
           </h1>
           <p className={`text-lg ${theme.text}`}>
@@ -252,13 +252,13 @@ export default function MyJourneyDashboard({
         {primaryCoach && (
           <section aria-label="Your coach" className="mb-8">
             <div className={`${theme.bgLight} border ${theme.borderLight} rounded-xl px-5 py-4 text-center shadow-sm`}>
-              <p className="text-base font-medium text-gray-900 mb-0.5">
+              <p className="text-base font-medium text-text-primary mb-0.5">
                 Your coach
               </p>
-              <p className="text-lg font-bold text-gray-900 mb-1">
+              <p className="text-lg font-bold text-text-primary mb-1">
                 {primaryCoach.name}
               </p>
-              <p className="text-sm text-gray-500 mb-3">
+              <p className="text-sm text-text-muted mb-3">
                 {primaryCoach.sessionCount} {primaryCoach.sessionCount === 1 ? 'session' : 'sessions'} together
               </p>
               {primaryCoach.sessionCount <= 20 ? (
@@ -272,7 +272,7 @@ export default function MyJourneyDashboard({
                     const nextTarget = milestoneTargets.find(t => t > primaryCoach.sessionCount) ?? primaryCoach.sessionCount
                     const empty = nextTarget - primaryCoach.sessionCount
                     return Array.from({ length: Math.min(empty, 20 - primaryCoach.sessionCount) }).map((_, i) => (
-                      <span key={`e${i}`} className="inline-block w-3 h-3 rounded-full bg-gray-200" />
+                      <span key={`e${i}`} className="inline-block w-3 h-3 rounded-full bg-surface-alt" />
                     ))
                   })()}
                 </div>
@@ -305,18 +305,18 @@ export default function MyJourneyDashboard({
         {/* ── Personal Best ─────────────────────────────────── */}
         {personalBest && (
           <section aria-label="Your personal best" className="mb-8">
-            <div className="bg-white border-l-4 border-amber-400 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
+            <div className="bg-surface border-l-4 border-amber-400 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
               <span className="text-3xl flex-shrink-0">🏆</span>
               <div className="flex-1 min-w-0">
-                <p className="text-base font-bold text-gray-900">
+                <p className="text-base font-bold text-text-primary">
                   Your longest run: {personalBest.distance_km.toFixed(1)} km
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-text-muted">
                   on {formatRunDate(personalBest.date)}
                 </p>
                 {/* Visual distance bar */}
                 <div className="flex items-center gap-2 mt-1.5">
-                  <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2.5 bg-surface-alt rounded-full overflow-hidden">
                     <div
                       className="h-full bg-amber-400 rounded-full"
                       style={{ width: `${Math.min((personalBest.distance_km / 5) * 100, 100)}%` }}
@@ -331,7 +331,7 @@ export default function MyJourneyDashboard({
         {/* ── My Best Runs ──────────────────────────────────── */}
         {bestRuns.length > 0 && (
           <section aria-label="My best runs" className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
               <span>⭐</span> My best runs
             </h2>
             <div className="space-y-2">
@@ -346,11 +346,11 @@ export default function MyJourneyDashboard({
                     {feel && (
                       <div className="flex flex-col items-center flex-shrink-0 w-10">
                         <span className="text-2xl">{feel.emoji}</span>
-                        <span className="text-[10px] text-gray-500 mt-0.5">{feel.label}</span>
+                        <span className="text-[10px] text-text-muted mt-0.5">{feel.label}</span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-text-primary">
                         {formatRunDate(run.date)}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
@@ -362,12 +362,12 @@ export default function MyJourneyDashboard({
                                 style={{ width: `${Math.min((km / 5) * 100, 100)}%` }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500 flex-shrink-0 w-12 text-right">
+                            <span className="text-xs text-text-muted flex-shrink-0 w-12 text-right">
                               {km.toFixed(1)} km
                             </span>
                           </>
                         ) : (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-text-hint">
                             No distance recorded
                           </span>
                         )}
@@ -384,17 +384,17 @@ export default function MyJourneyDashboard({
         {/* ── Milestones Wall ──────────────────────────────── */}
         {milestones.length > 0 && (
           <section aria-label="Your milestones" className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
               <span>🏆</span> Your milestones
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {milestones.map(m => (
                 <div
                   key={m.id}
-                  className="bg-white border-2 border-amber-100 rounded-xl px-4 py-4 text-center shadow-sm"
+                  className="bg-surface border-2 border-amber-100 rounded-xl px-4 py-4 text-center shadow-sm"
                 >
                   <span className="text-4xl block mb-2">{m.icon || '🏆'}</span>
-                  <p className="text-sm font-semibold text-gray-900">{m.label}</p>
+                  <p className="text-sm font-semibold text-text-primary">{m.label}</p>
                 </div>
               ))}
             </div>
@@ -403,7 +403,7 @@ export default function MyJourneyDashboard({
 
         {/* ── Athlete Goal Choice ─────────────────────────── */}
         <section aria-label="Your focus" className="mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
             <span>🎯</span> What do you want to work on?
           </h2>
           <div className="space-y-2">
@@ -416,16 +416,16 @@ export default function MyJourneyDashboard({
                   className={`w-full text-left flex items-center gap-4 rounded-xl px-5 py-4 transition-all shadow-sm
                     ${selected
                       ? `${theme.bgLight} border-2 ${theme.border} ring-1 ${theme.ring}`
-                      : `bg-white border-2 border-gray-100 hover:${theme.borderLight} opacity-70`
+                      : `bg-surface border-2 border-border-subtle hover:${theme.borderLight} opacity-70`
                     }`}
                 >
                   <span className="text-2xl flex-shrink-0">{g.icon}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <p className="text-base font-semibold text-text-primary flex items-center gap-2">
                       {g.label}
                       {selected && <span className={theme.text}>✓</span>}
                     </p>
-                    <p className="text-sm text-gray-500">{g.desc}</p>
+                    <p className="text-sm text-text-muted">{g.desc}</p>
                   </div>
                 </button>
               )
@@ -441,15 +441,15 @@ export default function MyJourneyDashboard({
         {/* ── Goal Progress ───────────────────────────────── */}
         {goal && (
           <section aria-label="Your goal" className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
               <span>🎯</span> Your goal
             </h2>
-            <div className={`bg-white border ${theme.borderLight} rounded-xl px-5 py-4 shadow-sm`}>
-              <p className="text-base font-semibold text-gray-900 mb-2">
+            <div className={`bg-surface border ${theme.borderLight} rounded-xl px-5 py-4 shadow-sm`}>
+              <p className="text-base font-semibold text-text-primary mb-2">
                 {goal.label}
               </p>
               {/* Visual progress bar */}
-              <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden mb-2">
+              <div className="w-full h-4 bg-surface-alt rounded-full overflow-hidden mb-2">
                 <div
                   className={`h-full ${theme.bg} rounded-full transition-all duration-500`}
                   style={{ width: `${Math.min(goal.pct, 100)}%` }}
@@ -471,7 +471,7 @@ export default function MyJourneyDashboard({
         {/* ── Recent Runs ─────────────────────────────────── */}
         {recentRuns.length > 0 && (
           <section aria-label="Your recent runs" className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
               <span>📅</span> Recent runs
             </h2>
             <div className="space-y-2">
@@ -481,34 +481,34 @@ export default function MyJourneyDashboard({
                 return (
                   <div
                     key={run.id}
-                    className={`bg-white border border-gray-100 border-l-4 ${theme.border} rounded-xl px-4 py-3 flex items-center gap-4 shadow-sm`}
+                    className={`bg-surface border border-border-subtle border-l-4 ${theme.border} rounded-xl px-4 py-3 flex items-center gap-4 shadow-sm`}
                   >
                     {feel && (
                       <div className="flex flex-col items-center flex-shrink-0 w-10">
                         <span className="text-2xl">{feel.emoji}</span>
-                        <span className="text-[10px] text-gray-500 mt-0.5">{feel.label}</span>
+                        <span className="text-[10px] text-text-muted mt-0.5">{feel.label}</span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-text-primary">
                         {formatRunDate(run.date)}
                       </p>
                       {/* Visual distance bar alongside number */}
                       <div className="flex items-center gap-2 mt-1">
                         {km > 0 ? (
                           <>
-                            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="flex-1 h-2 bg-surface-alt rounded-full overflow-hidden">
                               <div
                                 className={`h-full ${theme.bg} rounded-full`}
                                 style={{ width: `${Math.min((km / 5) * 100, 100)}%` }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500 flex-shrink-0 w-12 text-right">
+                            <span className="text-xs text-text-muted flex-shrink-0 w-12 text-right">
                               {km.toFixed(1)} km
                             </span>
                           </>
                         ) : (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-text-hint">
                             No distance recorded
                           </span>
                         )}
@@ -534,7 +534,7 @@ export default function MyJourneyDashboard({
         {/* ── Cheers from Home ────────────────────────────── */}
         {cheers.length > 0 && (
           <section aria-label="Messages from home" className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
               <span>💬</span> Messages from home
             </h2>
             <div className="space-y-2">
@@ -562,7 +562,7 @@ export default function MyJourneyDashboard({
 
         {/* ── Send Message to Coach ───────────────────────── */}
         <section aria-label="Send a message to your coach" className="mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
             <span>✉️</span> Send a message to your coach
           </h2>
           <div className="grid grid-cols-2 gap-3">
@@ -571,7 +571,7 @@ export default function MyJourneyDashboard({
                 key={msg}
                 onClick={() => handleSendMessage(msg)}
                 disabled={sendingMessage}
-                className={`h-14 bg-white border-2 ${theme.borderLight} hover:${theme.border} hover:${theme.bgLight}
+                className={`h-14 bg-surface border-2 ${theme.borderLight} hover:${theme.border} hover:${theme.bgLight}
                            disabled:opacity-40 ${theme.text} text-base font-medium rounded-xl
                            transition-colors shadow-sm`}
               >
@@ -593,7 +593,7 @@ export default function MyJourneyDashboard({
             )}
           </div>
           {lastSentMessage && !messageSent && (
-            <p className="text-sm text-gray-500 text-center mt-2">
+            <p className="text-sm text-text-muted text-center mt-2">
               You sent &ldquo;{lastSentMessage.message}&rdquo; on {lastSentMessage.time} ✓
             </p>
           )}
@@ -635,12 +635,12 @@ function StatCard({
 }) {
   const pct = maxValue > 0 ? Math.min((value / maxValue) * 100, 100) : 0
   return (
-    <div className={`bg-white border ${borderColor} rounded-xl px-3 py-4 text-center shadow-sm`}>
+    <div className={`bg-surface border ${borderColor} rounded-xl px-3 py-4 text-center shadow-sm`}>
       <span className="text-2xl block mb-1">{icon}</span>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      <p className="text-sm text-gray-600 mb-2">{label}</p>
+      <p className="text-2xl font-bold text-text-primary">{value}</p>
+      <p className="text-sm text-text-secondary mb-2">{label}</p>
       {/* Visual bar */}
-      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
         <div
           className={`h-full ${barColor} rounded-full`}
           style={{ width: `${pct}%` }}
@@ -660,7 +660,7 @@ function StreakVisual({ weeks, themeBarColor, themeBorderLight }: { weeks: numbe
   const glowClass = weeks >= 5 ? 'ring-2 ring-amber-200' : ''
 
   return (
-    <div className={`bg-white border ${borderColor} ${glowClass} rounded-xl px-3 py-4 text-center shadow-sm`}>
+    <div className={`bg-surface border ${borderColor} ${glowClass} rounded-xl px-3 py-4 text-center shadow-sm`}>
       <div className="flex justify-center items-end gap-0.5 mb-1 h-8">
         {weeks === 0 ? (
           <span className="text-2xl opacity-30">👟</span>
@@ -676,12 +676,12 @@ function StreakVisual({ weeks, themeBarColor, themeBorderLight }: { weeks: numbe
           ))
         )}
       </div>
-      <p className="text-2xl font-bold text-gray-900">{weeks}</p>
-      <p className="text-sm text-gray-600 mb-2">
+      <p className="text-2xl font-bold text-text-primary">{weeks}</p>
+      <p className="text-sm text-text-secondary mb-2">
         {weeks === 0 ? 'No streak yet' : weeks === 1 ? 'week' : 'weeks'}
       </p>
       {weeks > 0 && (
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-surface-alt rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full ${isGold ? 'bg-amber-400' : themeBarColor}`}
             style={{ width: `${Math.min((weeks / 8) * 100, 100)}%` }}

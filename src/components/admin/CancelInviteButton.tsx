@@ -44,12 +44,12 @@ export default function CancelInviteButton({
           <button
             onClick={() => { setConfirming(false); setError(null) }}
             disabled={busy}
-            className="text-xs text-gray-500 hover:text-gray-700 px-1.5 py-1 transition-colors"
+            className="text-xs text-text-muted hover:text-text-secondary px-1.5 py-1 transition-colors"
           >
             No
           </button>
         </div>
-        <p className="text-[10px] text-gray-400">This will delete the invitation and the pending account.</p>
+        <p className="text-[10px] text-text-hint">This will delete the invitation and the pending account.</p>
         {error && <p className="text-[10px] text-red-500">{error}</p>}
       </div>
     )

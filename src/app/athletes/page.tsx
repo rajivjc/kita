@@ -88,7 +88,7 @@ export default async function AthletesPage({
   return (
     <main className="max-w-2xl mx-auto px-4 py-6 pb-28">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Athletes</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Athletes</h1>
         {isAdmin && !isCaregiver && (
           <Link
             href="/admin/athletes/new"
@@ -110,8 +110,8 @@ export default async function AthletesPage({
       {athleteList.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-4xl mb-3">🏃</p>
-          <p className="text-base font-semibold text-gray-900 mb-1">No athletes yet</p>
-          <p className="text-sm text-gray-500">Add your first athlete to get started.</p>
+          <p className="text-base font-semibold text-text-primary mb-1">No athletes yet</p>
+          <p className="text-sm text-text-muted">Add your first athlete to get started.</p>
         </div>
       ) : (
         <AthleteSearch athletes={athleteList} />

@@ -23,9 +23,9 @@ export default async function WelcomePage() {
   const role = userRow?.role ?? 'coach'
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-surface-raised px-4">
       <div className="w-full max-w-sm">
-        <div className="bg-white rounded-2xl shadow-md p-8">
+        <div className="bg-surface rounded-2xl shadow-md p-8">
           <div className="text-center mb-6">
             <div className="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center mx-auto mb-4">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-teal-600">
@@ -33,10 +33,10 @@ export default async function WelcomePage() {
                 <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-text-primary">
               Welcome to SOSG Running Club!
             </h1>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-text-muted mt-2">
               {role === 'coach'
                 ? "Let\u2019s get you set up for coaching."
                 : role === 'caregiver'

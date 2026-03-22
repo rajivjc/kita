@@ -34,7 +34,7 @@ export default function StreakCalendar({ weeklyActivity, current, longest, varia
           </span>
         )}
         {current === 0 && (
-          <span className="text-sm text-gray-400">No active streak</span>
+          <span className="text-sm text-text-hint">No active streak</span>
         )}
         {longest > 0 && longest > current && (
           <span className={`text-xs ${mutedColor}`}>
@@ -51,7 +51,7 @@ export default function StreakCalendar({ weeklyActivity, current, longest, varia
             className={`w-5 h-5 rounded-full flex-shrink-0 ${
               week.active
                 ? `${activeBg} ring-2 ${activeRing}`
-                : 'bg-gray-100 border border-gray-200'
+                : 'bg-surface-alt border border-border'
             }`}
             title={`Week of ${formatWeek(week.weekStart)}${week.active ? ' — active' : ''}`}
           />
@@ -60,8 +60,8 @@ export default function StreakCalendar({ weeklyActivity, current, longest, varia
 
       {/* Labels */}
       <div className="flex justify-between">
-        <span className="text-[10px] text-gray-400">{firstLabel}</span>
-        <span className="text-[10px] text-gray-400">{lastLabel}</span>
+        <span className="text-[10px] text-text-hint">{firstLabel}</span>
+        <span className="text-[10px] text-text-hint">{lastLabel}</span>
       </div>
     </div>
   )

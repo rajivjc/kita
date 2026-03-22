@@ -317,7 +317,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
               </span>
             </div>
           )}
-          <h1 className="text-2xl font-bold text-gray-900">{athlete.name}</h1>
+          <h1 className="text-2xl font-bold text-text-primary">{athlete.name}</h1>
         </div>
         <div className="flex items-center gap-1">
           {!isReadOnly && athlete.athlete_pin && (
@@ -325,7 +325,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
           )}
           <Link
             href={`/story/${id}`}
-            className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+            className="p-2 text-text-hint hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
             aria-label="View journey story"
             title="Journey story"
           >
@@ -335,7 +335,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
           {!isReadOnly && (
             <Link
               href={`/athletes/${id}/edit`}
-              className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+              className="p-2 text-text-hint hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
               aria-label="Edit athlete profile"
             >
               <Pencil size={18} />
@@ -352,7 +352,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
 
       {/* Profile strip */}
       {(athlete.running_goal || athlete.medical_notes || athlete.emergency_contact || athlete.communication_notes) && (
-        <div className="mb-6 bg-gray-50 rounded-xl px-4 py-3 space-y-1.5">
+        <div className="mb-6 bg-surface-raised rounded-xl px-4 py-3 space-y-1.5">
           {athlete.running_goal && (
             <p className="text-sm text-teal-700 font-medium line-clamp-1">🎯 {athlete.running_goal}</p>
           )}
@@ -360,10 +360,10 @@ export default async function AthleteHubPage({ params }: PageProps) {
             <p className="text-sm text-orange-700 line-clamp-2">🏥 {athlete.medical_notes}</p>
           )}
           {athlete.emergency_contact && (
-            <p className="text-sm text-gray-600 line-clamp-1">📞 {athlete.emergency_contact}</p>
+            <p className="text-sm text-text-secondary line-clamp-1">📞 {athlete.emergency_contact}</p>
           )}
           {athlete.communication_notes && (
-            <p className="text-sm text-gray-500 line-clamp-2">💬 {athlete.communication_notes}</p>
+            <p className="text-sm text-text-muted line-clamp-2">💬 {athlete.communication_notes}</p>
           )}
         </div>
       )}

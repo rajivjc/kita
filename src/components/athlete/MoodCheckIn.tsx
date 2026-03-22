@@ -47,7 +47,7 @@ export default function MoodCheckIn({
 
   return (
     <section aria-label="How are you feeling today" className="mb-8">
-      <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+      <h2 className="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
         <span>😊</span> How are you feeling today?
       </h2>
       <div className="flex justify-between gap-2">
@@ -59,14 +59,14 @@ export default function MoodCheckIn({
               onClick={() => handleMood(m.value)}
               className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all
                 ${selected
-                  ? `bg-white border-2 ${themeRing.replace('ring', 'border')} shadow-sm`
-                  : 'bg-white/60 border-2 border-transparent hover:bg-white'
+                  ? `bg-surface border-2 ${themeRing.replace('ring', 'border')} shadow-sm`
+                  : 'bg-white/60 border-2 border-transparent hover:bg-surface'
                 }`}
               aria-label={m.label}
               aria-pressed={selected}
             >
               <span className="text-3xl">{m.emoji}</span>
-              <span className="text-xs text-gray-600">{m.label}</span>
+              <span className="text-xs text-text-secondary">{m.label}</span>
             </button>
           )
         })}

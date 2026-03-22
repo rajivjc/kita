@@ -98,10 +98,10 @@ export default async function MilestoneSharePage({ params }: PageProps) {
     if (user) {
       return (
         <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
+          <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
             <span className="text-5xl mb-4">🔒</span>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">This profile is private</h1>
-            <p className="text-sm text-gray-500 mb-6">
+            <h1 className="text-xl font-bold text-text-primary mb-2">This profile is private</h1>
+            <p className="text-sm text-text-muted mb-6">
               Sharing is not enabled for this athlete yet. Ask the coach to enable sharing.
             </p>
             <Link
@@ -110,7 +110,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
             >
               Back to home
             </Link>
-            <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
+            <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
           </div>
         </div>
       )
@@ -118,10 +118,10 @@ export default async function MilestoneSharePage({ params }: PageProps) {
 
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
+        <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
           <span className="text-5xl mb-4">🔒</span>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">This profile is private</h1>
-          <p className="text-sm text-gray-500 mb-6">
+          <h1 className="text-xl font-bold text-text-primary mb-2">This profile is private</h1>
+          <p className="text-sm text-text-muted mb-6">
             This athlete&apos;s milestones are not publicly shared.
           </p>
           <Link
@@ -130,7 +130,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
           >
             Sign in
           </Link>
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest mt-6">SOSG Running Club</p>
         </div>
       </div>
     )
@@ -152,23 +152,23 @@ export default async function MilestoneSharePage({ params }: PageProps) {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center p-6">
       <CloseButton />
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
+      <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm px-8 py-10 flex flex-col items-center text-center">
         <span className="text-7xl mb-4">{icon}</span>
         <p className="text-xs font-bold text-teal-500 uppercase tracking-widest mb-2">Milestone Achieved</p>
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">{athleteName}</h1>
+        <h1 className="text-3xl font-bold text-text-primary mb-1">{athleteName}</h1>
         <p className="text-xl font-semibold text-teal-600 mb-6">{label}</p>
         <div className="w-12 h-0.5 bg-teal-200 mb-6" />
-        <p className="text-sm text-gray-400 mb-1">{date}</p>
+        <p className="text-sm text-text-hint mb-1">{date}</p>
         {coachName && (
-          <p className="text-sm text-gray-400">Coached by {coachName}</p>
+          <p className="text-sm text-text-hint">Coached by {coachName}</p>
         )}
-        <div className="mt-8 pt-6 border-t border-gray-100 w-full flex flex-col items-center gap-4">
+        <div className="mt-8 pt-6 border-t border-border-subtle w-full flex flex-col items-center gap-4">
           <ShareButton
             title={`${athleteName} — ${label}`}
             text={`${athleteName} achieved a milestone: ${label}. Growing together at SOSG Running Club!`}
             url={`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/milestone/${params.id}`}
           />
-          <p className="text-xs text-gray-300 font-medium uppercase tracking-widest">SOSG Running Club — Growing Together</p>
+          <p className="text-xs text-text-hint font-medium uppercase tracking-widest">SOSG Running Club — Growing Together</p>
         </div>
         <p className="text-[10px] text-white/40 text-center mt-4 max-w-xs">
           This page shows {athleteName}&apos;s running achievements only. No personal details, notes, or contact information are included.

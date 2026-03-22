@@ -26,7 +26,7 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
     <form ref={formRef} action={formAction} className="space-y-4">
       {/* Email */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-secondary mb-1">
           Email address
         </label>
         <input
@@ -34,13 +34,13 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
           name="email"
           required
           placeholder="coach@example.com"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Role */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-secondary mb-1">
           Role
         </label>
         <select
@@ -48,7 +48,7 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
           ref={roleRef}
           value={selectedRole}
           onChange={(e) => setSelectedRole(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="coach">Coach</option>
           <option value="caregiver">Caregiver</option>
@@ -59,19 +59,19 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
       {/* Athlete — only shown for caregiver */}
       {selectedRole === 'caregiver' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-text-secondary mb-1">
             Athlete
           </label>
           <select
             name="athlete_id"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select athlete…</option>
             {athletes.map((a) => (
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1.5">
+          <p className="text-xs text-text-muted mt-1.5">
             Athlete not listed?{' '}
             <Link href="/admin/athletes/new" className="text-teal-600 hover:text-teal-700 font-medium underline">
               Add a new athlete first

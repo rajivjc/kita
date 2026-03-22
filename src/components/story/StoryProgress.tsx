@@ -19,14 +19,14 @@ export default function StoryProgress({ progress }: StoryProgressProps) {
         Progress
       </h2>
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-gray-50 rounded-xl p-4 text-center">
-          <p className="text-[10px] text-gray-400 font-medium uppercase mb-1">
+        <div className="bg-surface-raised rounded-xl p-4 text-center">
+          <p className="text-[10px] text-text-hint font-medium uppercase mb-1">
             First run
           </p>
-          <p className="text-xl font-extrabold text-gray-900">
+          <p className="text-xl font-extrabold text-text-primary">
             {progress.firstSessionDistance.toFixed(1)}
           </p>
-          <p className="text-[10px] text-gray-400">km</p>
+          <p className="text-[10px] text-text-hint">km</p>
         </div>
         <div className="bg-teal-50 rounded-xl p-4 text-center">
           <p className="text-[10px] text-teal-500 font-medium uppercase mb-1">
@@ -39,7 +39,7 @@ export default function StoryProgress({ progress }: StoryProgressProps) {
         </div>
       </div>
       {progress.recentSessionDistance > progress.firstSessionDistance && (
-        <p className="text-xs text-gray-500 text-center mt-2">
+        <p className="text-xs text-text-muted text-center mt-2">
           Distance has grown from {progress.firstSessionDistance.toFixed(1)}km to{' '}
           {progress.recentSessionDistance.toFixed(1)}km.
         </p>

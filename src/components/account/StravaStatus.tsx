@@ -49,7 +49,7 @@ export default function StravaStatus({ connection }: { connection: Connection })
         </span>
       </div>
 
-      <p className="text-xs text-gray-500 mb-1">Last sync: {lastSync}</p>
+      <p className="text-xs text-text-muted mb-1">Last sync: {lastSync}</p>
 
       {!isHealthy && connection.last_error && (
         <p className="text-xs text-red-600 mb-3">{connection.last_error}</p>
@@ -74,7 +74,7 @@ export default function StravaStatus({ connection }: { connection: Connection })
             <button
               onClick={() => setConfirming(false)}
               disabled={busy}
-              className="text-xs text-gray-600 hover:text-gray-800 px-2 py-1.5 transition-colors"
+              className="text-xs text-text-secondary hover:text-text-primary px-2 py-1.5 transition-colors"
             >
               Cancel
             </button>
@@ -84,7 +84,7 @@ export default function StravaStatus({ connection }: { connection: Connection })
         <div className="flex gap-2 mt-3">
           <a
             href="/api/strava/connect"
-            className="text-xs font-medium text-gray-600 hover:text-teal-600 active:scale-[0.97] border border-gray-200 rounded-lg px-3 py-1.5 transition-all duration-150"
+            className="text-xs font-medium text-text-secondary hover:text-teal-600 active:scale-[0.97] border border-border rounded-lg px-3 py-1.5 transition-all duration-150"
           >
             Reconnect
           </a>

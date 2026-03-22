@@ -46,13 +46,13 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
       <div className="relative flex flex-col items-center">
         <button
           onClick={handleOpen}
-          className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+          className="p-2 text-text-hint hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
           aria-label="Print QR code for athlete's personal page"
           title="Print QR code for athlete's personal page"
         >
           <QrCode size={18} />
         </button>
-        <span className="text-[9px] text-gray-400 font-medium leading-none mt-0.5">QR</span>
+        <span className="text-[9px] text-text-hint font-medium leading-none mt-0.5">QR</span>
 
         {showHint && (
           <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-10 w-56">
@@ -77,16 +77,16 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6 text-center"
+            className="bg-surface rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6 text-center"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-text-primary">
                 {athleteName}&apos;s page
               </h2>
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+                className="p-1.5 text-text-hint hover:text-text-secondary rounded-lg transition-colors"
                 aria-label="Close"
               >
                 <X size={20} />
@@ -94,7 +94,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
             </div>
 
             <div className="flex justify-center mb-4">
-              <div className="bg-white p-3 rounded-xl border border-gray-100">
+              <div className="bg-surface p-3 rounded-xl border border-border-subtle">
                 <QRCodeSVG
                   value={url}
                   size={200}
@@ -104,7 +104,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
               </div>
             </div>
 
-            <p className="text-sm text-gray-600 mb-4 text-left">
+            <p className="text-sm text-text-secondary mb-4 text-left">
               Print this QR code and stick it somewhere easy to find — like a fridge, a bedroom wall, or inside a notebook.
               {' '}{athleteName} (or their caregiver) can scan it with any phone camera to open their personal running page.
               {' '}They&apos;ll need their PIN to sign in.
@@ -120,7 +120,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
 
               <button
                 onClick={handleCopyLink}
-                className="w-full h-12 flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-teal-300 hover:bg-teal-50 text-gray-700 text-sm font-medium rounded-xl transition-colors"
+                className="w-full h-12 flex items-center justify-center gap-2 bg-surface border border-border hover:border-teal-300 hover:bg-teal-50 text-text-secondary text-sm font-medium rounded-xl transition-colors"
               >
                 {linkCopied ? (
                   <>

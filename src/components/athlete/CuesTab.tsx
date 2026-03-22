@@ -147,8 +147,8 @@ export default function CuesTab({ athleteId, athleteName, initialCues }: CuesTab
       {allEmpty && (
         <div className="text-center py-6">
           <p className="text-3xl mb-2">📋</p>
-          <p className="text-base font-semibold text-gray-900 mb-1">No coaching cues yet</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-base font-semibold text-text-primary mb-1">No coaching cues yet</p>
+          <p className="text-sm text-text-muted">
             Cues help coaches know what works for {athleteName.split(' ')[0]}. Add the first one below.
           </p>
         </div>
@@ -179,14 +179,14 @@ export default function CuesTab({ athleteId, athleteName, initialCues }: CuesTab
         const { label, placeholder, color } = SECTION_LABELS[section]
         return (
           <div key={section}>
-            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">
+            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-2">
               {label}
             </h2>
 
             {/* Tag list */}
             <div className="flex flex-wrap gap-2 mb-3 min-h-[28px]">
               {cues[section].length === 0 && (
-                <p className="text-xs text-gray-400 italic">None added yet</p>
+                <p className="text-xs text-text-hint italic">None added yet</p>
               )}
               {cues[section].map((tag, i) => (
                 <span
@@ -213,7 +213,7 @@ export default function CuesTab({ athleteId, athleteName, initialCues }: CuesTab
                 onChange={(e) => setInputValues((prev) => ({ ...prev, [section]: e.target.value }))}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(section) } }}
                 placeholder={placeholder}
-                className="flex-1 text-sm border border-gray-300 rounded-lg px-3 py-1.5 transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
+                className="flex-1 text-sm border border-border-strong rounded-lg px-3 py-1.5 transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
               />
               <button
                 onClick={() => addTag(section)}

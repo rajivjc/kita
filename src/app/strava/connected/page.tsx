@@ -24,14 +24,14 @@ function StravaConnectedContent() {
 
   if (isDenied) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 text-center space-y-4">
+      <main className="min-h-screen flex items-center justify-center bg-surface-raised px-4">
+        <div className="w-full max-w-sm bg-surface rounded-2xl shadow-md p-8 text-center space-y-4">
           <div className="text-4xl">🚫</div>
-          <h1 className="text-xl font-bold text-gray-900">Connection cancelled</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-xl font-bold text-text-primary">Connection cancelled</h1>
+          <p className="text-sm text-text-secondary">
             You chose not to connect your Strava account. You can try again anytime from the app.
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-text-hint">
             You can close this window and go back to the app.
           </p>
         </div>
@@ -40,8 +40,8 @@ function StravaConnectedContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 text-center space-y-4">
+    <main className="min-h-screen flex items-center justify-center bg-surface-raised px-4">
+      <div className="w-full max-w-sm bg-surface rounded-2xl shadow-md p-8 text-center space-y-4">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,8 +55,8 @@ function StravaConnectedContent() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="text-xl font-bold text-gray-900">Strava connected!</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="text-xl font-bold text-text-primary">Strava connected!</h1>
+        <p className="text-sm text-text-secondary">
           Your runs will now sync automatically to athlete profiles.
         </p>
 
@@ -72,7 +72,7 @@ function StravaConnectedContent() {
             </div>
             <a
               href="/account?connected=strava"
-              className="inline-block text-sm text-gray-500 hover:text-teal-600 transition-colors"
+              className="inline-block text-sm text-text-muted hover:text-teal-600 transition-colors"
             >
               Or continue in browser
             </a>
