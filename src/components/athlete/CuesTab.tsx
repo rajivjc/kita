@@ -9,7 +9,7 @@ import type { CuesData } from './AthleteTabs'
 type Section = 'helps' | 'avoid' | 'best_cues' | 'kit'
 
 const SECTION_LABELS: Record<Section, { label: string; placeholder: string; color: string }> = {
-  helps: { label: 'Helps', placeholder: 'e.g. Music during warm-up', color: 'bg-green-100 text-green-800' },
+  helps: { label: 'Helps', placeholder: 'e.g. Music during warm-up', color: 'bg-green-100 text-green-800 dark:text-green-300' },
   avoid: { label: 'Avoid', placeholder: 'e.g. Crowded start lines', color: 'bg-red-100 text-red-800' },
   best_cues: { label: 'Best Cues', placeholder: 'e.g. Look ahead not down', color: 'bg-blue-100 text-blue-800' },
   kit: { label: 'Kit', placeholder: 'e.g. Cushioned shoes', color: 'bg-purple-100 text-purple-800' },
@@ -154,7 +154,7 @@ export default function CuesTab({ athleteId, athleteName, initialCues }: CuesTab
         </div>
       )}
       {saveError && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-400/20 px-4 py-3 text-sm text-red-700 dark:text-red-300">
           {saveError}
         </div>
       )}

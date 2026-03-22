@@ -41,7 +41,7 @@ function VolumeTooltip({ active, payload }: { active?: boolean; payload?: Array<
   return (
     <div className="bg-surface border border-border rounded-lg shadow-sm px-3 py-2 text-xs">
       <p className="font-semibold text-text-primary">Week of {data.weekLabel}</p>
-      <p className="text-teal-600">{data.totalKm} km</p>
+      <p className="text-teal-600 dark:text-teal-300">{data.totalKm} km</p>
       <p className="text-text-muted">{data.sessionCount} run{data.sessionCount !== 1 ? 's' : ''}</p>
     </div>
   )
@@ -66,7 +66,7 @@ function DistanceTooltip({ active, payload }: { active?: boolean; payload?: Arra
   return (
     <div className="bg-surface border border-border rounded-lg shadow-sm px-3 py-2 text-xs">
       <p className="font-semibold text-text-primary">{data.dateLabel}</p>
-      <p className="text-teal-600">{data.distanceKm} km</p>
+      <p className="text-teal-600 dark:text-teal-300">{data.distanceKm} km</p>
       <p className="text-text-muted">Total: {data.cumulativeKm} km</p>
     </div>
   )
@@ -131,7 +131,7 @@ export default function ProgressChart({
               onClick={() => setView(v.key)}
               className={`text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors ${
                 activeView === v.key
-                  ? 'bg-teal-50 text-teal-700'
+                  ? 'bg-teal-50 dark:bg-teal-900/15 text-teal-700 dark:text-teal-300'
                   : 'text-text-hint hover:text-text-secondary hover:bg-surface-raised'
               }`}
             >

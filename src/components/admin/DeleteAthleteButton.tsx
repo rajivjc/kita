@@ -30,11 +30,11 @@ export default function DeleteAthleteButton({ athleteId, athleteName }: Props) {
   if (confirming) {
     return (
       <div className="space-y-2">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-          <p className="text-sm text-red-700 font-medium mb-2">
+        <div className="bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-400/20 rounded-xl p-3">
+          <p className="text-sm text-red-700 dark:text-red-300 font-medium mb-2">
             Permanently delete {athleteName}?
           </p>
-          <p className="text-xs text-red-600 mb-3">
+          <p className="text-xs text-red-600 dark:text-red-300 mb-3">
             This will remove all their sessions, notes, and cues. This cannot be undone.
           </p>
           <div className="flex items-center gap-2">
@@ -54,7 +54,7 @@ export default function DeleteAthleteButton({ athleteId, athleteName }: Props) {
             </button>
           </div>
         </div>
-        {error && <p className="text-xs text-red-600">{error}</p>}
+        {error && <p className="text-xs text-red-600 dark:text-red-300">{error}</p>}
       </div>
     )
   }
@@ -63,11 +63,11 @@ export default function DeleteAthleteButton({ athleteId, athleteName }: Props) {
     <div>
       <button
         onClick={() => setConfirming(true)}
-        className="text-sm text-red-500 hover:text-red-700 active:scale-[0.97] border border-red-200 rounded-lg px-3 py-1.5 transition-all duration-150"
+        className="text-sm text-red-500 hover:text-red-700 dark:hover:text-red-300 active:scale-[0.97] border border-red-200 dark:border-red-400/20 rounded-lg px-3 py-1.5 transition-all duration-150"
       >
         Delete athlete
       </button>
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-xs text-red-600 dark:text-red-300 mt-1">{error}</p>}
     </div>
   )
 }

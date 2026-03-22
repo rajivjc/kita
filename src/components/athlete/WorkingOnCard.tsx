@@ -61,7 +61,7 @@ export default function WorkingOnCard({
         </p>
         <button
           onClick={() => setEditing(true)}
-          className="text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors"
+          className="text-sm font-medium text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
         >
           Add status
         </button>
@@ -72,9 +72,9 @@ export default function WorkingOnCard({
   // Edit mode
   if (editing) {
     return (
-      <div className="mb-6 bg-surface border border-teal-200 rounded-xl px-4 py-4 shadow-sm">
+      <div className="mb-6 bg-surface border border-teal-200 dark:border-teal-400/20 rounded-xl px-4 py-4 shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-bold text-teal-700 uppercase tracking-widest">Working on</p>
+          <p className="text-xs font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Working on</p>
           <button
             onClick={handleCancel}
             className="p-1 text-text-hint hover:text-text-secondary transition-colors"
@@ -129,13 +129,13 @@ export default function WorkingOnCard({
 
   // Display mode
   return (
-    <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 rounded-xl px-4 py-3">
+    <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3">
       <div className="flex items-center justify-between mb-1.5">
-        <p className="text-[11px] font-bold text-teal-700 uppercase tracking-widest">Working on</p>
+        <p className="text-[11px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Working on</p>
         {!isReadOnly && (
           <button
             onClick={() => setEditing(true)}
-            className="p-1 text-teal-400 hover:text-teal-600 transition-colors"
+            className="p-1 text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition-colors"
             aria-label="Edit working on status"
           >
             <Pencil size={14} />
@@ -145,7 +145,7 @@ export default function WorkingOnCard({
       <p className="text-sm text-text-primary">{workingOn}</p>
       {recentProgress && (
         <div className="mt-2">
-          <p className="text-[11px] font-semibold text-teal-600 mb-0.5">Recent progress</p>
+          <p className="text-[11px] font-semibold text-teal-600 dark:text-teal-300 mb-0.5">Recent progress</p>
           <p className="text-sm text-text-secondary">{recentProgress}</p>
         </div>
       )}

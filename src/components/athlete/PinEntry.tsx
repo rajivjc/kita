@@ -97,7 +97,7 @@ export default function PinEntry({ athleteId, athleteName }: Props) {
         {/* Error message */}
         <div aria-live="polite" className="min-h-[2rem] mb-4">
           {error && (
-            <p className="text-base text-red-600 font-medium">{error}</p>
+            <p className="text-base text-red-600 dark:text-red-300 font-medium">{error}</p>
           )}
         </div>
 

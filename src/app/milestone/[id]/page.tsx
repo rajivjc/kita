@@ -106,7 +106,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
             </p>
             <Link
               href="/feed"
-              className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-full px-6 py-3 transition-colors"
+              className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-semibold rounded-full px-6 py-3 transition-colors"
             >
               Back to home
             </Link>
@@ -126,7 +126,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
           </p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-full px-6 py-3 transition-colors"
+            className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-semibold rounded-full px-6 py-3 transition-colors"
           >
             Sign in
           </Link>
@@ -156,7 +156,7 @@ export default async function MilestoneSharePage({ params }: PageProps) {
         <span className="text-7xl mb-4">{icon}</span>
         <p className="text-xs font-bold text-teal-500 uppercase tracking-widest mb-2">Milestone Achieved</p>
         <h1 className="text-3xl font-bold text-text-primary mb-1">{athleteName}</h1>
-        <p className="text-xl font-semibold text-teal-600 mb-6">{label}</p>
+        <p className="text-xl font-semibold text-teal-600 dark:text-teal-300 mb-6">{label}</p>
         <div className="w-12 h-0.5 bg-teal-200 mb-6" />
         <p className="text-sm text-text-hint mb-1">{date}</p>
         {coachName && (

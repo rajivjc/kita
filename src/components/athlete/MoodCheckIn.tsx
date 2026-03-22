@@ -20,7 +20,7 @@ interface MoodCheckInProps {
   currentMood: number | null
   /** Theme ring class, e.g. 'ring-teal-400' */
   themeRing: string
-  /** Theme text class, e.g. 'text-teal-700' */
+  /** Theme text class, e.g. 'text-teal-700 dark:text-teal-300' */
   themeText: string
 }
 
@@ -60,7 +60,7 @@ export default function MoodCheckIn({
               className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all
                 ${selected
                   ? `bg-surface border-2 ${themeRing.replace('ring', 'border')} shadow-sm`
-                  : 'bg-white/60 border-2 border-transparent hover:bg-surface'
+                  : 'bg-white/60 dark:bg-white/5 border-2 border-transparent hover:bg-surface'
                 }`}
               aria-label={m.label}
               aria-pressed={selected}

@@ -51,7 +51,7 @@ export default function SetupPage() {
         </div>
 
         {installed && (
-          <div className="mb-6 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800 flex items-center gap-2">
+          <div className="mb-6 rounded-lg bg-green-50 dark:bg-green-900/15 border border-green-200 dark:border-green-400/20 px-4 py-3 text-sm text-green-800 dark:text-green-300 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
@@ -62,7 +62,7 @@ export default function SetupPage() {
         {/* Step 1 — Login */}
         <section className="bg-surface rounded-xl border border-border shadow-sm mb-4 overflow-hidden">
           <div className="px-5 py-4 border-b border-border-subtle flex items-center gap-3">
-            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white text-sm font-bold flex items-center justify-center">1</span>
+            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-bold flex items-center justify-center">1</span>
             <h2 className="text-base font-semibold text-text-primary">Sign in</h2>
           </div>
           <div className="px-5 py-4 text-sm text-text-secondary space-y-2">
@@ -82,7 +82,7 @@ export default function SetupPage() {
         {/* Step 2 — Install as app */}
         <section className="bg-surface rounded-xl border border-border shadow-sm mb-4 overflow-hidden">
           <div className="px-5 py-4 border-b border-border-subtle flex items-center gap-3">
-            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white text-sm font-bold flex items-center justify-center">2</span>
+            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-bold flex items-center justify-center">2</span>
             <h2 className="text-base font-semibold text-text-primary">Add to Home Screen</h2>
           </div>
 
@@ -94,7 +94,7 @@ export default function SetupPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 py-2.5 text-xs font-medium text-center transition-colors border-b-2 bg-transparent ${
                   activeTab === tab.id
-                    ? 'text-teal-600 border-teal-600'
+                    ? 'text-teal-600 dark:text-teal-300 border-teal-600'
                     : 'text-text-hint border-transparent hover:text-text-secondary'
                 }`}
                 style={{ minWidth: 'auto', minHeight: 'auto', width: 'auto' }}
@@ -114,7 +114,7 @@ export default function SetupPage() {
         {/* Step 3 — All set */}
         <section className="bg-surface rounded-xl border border-border shadow-sm mb-6 overflow-hidden">
           <div className="px-5 py-4 border-b border-border-subtle flex items-center gap-3">
-            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white text-sm font-bold flex items-center justify-center">3</span>
+            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-bold flex items-center justify-center">3</span>
             <h2 className="text-base font-semibold text-text-primary">You&apos;re all set!</h2>
           </div>
           <div className="px-5 py-4 text-sm text-text-secondary space-y-2">
@@ -126,7 +126,7 @@ export default function SetupPage() {
         {/* Help section */}
         <div className="text-center text-sm text-text-hint space-y-2">
           <p>Having trouble? Ask your coach or admin for help.</p>
-          <Link href="/login" className="text-teal-600 hover:text-teal-700 font-medium">
+          <Link href="/login" className="text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 font-medium">
             Go to Sign in
           </Link>
         </div>
@@ -138,7 +138,7 @@ export default function SetupPage() {
 function IOSInstructions() {
   return (
     <div className="space-y-4">
-      <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 text-xs text-amber-800">
+      <div className="rounded-lg bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-400/20 px-3 py-2.5 text-xs text-amber-800 dark:text-amber-300">
         <strong>Important:</strong> You must use <strong>Safari</strong> for this step (the blue compass icon on your home screen). If you&apos;re using Chrome or another browser, open <strong>Safari</strong>, go to <strong>sosg.run</strong>, and sign in there first.
       </div>
       <ol className="space-y-3 pl-0" style={{ listStyle: 'none', paddingLeft: 0 }}>

@@ -11,7 +11,7 @@ export default function StoryPhotoTimeline({ photos }: StoryPhotoTimelineProps) 
 
   return (
     <section className="mb-6">
-      <h2 className="text-sm font-bold text-teal-600 uppercase tracking-wide mb-3">
+      <h2 className="text-sm font-bold text-teal-600 dark:text-teal-300 uppercase tracking-wide mb-3">
         Along the way
       </h2>
       <div

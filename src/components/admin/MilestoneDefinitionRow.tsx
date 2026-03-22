@@ -88,7 +88,7 @@ export default function MilestoneDefinitionRow({
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setEditing(true)}
-              className="text-xs text-teal-600 hover:text-teal-700 font-medium px-2 py-1 transition-colors"
+              className="text-xs text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 font-medium px-2 py-1 transition-colors"
             >
               Edit
             </button>
@@ -97,7 +97,7 @@ export default function MilestoneDefinitionRow({
               disabled={toggling}
               className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${
                 isActive
-                  ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                  ? 'bg-green-50 dark:bg-green-900/15 text-green-700 dark:text-green-300 hover:bg-green-100'
                   : 'bg-surface-alt text-text-muted hover:bg-surface-alt'
               }`}
             >
@@ -156,7 +156,7 @@ export default function MilestoneDefinitionRow({
               </div>
             </div>
           )}
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-red-600 dark:text-red-300">{error}</p>}
           <div className="flex gap-2">
             <button
               onClick={handleSave}
@@ -174,7 +174,7 @@ export default function MilestoneDefinitionRow({
           </div>
         </div>
       )}
-      {!editing && error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+      {!editing && error && <p className="text-xs text-red-600 dark:text-red-300 mt-1">{error}</p>}
     </div>
   )
 }

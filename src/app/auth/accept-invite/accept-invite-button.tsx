@@ -31,7 +31,7 @@ export function AcceptInviteButton({ token }: { token: string }) {
         {pending ? 'Setting up your account...' : 'Accept Invitation'}
       </button>
       {error && (
-        <p className="text-sm text-red-600 mt-3" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-300 mt-3" role="alert">
           Something went wrong. Please try again.
         </p>
       )}

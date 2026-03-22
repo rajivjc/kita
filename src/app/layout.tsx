@@ -5,6 +5,7 @@ import ServiceWorkerRegistrar from '@/components/nav/ServiceWorkerRegistrar'
 import InstallBanner from '@/components/nav/InstallBanner'
 import SplashHider from '@/components/nav/SplashHider'
 import ScrollRestorer from '@/components/nav/ScrollRestorer'
+import ThemeProvider from '@/components/theme/ThemeProvider'
 import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
@@ -30,8 +31,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var t = localStorage.getItem('theme') || 'system';
+              var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+              if (dark) document.documentElement.classList.add('dark');
+            } catch(e) {}
+          })();
+        `}} />
       </head>
       <body className="min-h-dvh pb-16 bg-bg text-text-primary">
+        <ThemeProvider>
         {/* Inline PWA splash screen — renders before React hydrates */}
         <div
           id="pwa-splash"
@@ -129,6 +140,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Suspense>
         <InstallBanner />
         {children}
+        </ThemeProvider>
       </body>
     </html>
   )
