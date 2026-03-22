@@ -18,12 +18,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const dryRun = request.nextUrl.searchParams.get('dry') === 'true'
+
   const { weekStart, weekEnd, label: weekDateRange } = getPreviousWeekRange()
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
 
   let coachEmailsSent = 0
   let caregiverEmailsSent = 0
   const errors: string[] = []
+  const dryRunResults: { to: string; subject: string; html: string }[] = []
 
   // Send coach digests
   try {
@@ -42,22 +45,25 @@ export async function GET(request: NextRequest) {
         // Fall back to current email format — narrativeHtml stays empty
       }
 
-      const result = await sendEmail({
-        to: digest.coachEmail,
-        subject: `Your week: ${digest.totalSessions} session${digest.totalSessions !== 1 ? 's' : ''} logged`,
-        html: weeklyDigestEmail({
-          coachName: digest.coachName,
-          totalSessions: digest.totalSessions,
-          athleteNames: digest.athleteNames,
-          weekDateRange,
-          feedUrl: `${appUrl}/feed`,
-          narrativeHtml,
-          digestUrl,
-        }),
+      const subject = `Your week: ${digest.totalSessions} session${digest.totalSessions !== 1 ? 's' : ''} logged`
+      const html = weeklyDigestEmail({
+        coachName: digest.coachName,
+        totalSessions: digest.totalSessions,
+        athleteNames: digest.athleteNames,
+        weekDateRange,
+        feedUrl: `${appUrl}/feed`,
+        narrativeHtml,
+        digestUrl,
       })
 
-      if (result.success) coachEmailsSent++
-      else errors.push(`Coach ${digest.coachEmail}: ${result.error}`)
+      if (dryRun) {
+        dryRunResults.push({ to: digest.coachEmail, subject, html })
+      } else {
+        const result = await sendEmail({ to: digest.coachEmail, subject, html })
+
+        if (result.success) coachEmailsSent++
+        else errors.push(`Coach ${digest.coachEmail}: ${result.error}`)
+      }
     }
   } catch (err) {
     errors.push(`Coach digests failed: ${String(err)}`)
@@ -80,28 +86,40 @@ export async function GET(request: NextRequest) {
         // Fall back to current email format
       }
 
-      const result = await sendEmail({
-        to: digest.caregiverEmail,
-        subject: `${digest.athleteName}'s week: ${digest.totalSessions} session${digest.totalSessions !== 1 ? 's' : ''}`,
-        html: caregiverDigestEmail({
-          caregiverName: digest.caregiverName,
-          athleteName: digest.athleteName,
-          totalSessions: digest.totalSessions,
-          totalKm: digest.totalKm,
-          milestonesEarned: digest.milestonesEarned,
-          nextMilestone: digest.nextMilestone,
-          weekDateRange,
-          athleteUrl: `${appUrl}/athletes/${digest.athleteId}`,
-          narrativeHtml: cgNarrativeHtml,
-          digestUrl: cgDigestUrl,
-        }),
+      const subject = `${digest.athleteName}'s week: ${digest.totalSessions} session${digest.totalSessions !== 1 ? 's' : ''}`
+      const html = caregiverDigestEmail({
+        caregiverName: digest.caregiverName,
+        athleteName: digest.athleteName,
+        totalSessions: digest.totalSessions,
+        totalKm: digest.totalKm,
+        milestonesEarned: digest.milestonesEarned,
+        nextMilestone: digest.nextMilestone,
+        weekDateRange,
+        athleteUrl: `${appUrl}/athletes/${digest.athleteId}`,
+        narrativeHtml: cgNarrativeHtml,
+        digestUrl: cgDigestUrl,
       })
 
-      if (result.success) caregiverEmailsSent++
-      else errors.push(`Caregiver ${digest.caregiverEmail}: ${result.error}`)
+      if (dryRun) {
+        dryRunResults.push({ to: digest.caregiverEmail, subject, html })
+      } else {
+        const result = await sendEmail({ to: digest.caregiverEmail, subject, html })
+
+        if (result.success) caregiverEmailsSent++
+        else errors.push(`Caregiver ${digest.caregiverEmail}: ${result.error}`)
+      }
     }
   } catch (err) {
     errors.push(`Caregiver digests failed: ${String(err)}`)
+  }
+
+  if (dryRun) {
+    return NextResponse.json({
+      ok: true,
+      dryRun: true,
+      week: weekDateRange,
+      emails: dryRunResults,
+    })
   }
 
   return NextResponse.json({
