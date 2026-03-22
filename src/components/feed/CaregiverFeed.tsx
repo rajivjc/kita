@@ -83,7 +83,7 @@ export default function CaregiverFeed({ data, userId }: Props) {
       />
 
       {/* Card 1 — Athlete Status */}
-      <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
+      <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15 border border-amber-200 dark:border-amber-400/30 rounded-2xl px-5 py-4 mb-5 shadow-sm">
         <div className="flex items-center justify-between">
           <p className="text-lg font-bold text-text-primary">
             {greeting}, {firstName}
@@ -100,11 +100,11 @@ export default function CaregiverFeed({ data, userId }: Props) {
         {caregiverAthlete?.avatar && (
           <div className="flex items-center gap-2 mt-2">
             <div className="relative flex-shrink-0">
-              <div className="rounded-full w-10 h-10 bg-white/60 dark:bg-white/5 flex items-center justify-center text-xl">
+              <div className="rounded-full w-10 h-10 bg-white/60 dark:bg-white/8 flex items-center justify-center text-xl">
                 {caregiverAthlete.avatar}
               </div>
               <span
-                className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-amber-50 dark:bg-amber-900/20 border-[1.5px] border-white flex items-center justify-center text-[8px] leading-none"
+                className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-amber-50 dark:bg-amber-900/10 border-[1.5px] border-white flex items-center justify-center text-[8px] leading-none"
                 title="Avatar chosen by athlete"
               >
                 ✌️

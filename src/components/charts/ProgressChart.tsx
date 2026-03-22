@@ -138,7 +138,7 @@ export default function ProgressChart({
               onClick={() => setView(v.key)}
               className={`text-[11px] font-semibold px-3 py-1.5 rounded-full transition-colors ${
                 activeView === v.key
-                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300'
+                  ? 'bg-teal-50 dark:bg-teal-900/10 text-teal-700 dark:text-teal-300'
                   : 'text-text-hint hover:text-text-secondary hover:bg-surface-raised'
               }`}
             >

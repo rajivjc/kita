@@ -46,7 +46,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
       <div className="relative flex flex-col items-center">
         <button
           onClick={handleOpen}
-          className="p-2 text-text-hint hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 rounded-lg transition-all"
+          className="p-2 text-text-hint hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/12 rounded-lg transition-all"
           aria-label="Print QR code for athlete's personal page"
           title="Print QR code for athlete's personal page"
         >
@@ -120,7 +120,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
 
               <button
                 onClick={handleCopyLink}
-                className="w-full h-12 flex items-center justify-center gap-2 bg-surface border border-border hover:border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 text-text-secondary text-sm font-medium rounded-xl transition-colors"
+                className="w-full h-12 flex items-center justify-center gap-2 bg-surface border border-border hover:border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/12 text-text-secondary text-sm font-medium rounded-xl transition-colors"
               >
                 {linkCopied ? (
                   <>

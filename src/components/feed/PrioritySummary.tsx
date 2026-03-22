@@ -28,7 +28,7 @@ export default function PrioritySummary({
 
   if (allOnTrack) {
     return (
-      <div className="bg-emerald-100 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 px-4 py-3 mb-4 text-center rounded-[10px] border border-emerald-200 dark:border-emerald-400/20">
+      <div className="bg-emerald-100 dark:bg-emerald-900/10 text-emerald-600 dark:text-emerald-300 px-4 py-3 mb-4 text-center rounded-[10px] border border-emerald-200 dark:border-emerald-400/20">
         <p className="text-sm font-semibold">
           All {totalAthletes} athletes on track
         </p>
@@ -40,7 +40,7 @@ export default function PrioritySummary({
     {
       count: needsAttentionCount,
       label: 'Needs attention',
-      bgClass: 'bg-red-100 dark:bg-red-900/25',
+      bgClass: 'bg-red-100 dark:bg-red-900/10',
       borderClass: 'border border-red-200 dark:border-red-400/20',
       numberClass: 'text-red-600 dark:text-red-300',
       labelClass: 'text-red-800 dark:text-red-300',
@@ -48,7 +48,7 @@ export default function PrioritySummary({
     {
       count: goingQuietCount,
       label: 'Going quiet',
-      bgClass: 'bg-amber-100 dark:bg-amber-900/25',
+      bgClass: 'bg-amber-100 dark:bg-amber-900/10',
       borderClass: 'border border-amber-200 dark:border-amber-400/20',
       numberClass: 'text-amber-600 dark:text-amber-300',
       labelClass: 'text-amber-800 dark:text-amber-300',
@@ -56,7 +56,7 @@ export default function PrioritySummary({
     {
       count: nearMilestoneCount,
       label: 'Near milestone',
-      bgClass: 'bg-blue-100 dark:bg-blue-900/25',
+      bgClass: 'bg-blue-100 dark:bg-blue-900/10',
       borderClass: 'border border-blue-200 dark:border-blue-400/20',
       numberClass: 'text-blue-600 dark:text-blue-300',
       labelClass: 'text-blue-800 dark:text-blue-300',
@@ -64,7 +64,7 @@ export default function PrioritySummary({
     {
       count: onTrackCount,
       label: 'On track',
-      bgClass: 'bg-emerald-100 dark:bg-emerald-900/25',
+      bgClass: 'bg-emerald-100 dark:bg-emerald-900/10',
       borderClass: 'border border-emerald-200 dark:border-emerald-400/20',
       numberClass: 'text-emerald-600 dark:text-emerald-300',
       labelClass: 'text-emerald-800 dark:text-emerald-300',

@@ -85,7 +85,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
             key={i}
             onClick={() => handleSend(msg.full)}
             disabled={isPending}
-            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200 dark:border-amber-400/80 text-text-secondary text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
+            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200 dark:border-amber-400/80 text-text-secondary text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
           >
             <span className="text-base">{msg.emoji}</span>
             <span>{msg.text}</span>

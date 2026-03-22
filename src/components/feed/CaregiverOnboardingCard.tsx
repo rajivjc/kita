@@ -51,7 +51,7 @@ export default function CaregiverOnboardingCard({
     return (
       <button
         onClick={handleToggle}
-        className="w-full bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
+        className="w-full bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15 border border-amber-200 dark:border-amber-400/30 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
         aria-label="Expand setup guide"
       >
         <span className="text-sm font-medium text-amber-700 dark:text-amber-300">
@@ -65,7 +65,7 @@ export default function CaregiverOnboardingCard({
   }
 
   return (
-    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
+    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15 border border-amber-200 dark:border-amber-400/30 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-lg font-bold text-text-primary">
@@ -95,7 +95,7 @@ export default function CaregiverOnboardingCard({
           </span>
           <span className="text-[10px] text-amber-500">{progressPct}%</span>
         </div>
-        <div className="w-full bg-amber-100 dark:bg-amber-900/20 rounded-full h-1.5">
+        <div className="w-full bg-amber-100 dark:bg-amber-900/10 rounded-full h-1.5">
           <div
             className="bg-amber-500 h-1.5 rounded-full transition-all"
             style={{ width: `${progressPct}%` }}

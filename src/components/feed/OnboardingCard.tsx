@@ -106,7 +106,7 @@ export default function OnboardingCard({
     return (
       <button
         onClick={handleToggle}
-        className="w-full bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
+        className="w-full bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-200 dark:border-teal-400/30 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
         aria-label="Expand setup guide"
       >
         <span className="text-sm font-medium text-teal-700 dark:text-teal-300">
@@ -120,7 +120,7 @@ export default function OnboardingCard({
   }
 
   return (
-    <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
+    <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-200 dark:border-teal-400/30 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-lg font-bold text-text-primary">

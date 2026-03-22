@@ -21,7 +21,7 @@ export default function AppContextCard() {
   if (!visible) return null
 
   return (
-    <div className="relative bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-4 mb-3 shadow-sm">
+    <div className="relative bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-200 dark:border-teal-400/30 rounded-2xl px-5 py-4 mb-3 shadow-sm">
       <button
         onClick={dismiss}
         className="absolute top-3 right-3 p-1 text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition-colors"

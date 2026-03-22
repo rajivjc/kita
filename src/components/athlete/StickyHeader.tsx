@@ -64,7 +64,7 @@ export default function StickyHeader({
           {showEdit && (
             <Link
               href={`/athletes/${athleteId}/edit`}
-              className="p-1.5 text-text-hint hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 rounded-lg transition-all flex-shrink-0"
+              className="p-1.5 text-text-hint hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/12 rounded-lg transition-all flex-shrink-0"
               aria-label="Edit athlete profile"
             >
               <Pencil size={16} />

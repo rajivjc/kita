@@ -235,7 +235,7 @@ export default function PhotosTab({
             {photos.length > 1 && (
               <button
                 onClick={() => setSelectionMode(true)}
-                className="text-xs font-medium text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 px-2 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/15 transition-colors"
+                className="text-xs font-medium text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 px-2 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/12 transition-colors"
               >
                 Select
               </button>

@@ -129,7 +129,7 @@ export default function WorkingOnCard({
 
   // Display mode
   return (
-    <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3">
+    <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3">
       <div className="flex items-center justify-between mb-1.5">
         <p className="text-[11px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Working on</p>
         {!isReadOnly && (
