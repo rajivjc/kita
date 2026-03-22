@@ -60,7 +60,7 @@ export default function MoodCheckIn({
               className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all
                 ${selected
                   ? `bg-surface border-2 ${themeRing.replace('ring', 'border')} shadow-sm`
-                  : 'bg-white/60 dark:bg-white/5 border-2 border-transparent hover:bg-surface'
+                  : 'bg-white/60 dark:bg-white/8 border-2 border-transparent hover:bg-surface'
                 }`}
               aria-label={m.label}
               aria-pressed={selected}

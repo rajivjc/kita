@@ -16,7 +16,7 @@ export default function CaregiverWorkingOnCard({
   coachName,
 }: Props) {
   return (
-    <div className="bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-100 dark:border-teal-400/20 rounded-2xl px-5 py-4 mb-5 shadow-sm">
+    <div className="bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-100 dark:border-teal-400/20 rounded-2xl px-5 py-4 mb-5 shadow-sm">
       <p className="text-[11px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest mb-2">
         What {athleteFirstName} is working on
       </p>

@@ -74,7 +74,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
       {/* Coach greeting card — hidden during onboarding */}
       {!showOnboarding && (
         <>
-        <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
+        <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-200 dark:border-teal-400/30 rounded-2xl px-5 py-4 mb-5 shadow-sm">
           <div className="flex items-center justify-between">
             <p className="text-lg font-bold text-text-primary">
               {greeting}, {firstName}
@@ -189,7 +189,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           {priorities.unmatchedStravaCount > 0 && (
             <Link
               href="/notifications"
-              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px] bg-amber-50 dark:bg-amber-900/20 border-l-4 border-l-amber-500"
+              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px] bg-amber-50 dark:bg-amber-900/10 border-l-4 border-l-amber-500"
             >
               <p className="text-sm font-medium text-text-primary">
                 {priorities.unmatchedStravaCount} unmatched Strava activit{priorities.unmatchedStravaCount === 1 ? 'y' : 'ies'} — tap to resolve
@@ -205,7 +205,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
 
       {/* Cheers from home */}
       {recentCheers.length > 0 && (
-        <div className="bg-amber-50/40 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
+        <div className="bg-amber-50/40 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
           <CheerViewTracker
             unviewedCheerIds={recentCheers.filter(c => !c.viewed_at).map(c => c.id)}
           />
@@ -213,7 +213,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           <div className="space-y-2">
             {recentCheers.map(c => (
               <Link key={c.id} href={`/athletes/${c.athlete_id}`}>
-                <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 dark:hover:bg-amber-900/15 transition-colors">
+                <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 dark:hover:bg-amber-900/12 transition-colors">
                   <div className="min-w-0">
                     <p className="text-sm text-amber-800 dark:text-amber-300">&ldquo;{c.message}&rdquo;</p>
                     <p className="text-[10px] text-amber-600 dark:text-amber-300">
@@ -235,7 +235,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           ? names.join(' and ')
           : `${names.slice(0, 2).join(', ')} and ${names.length - 2} more`
         return (
-          <div className="bg-teal-50/40 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <div className="bg-teal-50/40 dark:bg-teal-900/10 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Messages from athletes ✉️</p>
               <span className="bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -272,8 +272,8 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           <p className="text-[11px] font-bold text-text-muted uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
           <div className="space-y-2">
             {coachFocus.items.map((item, i) => {
-              const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 dark:hover:bg-orange-900/15 bg-orange-50/40 dark:bg-orange-900/20'
-                : item.type === 'personal_best' || item.type === 'best_week_ever' ? 'hover:bg-teal-50 dark:hover:bg-teal-900/15 bg-teal-50/40 dark:bg-teal-900/20'
+              const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 dark:hover:bg-orange-900/15 bg-orange-50/40 dark:bg-orange-900/10'
+                : item.type === 'personal_best' || item.type === 'best_week_ever' ? 'hover:bg-teal-50 dark:hover:bg-teal-900/12 bg-teal-50/40 dark:bg-teal-900/10'
                 : 'hover:bg-surface-raised'
               return (
                 <Link key={i} href={`/athletes/${item.athleteId}`}>

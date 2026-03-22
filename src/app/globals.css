@@ -35,13 +35,13 @@
     --color-text-secondary: #B8B5AD;
     --color-text-muted: #9A9790;
     --color-text-hint: #706D65;
-    --color-border: rgba(255,255,255,0.10);
-    --color-border-strong: rgba(255,255,255,0.16);
-    --color-border-subtle: rgba(255,255,255,0.06);
+    --color-border: rgba(255,255,255,0.12);
+    --color-border-strong: rgba(255,255,255,0.18);
+    --color-border-subtle: rgba(255,255,255,0.08);
     --color-accent: #2DD4BF;
     --color-accent-hover: #5EEAD4;
     --color-accent-text: #5EEAD4;
-    --color-accent-bg: rgba(45,212,191,0.15);
+    --color-accent-bg: rgba(45,212,191,0.10);
     --color-accent-border: rgba(45,212,191,0.25);
     color-scheme: dark;
 
@@ -138,14 +138,14 @@ nav.fixed.bottom-0 {
 .dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 .dark select,
 .dark textarea {
-  background-color: var(--color-surface-alt) !important;
-  border-color: rgba(255,255,255,0.12) !important;
-  color: var(--color-text-primary) !important;
+  background-color: var(--color-surface-alt);
+  border-color: rgba(255,255,255,0.12);
+  color: var(--color-text-primary);
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: var(--color-text-hint) !important;
+  color: var(--color-text-hint);
 }
 
 /* Respect reduced motion */

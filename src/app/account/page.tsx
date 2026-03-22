@@ -190,7 +190,7 @@ export default async function AccountPage({
       </section>
 
       {searchParams?.connected === 'strava' && (
-        <div className="rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-400/20 px-4 py-3 text-sm text-green-800 dark:text-green-300 flex items-center gap-2">
+        <div className="rounded-lg bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-400/20 px-4 py-3 text-sm text-green-800 dark:text-green-300 flex items-center gap-2">
           <span>✓</span>
           <span>Strava connected! Your runs will now sync automatically.</span>
         </div>
@@ -200,7 +200,7 @@ export default async function AccountPage({
       <section>
         <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Display name</p>
         {searchParams.setup === 'name' && (
-          <div className="mb-3 rounded-lg bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-400/20 px-4 py-3 text-sm text-teal-800 dark:text-teal-300">
+          <div className="mb-3 rounded-lg bg-teal-50 dark:bg-teal-900/10 border border-teal-200 dark:border-teal-400/20 px-4 py-3 text-sm text-teal-800 dark:text-teal-300">
             👋 Welcome! Please set your display name before getting started.
           </div>
         )}
@@ -223,7 +223,7 @@ export default async function AccountPage({
       {!isCaregiver && (
         <section>
           <p className="text-xs text-text-hint uppercase tracking-wide font-medium mb-3">Your coaching stats</p>
-          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30 rounded-xl border border-teal-100 dark:border-teal-400/20 shadow-sm px-4 py-5 border-t-4 border-t-teal-500 dark:border-t-teal-400">
+          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 rounded-xl border border-teal-100 dark:border-teal-400/20 shadow-sm px-4 py-5 border-t-4 border-t-teal-500 dark:border-t-teal-400">
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col items-center text-center">
                 <span className="text-lg mb-1">🏃</span>
@@ -242,7 +242,7 @@ export default async function AccountPage({
               </div>
             </div>
             {coachStreak && (
-              <div className="mt-4 pt-4 border-t border-teal-200 dark:border-teal-400/60">
+              <div className="mt-4 pt-4 border-t border-teal-200 dark:border-teal-400/30">
                 <StreakCalendar
                   weeklyActivity={coachStreak.weeklyActivity}
                   current={coachStreak.current}
@@ -272,7 +272,7 @@ export default async function AccountPage({
                   key={badge.key}
                   className={`relative rounded-xl border px-3 py-3.5 text-center transition-all ${
                     earned
-                      ? 'bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 border-amber-200 dark:border-amber-400/20 shadow-md ring-1 ring-amber-200/50'
+                      ? 'bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/15 border-amber-200 dark:border-amber-400/20 shadow-md ring-1 ring-amber-200/50'
                       : 'bg-surface-raised/80 border-border-subtle'
                   }`}
                 >
@@ -293,9 +293,9 @@ export default async function AccountPage({
       {isCaregiver && caregiverAthlete && (
         <section className="space-y-4">
           {/* Athlete hero card */}
-          <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-5 shadow-sm">
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15 border border-amber-200 dark:border-amber-400/30 rounded-2xl px-5 py-5 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center text-2xl flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/10 flex items-center justify-center text-2xl flex-shrink-0">
                 👟
               </div>
               <div>
@@ -313,22 +313,22 @@ export default async function AccountPage({
 
             {/* Stats grid */}
             <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="bg-white/60 dark:bg-white/5 rounded-xl px-3 py-3 text-center">
+              <div className="bg-white/60 dark:bg-white/8 rounded-xl px-3 py-3 text-center">
                 <p className="text-2xl font-bold text-text-primary">{totalAthleteSessions}</p>
                 <p className="text-[10px] text-amber-600 dark:text-amber-300 font-medium mt-0.5">total runs</p>
               </div>
-              <div className="bg-white/60 dark:bg-white/5 rounded-xl px-3 py-3 text-center">
+              <div className="bg-white/60 dark:bg-white/8 rounded-xl px-3 py-3 text-center">
                 <p className="text-2xl font-bold text-text-primary">{totalAthleteKm.toFixed(1)}</p>
                 <p className="text-[10px] text-amber-600 dark:text-amber-300 font-medium mt-0.5">total km</p>
               </div>
-              <div className="bg-white/60 dark:bg-white/5 rounded-xl px-3 py-3 text-center">
+              <div className="bg-white/60 dark:bg-white/8 rounded-xl px-3 py-3 text-center">
                 <p className="text-2xl font-bold text-text-primary">{athleteMilestones.length}</p>
                 <p className="text-[10px] text-amber-600 dark:text-amber-300 font-medium mt-0.5">milestones</p>
               </div>
             </div>
 
             {/* This month vs last month */}
-            <div className="bg-white/60 dark:bg-white/5 rounded-xl px-4 py-3 mb-4">
+            <div className="bg-white/60 dark:bg-white/8 rounded-xl px-4 py-3 mb-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-text-primary">This month</p>
@@ -344,14 +344,14 @@ export default async function AccountPage({
 
             {/* Goal progress */}
             {goalProgress && (
-              <div className="bg-white/60 dark:bg-white/5 rounded-xl px-4 py-3 mb-4">
+              <div className="bg-white/60 dark:bg-white/8 rounded-xl px-4 py-3 mb-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">🎯 {goalProgress.label}</span>
                   <span className="text-[10px] text-amber-600 dark:text-amber-300 font-medium">
                     {goalProgress.current} / {goalProgress.target} {goalProgress.unit}
                   </span>
                 </div>
-                <div className="w-full bg-amber-100 dark:bg-amber-900/20 rounded-full h-2">
+                <div className="w-full bg-amber-100 dark:bg-amber-900/10 rounded-full h-2">
                   <div
                     className="bg-amber-500 h-2 rounded-full transition-all"
                     style={{ width: `${goalProgress.pct}%` }}
@@ -368,7 +368,7 @@ export default async function AccountPage({
 
             {/* Athlete activity streak */}
             {athleteStreak && (
-              <div className="bg-white/60 dark:bg-white/5 rounded-xl px-4 py-3 mb-4">
+              <div className="bg-white/60 dark:bg-white/8 rounded-xl px-4 py-3 mb-4">
                 <StreakCalendar
                   weeklyActivity={athleteStreak.weeklyActivity}
                   current={athleteStreak.current}
@@ -427,7 +427,7 @@ export default async function AccountPage({
 
       {/* Caregiver — no athlete linked */}
       {isCaregiver && !caregiverAthlete && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-400/20 rounded-xl px-4 py-4">
+        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-400/20 rounded-xl px-4 py-4">
           <p className="text-sm text-amber-800 dark:text-amber-300">
             Your athlete hasn&apos;t been linked yet. Please ask a coach or admin to connect your account.
           </p>
@@ -462,13 +462,13 @@ export default async function AccountPage({
           ) : (
             <>
               <div className="flex items-center gap-3">
-                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${connection ? 'bg-teal-500 text-white' : 'border-2 border-teal-300 dark:border-teal-400/40'}`}>
+                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${connection ? 'bg-teal-500 text-white' : 'border-2 border-teal-300 dark:border-teal-400/25'}`}>
                   {connection && <span className="text-[10px]">&#10003;</span>}
                 </span>
                 <span className={`text-sm ${connection ? 'text-teal-600 dark:text-teal-300 line-through' : 'text-text-primary font-medium'}`}>Connect Strava for auto-sync</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${totalSessions > 0 ? 'bg-teal-500 text-white' : 'border-2 border-teal-300 dark:border-teal-400/40'}`}>
+                <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs ${totalSessions > 0 ? 'bg-teal-500 text-white' : 'border-2 border-teal-300 dark:border-teal-400/25'}`}>
                   {totalSessions > 0 && <span className="text-[10px]">&#10003;</span>}
                 </span>
                 <span className={`text-sm ${totalSessions > 0 ? 'text-teal-600 dark:text-teal-300 line-through' : 'text-text-primary font-medium'}`}>Log your first run</span>
