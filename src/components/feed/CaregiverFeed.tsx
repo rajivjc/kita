@@ -148,12 +148,18 @@ export default function CaregiverFeed({ data, userId }: Props) {
                 </div>
               </>
             )}
-            <div className="mt-3 text-center">
+            <div className="mt-3 text-center space-y-1">
               <Link
                 href={`/story/${caregiverAthlete.id}`}
-                className="text-xs text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-300 font-medium transition-colors"
+                className="text-xs text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-300 font-medium transition-colors block"
               >
                 View {athleteFirstName}&apos;s journey story &rarr;
+              </Link>
+              <Link
+                href="/digest"
+                className="text-xs text-amber-600 dark:text-amber-300 hover:text-amber-800 font-medium block"
+              >
+                Weekly notes &rarr;
               </Link>
             </div>
           </>

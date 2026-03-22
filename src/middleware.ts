@@ -9,6 +9,7 @@ const PROTECTED_PATHS = [
   '/account',
   '/notifications',
   '/welcome',
+  '/digest',
   '/api/strava/connect',
   '/api/strava/callback',
 ]
