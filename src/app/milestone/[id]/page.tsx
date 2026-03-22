@@ -6,6 +6,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import ShareButton from '@/components/milestone/ShareButton'
 import CloseButton from '@/components/milestone/CloseButton'
+import CertificateButton from '@/components/milestone/CertificateButton'
 import PoweredByBadge from '@/components/ui/PoweredByBadge'
 
 interface PageProps {
@@ -18,7 +19,7 @@ interface MilestoneWithRelations {
   label: string
   achieved_at: string
   awarded_by: string | null
-  athletes: { name: string; allow_public_sharing: boolean } | null
+  athletes: { name: string; allow_public_sharing: boolean; theme_color: string | null; avatar: string | null } | null
   milestone_definitions: { icon: string; label: string } | null
   [key: string]: unknown
 }
@@ -26,7 +27,7 @@ interface MilestoneWithRelations {
 const getMilestone = cache(async (id: string): Promise<MilestoneWithRelations | null> => {
   const { data } = await adminClient
     .from('milestones')
-    .select('*, athletes(name, allow_public_sharing), milestone_definitions(icon, label)')
+    .select('*, athletes(name, allow_public_sharing, theme_color, avatar), milestone_definitions(icon, label)')
     .eq('id', id)
     .single()
   return data as MilestoneWithRelations | null
@@ -137,14 +138,20 @@ export default async function MilestoneSharePage({ params }: PageProps) {
   }
 
   const coachId = milestone.awarded_by ?? null
-  const { data: coach } = coachId
-    ? await adminClient.from('users').select('name').eq('id', coachId).single()
-    : { data: null }
+  const [{ data: coach }, { data: clubRow }] = await Promise.all([
+    coachId
+      ? adminClient.from('users').select('name').eq('id', coachId).single()
+      : Promise.resolve({ data: null }),
+    adminClient.from('club_settings').select('name').limit(1).single(),
+  ])
 
   const athleteName = milestone.athletes?.name ?? 'Athlete'
   const coachName = coach?.name ?? null
   const icon = milestone.milestone_definitions?.icon ?? '🏆'
   const label = milestone.label
+  const themeColor = milestone.athletes?.theme_color ?? null
+  const avatar = milestone.athletes?.avatar ?? null
+  const clubName = clubRow?.name ?? 'SOSG Running Club'
   const date = new Date(milestone.achieved_at).toLocaleDateString('en-SG', {
     day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Singapore'
   })
@@ -168,6 +175,20 @@ export default async function MilestoneSharePage({ params }: PageProps) {
             text={`${athleteName} achieved a milestone: ${label}. Growing together at SOSG Running Club!`}
             url={`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/milestone/${params.id}`}
           />
+          {canView && user && (
+            <CertificateButton
+              data={{
+                athleteName,
+                milestoneLabel: label,
+                milestoneIcon: icon,
+                achievedAt: milestone.achieved_at,
+                coachName,
+                clubName,
+                themeColor,
+                avatar,
+              }}
+            />
+          )}
           <p className="text-xs text-text-hint font-medium uppercase tracking-widest">SOSG Running Club — Growing Together</p>
         </div>
         <p className="text-[10px] text-white/40 text-center mt-4 max-w-xs">

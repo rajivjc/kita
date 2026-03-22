@@ -8,6 +8,7 @@ import type { SessionData, MilestoneData, PhotoData } from './AthleteTabs'
 import type { WeeklyVolume, FeelPoint, DistancePoint, MilestonePin } from '@/lib/analytics/session-trends'
 import { updateManualSession, updateSessionFeel, deleteSession } from '@/app/athletes/[id]/actions'
 import StravaActivityLink from '@/components/feed/StravaActivityLink'
+import CertificateButton from '@/components/milestone/CertificateButton'
 import PhotoLightbox from './PhotoLightbox'
 
 const ProgressChart = dynamic(() => import('@/components/charts/ProgressChart'), {
@@ -32,6 +33,9 @@ type RunsTabProps = {
   onSessionUpdated?: () => void
   onLogRun?: () => void
   onDeletePhoto?: (photoId: string) => Promise<void>
+  themeColor?: string | null
+  avatar?: string | null
+  clubName?: string
 }
 
 const FEEL_EMOJI: Record<number, string> = {
@@ -74,6 +78,9 @@ type SessionCardProps = {
   kudosCount?: number
   kudosGivers?: string[]
   onDeletePhoto?: (photoId: string) => Promise<void>
+  themeColor?: string | null
+  avatar?: string | null
+  clubName?: string
 }
 
 const FEEL_COLORS: Record<number, string> = {
@@ -108,7 +115,7 @@ function formatPace(distanceKm: number, durationSeconds: number): string {
   return `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} /km`
 }
 
-function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated, badges = [], photos = [], kudosCount = 0, kudosGivers = [], onDeletePhoto }: SessionCardProps) {
+function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated, badges = [], photos = [], kudosCount = 0, kudosGivers = [], onDeletePhoto, themeColor, avatar, clubName }: SessionCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [feel, setFeel] = useState<Feel | null>(s.feel as Feel | null)
   const [note, setNote] = useState(s.note ?? '')
@@ -283,24 +290,42 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
 
       {/* Milestone badges — outside button so links work correctly */}
       {badges.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 px-4 pb-3 -mt-1">
+        <div className="flex flex-wrap gap-1.5 px-4 pb-3 -mt-1 items-center">
           {badges.map((m, i) => {
             const badgeClasses = "inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-400/20 text-amber-700 dark:text-amber-300 text-xs font-semibold px-2.5 py-1 rounded-full"
             const content = <>{m.icon ?? '🏆'} {m.label}{m.id && <span className="ml-1 text-amber-400">↗</span>}</>
 
-            return m.id ? (
-              <a
-                key={i}
-                href={`/milestone/${m.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${badgeClasses} hover:bg-amber-100 dark:hover:bg-amber-900/12 transition-colors`}
-                title="View and share this milestone"
-              >
-                {content}
-              </a>
-            ) : (
-              <span key={i} className={badgeClasses}>{content}</span>
+            return (
+              <span key={i} className="inline-flex items-center gap-0.5">
+                {m.id ? (
+                  <a
+                    href={`/milestone/${m.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${badgeClasses} hover:bg-amber-100 dark:hover:bg-amber-900/12 transition-colors`}
+                    title="View and share this milestone"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <span className={badgeClasses}>{content}</span>
+                )}
+                {m.id && (
+                  <CertificateButton
+                    variant="ghost"
+                    data={{
+                      athleteName,
+                      milestoneLabel: m.label,
+                      milestoneIcon: m.icon ?? '🏆',
+                      achievedAt: m.achieved_at,
+                      coachName: null,
+                      clubName: clubName ?? 'SOSG Running Club',
+                      themeColor: themeColor ?? null,
+                      avatar: avatar ?? null,
+                    }}
+                  />
+                )}
+              </span>
             )
           })}
         </div>
@@ -428,7 +453,7 @@ function SessionCard({ session: s, athleteId, athleteName, isReadOnly, onUpdated
   )
 }
 
-export default function RunsTab({ sessions, milestones, photosBySession, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, athleteName, kudosCounts, kudosGivers, isReadOnly = false, onSessionUpdated, onLogRun, onDeletePhoto }: RunsTabProps) {
+export default function RunsTab({ sessions, milestones, photosBySession, weeklyData, weeklyVolume, feelTrend, distanceTimeline, milestonePins, athleteId, athleteName, kudosCounts, kudosGivers, isReadOnly = false, onSessionUpdated, onLogRun, onDeletePhoto, themeColor, avatar, clubName }: RunsTabProps) {
   const milestonesBySession: Record<string, MilestoneData[]> = {}
   for (const m of milestones) {
     if (!m.session_id) continue
@@ -484,6 +509,9 @@ export default function RunsTab({ sessions, milestones, photosBySession, weeklyD
           kudosCount={kudosCounts?.[item.data.id] ?? 0}
           kudosGivers={kudosGivers?.[item.data.id]}
           onDeletePhoto={onDeletePhoto}
+          themeColor={themeColor}
+          avatar={avatar}
+          clubName={clubName}
         />
       ))}
     </div>

@@ -95,7 +95,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
   ] = await Promise.all([
     adminClient
       .from('athletes')
-      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact, athlete_pin, working_on, recent_progress, working_on_updated_at, working_on_updated_by, avatar')
+      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact, athlete_pin, working_on, recent_progress, working_on_updated_at, working_on_updated_by, avatar, theme_color')
       .eq('id', id)
       .single(),
 
@@ -160,7 +160,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
   const workingOnUpdatedBy = (athlete as any)?.working_on_updated_by as string | null
   const coachIds = [...new Set([...(sessions ?? []).map((s: any) => s.coach_user_id), workingOnUpdatedBy].filter(Boolean))]
   const sessionIds = (sessions ?? []).map((s: any) => s.id)
-  const [{ data: coachUsers }, { photos: paginatedPhotos, nextCursor }, photoCount, rawSessionPhotos, { data: kudosRows }] = await Promise.all([
+  const [{ data: coachUsers }, { photos: paginatedPhotos, nextCursor }, photoCount, rawSessionPhotos, { data: kudosRows }, { data: clubSettingsRow }] = await Promise.all([
     coachIds.length > 0
       ? adminClient.from('users').select('id, name, email').in('id', coachIds)
       : Promise.resolve({ data: [] }),
@@ -170,7 +170,10 @@ export default async function AthleteHubPage({ params }: PageProps) {
     sessionIds.length > 0
       ? adminClient.from('kudos').select('session_id, user_id').in('session_id', sessionIds)
       : Promise.resolve({ data: [] as { session_id: string; user_id: string }[] }),
+    adminClient.from('club_settings').select('name').limit(1).single(),
   ])
+
+  const clubName = clubSettingsRow?.name ?? 'SOSG Running Club'
 
   // Build kudos data maps
   // Fetch giver names separately (kudos.user_id → auth.users, not public.users, so join fails)
@@ -454,6 +457,9 @@ export default async function AthleteHubPage({ params }: PageProps) {
         currentUserId={user?.id}
         isAdmin={currentUserRow?.role === 'admin'}
         storyUpdates={flatStoryUpdates}
+        themeColor={(athlete as Record<string, unknown>).theme_color as string | null ?? null}
+        avatar={(athlete as Record<string, unknown>).avatar as string | null ?? null}
+        clubName={clubName}
         onDeletePhoto={!isReadOnly ? async (photoId: string) => {
           'use server'
           await deletePhoto(photoId, id)

@@ -110,6 +110,9 @@ type AthleteTabsProps = {
   isAdmin?: boolean
   storyUpdates?: StoryUpdateData[]
   onDeletePhoto?: (photoId: string) => Promise<void>
+  themeColor?: string | null
+  avatar?: string | null
+  clubName?: string
 }
 
 export default function AthleteTabs({
@@ -135,6 +138,9 @@ export default function AthleteTabs({
   isAdmin = false,
   storyUpdates = [],
   onDeletePhoto,
+  themeColor,
+  avatar,
+  clubName,
 }: AthleteTabsProps) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>('feed')
@@ -205,6 +211,9 @@ export default function AthleteTabs({
           onSessionUpdated={() => router.refresh()}
           onLogRun={() => setLogRunOpen(true)}
           onDeletePhoto={onDeletePhoto}
+          themeColor={themeColor}
+          avatar={avatar}
+          clubName={clubName}
         />
       )}
       {activeTab === 'cues' && (

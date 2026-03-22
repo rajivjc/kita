@@ -51,6 +51,10 @@ export interface CelebrationMilestone {
   icon: string
   athleteName: string
   achievedAt: string
+  coachName: string | null
+  themeColor: string | null
+  avatar: string | null
+  clubName: string
 }
 
 // ─── Cheer shapes ────────────────────────────────────────────────
