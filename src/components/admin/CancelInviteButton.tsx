@@ -33,7 +33,7 @@ export default function CancelInviteButton({
     return (
       <div className="flex flex-col gap-1.5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-red-600 font-medium whitespace-nowrap">Remove {email} completely?</span>
+          <span className="text-xs text-red-600 dark:text-red-300 font-medium whitespace-nowrap">Remove {email} completely?</span>
           <button
             onClick={handleConfirm}
             disabled={busy}
@@ -58,7 +58,7 @@ export default function CancelInviteButton({
   return (
     <button
       onClick={() => setConfirming(true)}
-      className="text-xs font-medium text-red-500 hover:text-red-700 active:scale-[0.97] border border-red-100 rounded-lg px-2.5 py-1 transition-all duration-150"
+      className="text-xs font-medium text-red-500 hover:text-red-700 dark:hover:text-red-300 active:scale-[0.97] border border-red-100 rounded-lg px-2.5 py-1 transition-all duration-150"
     >
       Cancel
     </button>

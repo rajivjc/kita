@@ -17,7 +17,7 @@ export default function MilestoneShareLink({ milestoneId }: { milestoneId: strin
           window.open(`/milestone/${milestoneId}`, '_blank', 'noopener,noreferrer')
         }
       }}
-      className="ml-0.5 text-amber-400 hover:text-amber-600 cursor-pointer"
+      className="ml-0.5 text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 cursor-pointer"
       title="Share this milestone"
       aria-label="Share this milestone"
     >

@@ -18,9 +18,9 @@ export default function StravaStatus({ connection }: { connection: Connection })
 
   if (!connection) {
     return (
-      <div className="rounded-xl border border-orange-200 bg-orange-50 p-4">
+      <div className="rounded-xl border border-orange-200 dark:border-orange-400/20 bg-orange-50 dark:bg-orange-900/15 p-4">
         <p className="text-sm font-medium text-orange-900 mb-1">Not connected</p>
-        <p className="text-xs text-orange-700 mb-3">
+        <p className="text-xs text-orange-700 dark:text-orange-300 mb-3">
           Connect Strava so your runs automatically sync to athlete profiles.
         </p>
         <a
@@ -39,12 +39,12 @@ export default function StravaStatus({ connection }: { connection: Connection })
     : 'Never'
 
   return (
-    <div className={`rounded-xl border p-4 ${isHealthy ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+    <div className={`rounded-xl border p-4 ${isHealthy ? 'border-green-200 dark:border-green-400/20 bg-green-50 dark:bg-green-900/15' : 'border-red-200 dark:border-red-400/20 bg-red-50 dark:bg-red-900/15'}`}>
       <div className="flex items-center justify-between mb-2">
         <p className={`text-sm font-medium ${isHealthy ? 'text-green-900' : 'text-red-900'}`}>
           {isHealthy ? '✓ Connected' : '⚠ Connection issue'}
         </p>
-        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${isHealthy ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${isHealthy ? 'bg-green-100 text-green-700 dark:text-green-300' : 'bg-red-100 text-red-700 dark:text-red-300'}`}>
           {isHealthy ? 'Active' : 'Error'}
         </span>
       </div>
@@ -52,12 +52,12 @@ export default function StravaStatus({ connection }: { connection: Connection })
       <p className="text-xs text-text-muted mb-1">Last sync: {lastSync}</p>
 
       {!isHealthy && connection.last_error && (
-        <p className="text-xs text-red-600 mb-3">{connection.last_error}</p>
+        <p className="text-xs text-red-600 dark:text-red-300 mb-3">{connection.last_error}</p>
       )}
 
       {confirming ? (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-3">
-          <p className="text-xs font-medium text-red-700 mb-2">
+        <div className="mt-3 rounded-lg border border-red-200 dark:border-red-400/20 bg-red-50 dark:bg-red-900/15 px-3 py-3">
+          <p className="text-xs font-medium text-red-700 dark:text-red-300 mb-2">
             Disconnect Strava? Your runs will no longer sync automatically.
           </p>
           <div className="flex gap-2">
@@ -84,14 +84,14 @@ export default function StravaStatus({ connection }: { connection: Connection })
         <div className="flex gap-2 mt-3">
           <a
             href="/api/strava/connect"
-            className="text-xs font-medium text-text-secondary hover:text-teal-600 active:scale-[0.97] border border-border rounded-lg px-3 py-1.5 transition-all duration-150"
+            className="text-xs font-medium text-text-secondary hover:text-teal-600 dark:hover:text-teal-300 active:scale-[0.97] border border-border rounded-lg px-3 py-1.5 transition-all duration-150"
           >
             Reconnect
           </a>
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="text-xs font-medium text-red-500 hover:text-red-700 active:scale-[0.97] border border-red-100 rounded-lg px-3 py-1.5 transition-all duration-150"
+            className="text-xs font-medium text-red-500 hover:text-red-700 dark:hover:text-red-300 active:scale-[0.97] border border-red-100 rounded-lg px-3 py-1.5 transition-all duration-150"
           >
             Disconnect
           </button>

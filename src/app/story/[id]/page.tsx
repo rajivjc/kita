@@ -97,7 +97,7 @@ export default async function StoryPage({ params }: PageProps) {
             </p>
             <Link
               href="/feed"
-              className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-full px-6 py-3 transition-colors"
+              className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-semibold rounded-full px-6 py-3 transition-colors"
             >
               Back to home
             </Link>
@@ -117,7 +117,7 @@ export default async function StoryPage({ params }: PageProps) {
           </p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-full px-6 py-3 transition-colors"
+            className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-semibold rounded-full px-6 py-3 transition-colors"
           >
             Sign in
           </Link>
@@ -158,7 +158,7 @@ export default async function StoryPage({ params }: PageProps) {
 
         {/* Streak callout */}
         {narrative.streakCallout && (
-          <p className="text-xs text-center text-teal-600 font-medium bg-teal-50 rounded-lg py-2 px-3 mb-6">
+          <p className="text-xs text-center text-teal-600 dark:text-teal-300 font-medium bg-teal-50 dark:bg-teal-900/15 rounded-lg py-2 px-3 mb-6">
             {narrative.streakCallout}
           </p>
         )}
@@ -177,7 +177,7 @@ export default async function StoryPage({ params }: PageProps) {
         {/* Coach reflections */}
         {coachReflections.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold text-teal-600 uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-bold text-teal-600 dark:text-teal-300 uppercase tracking-wide mb-3">
               Coach reflections
             </h2>
             <div className="space-y-3">
@@ -191,7 +191,7 @@ export default async function StoryPage({ params }: PageProps) {
         {/* Story updates */}
         {storyUpdates.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold text-teal-600 uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-bold text-teal-600 dark:text-teal-300 uppercase tracking-wide mb-3">
               Updates
             </h2>
             <div>

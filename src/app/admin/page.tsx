@@ -85,7 +85,7 @@ export default async function AdminPage() {
         <div className="grid grid-cols-3 gap-3">
           <Link
             href="/admin/milestones"
-            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 dark:hover:border-teal-400/20 hover:bg-teal-50 dark:hover:bg-teal-900/15 transition-colors"
           >
             <span className="text-2xl">🏆</span>
             <p className="text-sm font-semibold text-text-primary mt-2">Milestones</p>
@@ -93,7 +93,7 @@ export default async function AdminPage() {
           </Link>
           <Link
             href="/admin/settings"
-            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 dark:hover:border-teal-400/20 hover:bg-teal-50 dark:hover:bg-teal-900/15 transition-colors"
           >
             <span className="text-2xl">⚙️</span>
             <p className="text-sm font-semibold text-text-primary mt-2">Settings</p>
@@ -101,7 +101,7 @@ export default async function AdminPage() {
           </Link>
           <Link
             href="/admin/audit"
-            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 hover:bg-teal-50/30 transition-colors"
+            className="bg-surface border border-border rounded-xl px-4 py-4 hover:border-teal-200 dark:hover:border-teal-400/20 hover:bg-teal-50 dark:hover:bg-teal-900/15 transition-colors"
           >
             <span className="text-2xl">📋</span>
             <p className="text-sm font-semibold text-text-primary mt-2">Activity Log</p>
@@ -130,7 +130,7 @@ export default async function AdminPage() {
                   <p className="text-xs text-text-muted capitalize">
                     {inv.role}
                     {inv.role === 'caregiver' && inv.athlete_id && athleteNameMap[inv.athlete_id] && (
-                      <span className="ml-1 inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700">
+                      <span className="ml-1 inline-flex items-center rounded-full border border-teal-200 dark:border-teal-400/20 bg-teal-50 dark:bg-teal-900/15 px-2 py-0.5 text-xs font-medium text-teal-700 dark:text-teal-300">
                         Linked to {athleteNameMap[inv.athlete_id]}
                       </span>
                     )}

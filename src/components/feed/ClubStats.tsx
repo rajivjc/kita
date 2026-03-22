@@ -54,7 +54,7 @@ function getDistanceEquivalent(km: number) {
 
 function TrendArrow({ current, previous, label }: { current: number; previous: number; label: string }) {
   const diff = current - previous
-  if (diff > 0) return <span className="text-green-600">↑ {diff} more {label}</span>
+  if (diff > 0) return <span className="text-green-600 dark:text-green-300">↑ {diff} more {label}</span>
   if (diff < 0) return <span className="text-red-500">↓ {Math.abs(diff)} fewer {label}</span>
   if (previous > 0) return <span className="text-text-hint">— same {label}</span>
   return null
@@ -112,12 +112,12 @@ export default function ClubStats({ stats, weeklyStats, weeklyRecap }: Props) {
             This week: {weeklyStats.count} run{weeklyStats.count !== 1 ? 's' : ''} · {weeklyStats.km.toFixed(1)} km · {weeklyStats.athletes} athlete{weeklyStats.athletes !== 1 ? 's' : ''}
           </p>
           {weeklyRecap?.starMoment && (
-            <p className="text-xs text-teal-600 mt-0.5">
+            <p className="text-xs text-teal-600 dark:text-teal-300 mt-0.5">
               ⭐ {weeklyRecap.starMoment.athleteName} {weeklyRecap.starMoment.value}
             </p>
           )}
           {weeklyRecap && weeklyRecap.milestonesEarned > 0 && (
-            <p className="text-xs text-amber-600 mt-0.5">
+            <p className="text-xs text-amber-600 dark:text-amber-300 mt-0.5">
               🏆 {weeklyRecap.milestonesEarned} milestone{weeklyRecap.milestonesEarned !== 1 ? 's' : ''} earned this week
             </p>
           )}
@@ -208,12 +208,12 @@ export default function ClubStats({ stats, weeklyStats, weeklyRecap }: Props) {
                 This week: {weeklyStats.count} run{weeklyStats.count !== 1 ? 's' : ''} · {weeklyStats.km.toFixed(1)} km · {weeklyStats.athletes} athlete{weeklyStats.athletes !== 1 ? 's' : ''}
               </p>
               {weeklyRecap?.starMoment && (
-                <p className="text-xs text-teal-600 mt-0.5">
+                <p className="text-xs text-teal-600 dark:text-teal-300 mt-0.5">
                   ⭐ {weeklyRecap.starMoment.athleteName} {weeklyRecap.starMoment.value}
                 </p>
               )}
               {weeklyRecap && weeklyRecap.milestonesEarned > 0 && (
-                <p className="text-xs text-amber-600 mt-0.5">
+                <p className="text-xs text-amber-600 dark:text-amber-300 mt-0.5">
                   🏆 {weeklyRecap.milestonesEarned} milestone{weeklyRecap.milestonesEarned !== 1 ? 's' : ''} earned this week
                 </p>
               )}

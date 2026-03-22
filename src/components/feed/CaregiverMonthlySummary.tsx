@@ -22,7 +22,7 @@ export default function CaregiverMonthlySummary({ athleteFirstName, thisMonth, l
   // Find longest run this month — we only have aggregate data, so show avg
   // For the trend arrow
   const trendIcon = distanceTrend > 0.05 ? '↑' : distanceTrend < -0.05 ? '↓' : '→'
-  const trendColor = distanceTrend > 0.05 ? 'text-green-600' : distanceTrend < -0.05 ? 'text-orange-500' : 'text-text-muted'
+  const trendColor = distanceTrend > 0.05 ? 'text-green-600 dark:text-green-300' : distanceTrend < -0.05 ? 'text-orange-500 dark:text-orange-300' : 'text-text-muted'
 
   return (
     <div className="bg-surface border border-border-subtle rounded-2xl px-5 py-4 mb-5 shadow-sm">

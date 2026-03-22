@@ -24,7 +24,7 @@ export default function CaregiverSharingControl({ athleteId, athleteName }: Prop
   if (disabled) {
     return (
       <div className="bg-white/50 rounded-lg px-3 py-2.5">
-        <p className="text-xs text-amber-700">
+        <p className="text-xs text-amber-700 dark:text-amber-300">
           Public sharing has been turned off for {athleteName}.
         </p>
       </div>
@@ -33,10 +33,10 @@ export default function CaregiverSharingControl({ athleteId, athleteName }: Prop
 
   return (
     <div className="bg-white/50 rounded-lg px-3 py-2.5">
-      <p className="text-xs font-semibold text-amber-700 mb-1">
+      <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 mb-1">
         📣 {athleteName}&apos;s achievements are shareable
       </p>
-      <p className="text-[10px] text-amber-600 mb-2">
+      <p className="text-[10px] text-amber-600 dark:text-amber-300 mb-2">
         Milestones and journey stats can be shared with family via a link. Notes and personal info are never included.
       </p>
       <div className="flex items-center gap-2">
@@ -44,14 +44,14 @@ export default function CaregiverSharingControl({ athleteId, athleteName }: Prop
           href={`/story/${athleteId}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-amber-600 hover:text-amber-800 font-medium underline"
+          className="text-[10px] text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-300 font-medium underline"
         >
           See what&apos;s shared
         </a>
         <button
           onClick={handleDisable}
           disabled={isPending}
-          className="text-[10px] text-red-500 hover:text-red-700 font-medium disabled:opacity-50"
+          className="text-[10px] text-red-500 hover:text-red-700 dark:hover:text-red-300 font-medium disabled:opacity-50"
         >
           {isPending ? 'Turning off...' : 'Turn off'}
         </button>

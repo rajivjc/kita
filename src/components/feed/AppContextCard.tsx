@@ -21,17 +21,17 @@ export default function AppContextCard() {
   if (!visible) return null
 
   return (
-    <div className="relative bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-4 mb-3 shadow-sm">
+    <div className="relative bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-4 mb-3 shadow-sm">
       <button
         onClick={dismiss}
-        className="absolute top-3 right-3 p-1 text-teal-400 hover:text-teal-600 transition-colors"
+        className="absolute top-3 right-3 p-1 text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition-colors"
         aria-label="Dismiss welcome card"
       >
         <X size={16} />
       </button>
 
       <h2 className="text-lg font-bold text-text-primary">Your coaching hub</h2>
-      <p className="text-sm text-teal-700 mb-3">Everything you need to support your athletes</p>
+      <p className="text-sm text-teal-700 dark:text-teal-300 mb-3">Everything you need to support your athletes</p>
 
       <div className="space-y-2.5">
         <div className="flex items-center gap-3">

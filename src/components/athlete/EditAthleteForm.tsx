@@ -106,8 +106,8 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
       </div>
 
       {/* Structured goal — track with progress bar */}
-      <div className="bg-teal-50/50 border border-teal-100 rounded-lg px-4 py-3 space-y-3">
-        <p className="text-xs font-semibold text-teal-700">Track goal progress</p>
+      <div className="bg-teal-50/50 dark:bg-teal-900/15 border border-teal-100 dark:border-teal-400/20 rounded-lg px-4 py-3 space-y-3">
+        <p className="text-xs font-semibold text-teal-700 dark:text-teal-300">Track goal progress</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs text-text-muted mb-1">Goal type</label>
@@ -135,7 +135,7 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
             />
           </div>
         </div>
-        <p className="text-[10px] text-teal-600">Set a measurable goal to show a progress bar on the athlete profile and caregiver dashboard.</p>
+        <p className="text-[10px] text-teal-600 dark:text-teal-300">Set a measurable goal to show a progress bar on the athlete profile and caregiver dashboard.</p>
       </div>
 
       {/* Communication notes */}
@@ -181,9 +181,9 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
       </div>
 
       {/* Share achievements */}
-      <div className="bg-teal-50/50 border border-teal-100 rounded-lg px-4 py-3 space-y-2">
+      <div className="bg-teal-50/50 dark:bg-teal-900/15 border border-teal-100 dark:border-teal-400/20 rounded-lg px-4 py-3 space-y-2">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-teal-700">📣 Share achievements</p>
+          <p className="text-xs font-semibold text-teal-700 dark:text-teal-300">📣 Share achievements</p>
           {athlete.sharing_disabled_by_caregiver ? (
             <span className="text-[10px] text-text-hint bg-surface-alt px-2 py-0.5 rounded-full">
               Disabled by caregiver
@@ -208,10 +208,10 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
           </p>
         ) : (
           <>
-            <p className="text-[10px] text-teal-600">
+            <p className="text-[10px] text-teal-600 dark:text-teal-300">
               Create a shareable link for {athlete.name}&apos;s milestones and running journey. Caregivers can send it to family.
             </p>
-            <p className="text-[10px] text-teal-600">
+            <p className="text-[10px] text-teal-600 dark:text-teal-300">
               The link shows: name, run count, distance, milestones. Never included: notes, medical info, contact details.
             </p>
             {sharingEnabled && (
@@ -220,12 +220,12 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
                   href={`/story/${athlete.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-teal-700 hover:text-teal-900 font-medium underline"
+                  className="text-[10px] text-teal-700 dark:text-teal-300 hover:text-teal-900 font-medium underline"
                 >
                   Preview what the link looks like →
                 </a>
                 {athlete.caregiver_user_id && (
-                  <p className="text-[10px] text-amber-600">
+                  <p className="text-[10px] text-amber-600 dark:text-amber-300">
                     {athlete.name}&apos;s caregiver will be notified and can turn this off anytime.
                   </p>
                 )}
@@ -236,7 +236,7 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
       </div>
 
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-red-600 dark:text-red-300">{error}</p>
       )}
 
       <SubmitButton />
@@ -276,17 +276,17 @@ function AthletePinSection({ athleteId, athleteName }: { athleteId: string; athl
   }, [journeyUrl])
 
   return (
-    <div className="mt-6 bg-teal-50/50 border border-teal-100 rounded-lg px-4 py-3 space-y-3">
-      <p className="text-xs font-semibold text-teal-700">🏃 Athlete access page</p>
-      <p className="text-[10px] text-teal-600 font-medium">
+    <div className="mt-6 bg-teal-50/50 dark:bg-teal-900/15 border border-teal-100 dark:border-teal-400/20 rounded-lg px-4 py-3 space-y-3">
+      <p className="text-xs font-semibold text-teal-700 dark:text-teal-300">🏃 Athlete access page</p>
+      <p className="text-[10px] text-teal-600 dark:text-teal-300 font-medium">
         Give {athleteName} their own page in 3 steps:
       </p>
-      <ol className="text-[10px] text-teal-600 list-decimal list-inside space-y-0.5">
+      <ol className="text-[10px] text-teal-600 dark:text-teal-300 list-decimal list-inside space-y-0.5">
         <li>Set a simple 4-digit PIN below</li>
         <li>Print or share the QR code (tap the QR icon on the athlete&apos;s profile)</li>
         <li>The athlete or caregiver scans the QR code and enters the PIN to view their running journey</li>
       </ol>
-      <p className="text-[10px] text-teal-600 italic">
+      <p className="text-[10px] text-teal-600 dark:text-teal-300 italic">
         Tip: Choose a PIN the athlete can remember — like a birthday (e.g. 0512) or a favourite number.
       </p>
 
@@ -318,17 +318,17 @@ function AthletePinSection({ athleteId, athleteName }: { athleteId: string; athl
         <p className="text-[10px] text-emerald-600 font-medium">PIN saved! Now tap the QR icon at the top of {athleteName}&apos;s profile to print or share the QR code.</p>
       )}
       {result?.error && (
-        <p className="text-[10px] text-red-600 font-medium">{result.error}</p>
+        <p className="text-[10px] text-red-600 dark:text-red-300 font-medium">{result.error}</p>
       )}
 
-      <div className="pt-2 border-t border-teal-100 space-y-2">
+      <div className="pt-2 border-t border-teal-100 dark:border-teal-400/20 space-y-2">
         <p className="text-[10px] text-text-muted">
-          Page link: <span className="font-mono text-teal-700">/my/{athleteId.slice(0, 8)}…</span>
+          Page link: <span className="font-mono text-teal-700 dark:text-teal-300">/my/{athleteId.slice(0, 8)}…</span>
         </p>
         <button
           type="button"
           onClick={handleCopyLink}
-          className="text-[10px] text-teal-700 hover:text-teal-900 font-medium underline"
+          className="text-[10px] text-teal-700 dark:text-teal-300 hover:text-teal-900 font-medium underline"
         >
           {linkCopied ? 'Copied!' : 'Copy link to clipboard'}
         </button>

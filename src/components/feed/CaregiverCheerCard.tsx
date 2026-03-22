@@ -14,8 +14,8 @@ interface Props {
 
 export default function CaregiverCheerCard({ athleteId, athleteFirstName, athleteName, cheersToday, sentCheers, allowPublicSharing }: Props) {
   return (
-    <div className="bg-surface border border-amber-100 rounded-xl px-4 py-4 mb-5 shadow-sm">
-      <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-3">
+    <div className="bg-surface border border-amber-100 dark:border-amber-400/20 rounded-xl px-4 py-4 mb-5 shadow-sm">
+      <p className="text-[11px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-widest mb-3">
         Send encouragement
       </p>
 
@@ -36,7 +36,7 @@ export default function CaregiverCheerCard({ athleteId, athleteFirstName, athlet
                   <p className="text-[10px] text-text-muted mt-0.5">{formatDate(c.created_at)}</p>
                 </div>
                 {c.viewed_at ? (
-                  <span className="text-[10px] text-teal-600 font-medium flex-shrink-0 bg-teal-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] text-teal-600 dark:text-teal-300 font-medium flex-shrink-0 bg-teal-50 dark:bg-teal-900/15 px-2 py-0.5 rounded-full">
                     Seen &#10003;
                   </span>
                 ) : (

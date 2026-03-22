@@ -51,10 +51,10 @@ export default function CaregiverOnboardingCard({
     return (
       <button
         onClick={handleToggle}
-        className="w-full bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
+        className="w-full bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
         aria-label="Expand setup guide"
       >
-        <span className="text-sm font-medium text-amber-700">
+        <span className="text-sm font-medium text-amber-700 dark:text-amber-300">
           Getting started: {completedCount} of {totalCount} complete
         </span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-amber-400 flex-shrink-0">
@@ -65,19 +65,19 @@ export default function CaregiverOnboardingCard({
   }
 
   return (
-    <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
+    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-400/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-lg font-bold text-text-primary">
             Welcome, {firstName}!
           </p>
-          <p className="text-sm text-amber-700 mt-0.5">
+          <p className="text-sm text-amber-700 dark:text-amber-300 mt-0.5">
             Here&apos;s how to get started
           </p>
         </div>
         <button
           onClick={handleToggle}
-          className="text-amber-400 hover:text-amber-600 p-1 transition-colors"
+          className="text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 p-1 transition-colors"
           aria-label="Collapse setup guide"
           title="Collapse"
         >
@@ -90,12 +90,12 @@ export default function CaregiverOnboardingCard({
       {/* Progress bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] text-amber-600 font-medium">
+          <span className="text-[10px] text-amber-600 dark:text-amber-300 font-medium">
             {completedCount} of {totalCount} complete
           </span>
           <span className="text-[10px] text-amber-500">{progressPct}%</span>
         </div>
-        <div className="w-full bg-amber-100 rounded-full h-1.5">
+        <div className="w-full bg-amber-100 dark:bg-amber-900/20 rounded-full h-1.5">
           <div
             className="bg-amber-500 h-1.5 rounded-full transition-all"
             style={{ width: `${progressPct}%` }}
@@ -124,7 +124,7 @@ export default function CaregiverOnboardingCard({
                 )}
               </span>
               <span className={`text-sm font-medium ${
-                step.completed ? 'text-amber-600 line-through' : 'text-text-primary'
+                step.completed ? 'text-amber-600 dark:text-amber-300 line-through' : 'text-text-primary'
               }`}>
                 {step.label}
               </span>

@@ -38,8 +38,8 @@ export default function DisplayNameForm({ currentName }: { currentName: string |
           Set your display name so teammates can identify your notes.
         </p>
       )}
-      {state.error && <p className="text-xs text-red-600">{state.error}</p>}
-      {state.success && <p className="text-xs text-green-600">{state.success}</p>}
+      {state.error && <p className="text-xs text-red-600 dark:text-red-300">{state.error}</p>}
+      {state.success && <p className="text-xs text-green-600 dark:text-green-300">{state.success}</p>}
     </form>
   )
 }

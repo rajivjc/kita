@@ -74,13 +74,13 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
       {/* Coach greeting card — hidden during onboarding */}
       {!showOnboarding && (
         <>
-        <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
+        <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-4 mb-5 shadow-sm">
           <div className="flex items-center justify-between">
             <p className="text-lg font-bold text-text-primary">
               {greeting}, {firstName}
             </p>
             {coachFocus && coachFocus.streak.current > 0 && (
-              <Link href="/account" className="flex items-center gap-1 text-sm font-semibold text-teal-700 hover:text-teal-800">
+              <Link href="/account" className="flex items-center gap-1 text-sm font-semibold text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-300">
                 🔥 {coachFocus.streak.current}-week streak
               </Link>
             )}
@@ -89,11 +89,11 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
             <p className="text-xs text-teal-500/70 mt-0.5">Log a run to keep your streak!</p>
           )}
           {coachStats.monthSessions === 0 ? (
-            <p className="text-sm text-teal-700 mt-1">
+            <p className="text-sm text-teal-700 dark:text-teal-300 mt-1">
               No sessions this month yet — let&apos;s get out there!
             </p>
           ) : (
-            <p className="text-sm text-teal-700 mt-1">
+            <p className="text-sm text-teal-700 dark:text-teal-300 mt-1">
               {coachStats.monthSessions} session{coachStats.monthSessions !== 1 ? 's' : ''} coached this month with {coachStats.monthAthletes} athlete{coachStats.monthAthletes !== 1 ? 's' : ''}
             </p>
           )}
@@ -101,8 +101,8 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
             <div className="mt-2 bg-white/50 rounded-lg px-3 py-2 flex items-center gap-2">
               <span className="text-xl">{recentBadge.icon}</span>
               <div className="flex-1">
-                <p className="text-xs font-semibold text-teal-800">New badge: {recentBadge.label}!</p>
-                <p className="text-[10px] text-teal-600">{recentBadge.description}</p>
+                <p className="text-xs font-semibold text-teal-800 dark:text-teal-300">New badge: {recentBadge.label}!</p>
+                <p className="text-[10px] text-teal-600 dark:text-teal-300">{recentBadge.description}</p>
               </div>
             </div>
           )}
@@ -189,7 +189,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           {priorities.unmatchedStravaCount > 0 && (
             <Link
               href="/notifications"
-              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px] bg-amber-50 border-l-4 border-l-amber-500"
+              className="block rounded-xl px-4 py-3 mb-4 min-h-[44px] bg-amber-50 dark:bg-amber-900/15 border-l-4 border-l-amber-500"
             >
               <p className="text-sm font-medium text-text-primary">
                 {priorities.unmatchedStravaCount} unmatched Strava activit{priorities.unmatchedStravaCount === 1 ? 'y' : 'ies'} — tap to resolve
@@ -205,18 +205,18 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
 
       {/* Cheers from home */}
       {recentCheers.length > 0 && (
-        <div className="bg-amber-50/40 border border-amber-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+        <div className="bg-amber-50/40 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
           <CheerViewTracker
             unviewedCheerIds={recentCheers.filter(c => !c.viewed_at).map(c => c.id)}
           />
-          <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest mb-2.5">Cheers from home 📣</p>
+          <p className="text-[11px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-widest mb-2.5">Cheers from home 📣</p>
           <div className="space-y-2">
             {recentCheers.map(c => (
               <Link key={c.id} href={`/athletes/${c.athlete_id}`}>
-                <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 transition-colors">
+                <div className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-amber-50 dark:hover:bg-amber-900/15 transition-colors">
                   <div className="min-w-0">
-                    <p className="text-sm text-amber-800">&ldquo;{c.message}&rdquo;</p>
-                    <p className="text-[10px] text-amber-600">
+                    <p className="text-sm text-amber-800 dark:text-amber-300">&ldquo;{c.message}&rdquo;</p>
+                    <p className="text-[10px] text-amber-600 dark:text-amber-300">
                       {formatDate(c.created_at)}
                     </p>
                   </div>
@@ -235,14 +235,14 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           ? names.join(' and ')
           : `${names.slice(0, 2).join(', ')} and ${names.length - 2} more`
         return (
-          <div className="bg-teal-50/40 border border-teal-100 rounded-xl px-4 py-3 mb-5 shadow-sm">
+          <div className="bg-teal-50/40 dark:bg-teal-900/15 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3 mb-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-bold text-teal-700 uppercase tracking-widest">Messages from athletes ✉️</p>
+              <p className="text-[11px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-widest">Messages from athletes ✉️</p>
               <span className="bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                 {athleteMessages.length}
               </span>
             </div>
-            <p className="text-sm text-teal-800 mt-1.5">
+            <p className="text-sm text-teal-800 dark:text-teal-300 mt-1.5">
               {athleteMessages.length === 1
                 ? `${athleteMessages[0].athlete_name} sent a message`
                 : `${athleteMessages.length} new messages from ${nameText}`}
@@ -254,7 +254,7 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
                   <Link
                     key={name}
                     href={`/athletes/${athleteMsg.athlete_id}`}
-                    className="inline-flex items-center gap-1 bg-white/70 hover:bg-surface text-teal-700 text-xs font-medium px-2.5 py-1 rounded-full border border-teal-200 transition-colors"
+                    className="inline-flex items-center gap-1 bg-white/70 hover:bg-surface text-teal-700 dark:text-teal-300 text-xs font-medium px-2.5 py-1 rounded-full border border-teal-200 dark:border-teal-400/20 transition-colors"
                   >
                     {name}
                     <span className="text-teal-400">&#x203A;</span>
@@ -272,8 +272,8 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           <p className="text-[11px] font-bold text-text-muted uppercase tracking-widest mb-2.5">Today&apos;s focus</p>
           <div className="space-y-2">
             {coachFocus.items.map((item, i) => {
-              const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 bg-orange-50/40'
-                : item.type === 'personal_best' || item.type === 'best_week_ever' ? 'hover:bg-teal-50 bg-teal-50/40'
+              const bgClass = item.type === 'feel_declining' ? 'hover:bg-orange-50 dark:hover:bg-orange-900/15 bg-orange-50/40 dark:bg-orange-900/15'
+                : item.type === 'personal_best' || item.type === 'best_week_ever' ? 'hover:bg-teal-50 dark:hover:bg-teal-900/15 bg-teal-50/40 dark:bg-teal-900/15'
                 : 'hover:bg-surface-raised'
               return (
                 <Link key={i} href={`/athletes/${item.athleteId}`}>

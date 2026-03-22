@@ -30,7 +30,7 @@ export default async function AdminSettingsPage() {
     <main className="max-w-3xl mx-auto px-4 py-6 pb-28 space-y-8">
       <Link
         href="/admin"
-        className="inline-flex items-center gap-1 text-sm text-teal-600 hover:text-teal-700 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
       >
         <ChevronLeft size={16} />
         Admin

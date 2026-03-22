@@ -11,7 +11,7 @@ export default function StreakCalendar({ weeklyActivity, current, longest, varia
   const isTeal = variant === 'teal'
   const activeBg = isTeal ? 'bg-teal-500' : 'bg-amber-500'
   const activeRing = isTeal ? 'ring-teal-200' : 'ring-amber-200'
-  const textColor = isTeal ? 'text-teal-700' : 'text-amber-700'
+  const textColor = isTeal ? 'text-teal-700 dark:text-teal-300' : 'text-amber-700 dark:text-amber-300'
   const mutedColor = isTeal ? 'text-teal-500' : 'text-amber-500'
 
   // Format week start as short label (e.g. "3 Mar")

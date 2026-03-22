@@ -15,7 +15,7 @@ export default function StoryProgress({ progress }: StoryProgressProps) {
 
   return (
     <section className="mb-6">
-      <h2 className="text-sm font-bold text-teal-600 uppercase tracking-wide mb-3">
+      <h2 className="text-sm font-bold text-teal-600 dark:text-teal-300 uppercase tracking-wide mb-3">
         Progress
       </h2>
       <div className="grid grid-cols-2 gap-3">
@@ -28,11 +28,11 @@ export default function StoryProgress({ progress }: StoryProgressProps) {
           </p>
           <p className="text-[10px] text-text-hint">km</p>
         </div>
-        <div className="bg-teal-50 rounded-xl p-4 text-center">
+        <div className="bg-teal-50 dark:bg-teal-900/15 rounded-xl p-4 text-center">
           <p className="text-[10px] text-teal-500 font-medium uppercase mb-1">
             Most recent
           </p>
-          <p className="text-xl font-extrabold text-teal-700">
+          <p className="text-xl font-extrabold text-teal-700 dark:text-teal-300">
             {progress.recentSessionDistance.toFixed(1)}
           </p>
           <p className="text-[10px] text-teal-400">km</p>

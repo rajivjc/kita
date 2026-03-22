@@ -19,7 +19,7 @@ const COLOR_OPTIONS = [
 interface ThemeColorPickerProps {
   athleteId: string
   selectedColor: string
-  /** Theme text class, e.g. 'text-teal-700' */
+  /** Theme text class, e.g. 'text-teal-700 dark:text-teal-300' */
   themeText: string
   /** Called immediately when the user picks a new color (parent updates theme) */
   onColorChange: (color: string) => void

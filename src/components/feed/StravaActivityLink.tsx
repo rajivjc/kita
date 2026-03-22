@@ -53,7 +53,7 @@ export default function StravaActivityLink({
       onClick={handleClick}
       target={isMobile ? undefined : '_blank'}
       rel="noopener noreferrer"
-      className={className ?? 'text-xs text-orange-500 hover:text-orange-600 font-medium'}
+      className={className ?? 'text-xs text-orange-500 dark:text-orange-300 hover:text-orange-600 font-medium'}
     >
       View on Strava ↗
     </a>

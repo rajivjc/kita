@@ -77,14 +77,14 @@ export default function AthleteSearch({ athletes }: AthleteSearchProps) {
       )}
 
       {hasAnyAvatar && !legendDismissed && (
-        <div className="flex items-center justify-between mt-4 px-3 py-2 rounded-lg bg-amber-50 border border-amber-100 text-xs text-amber-700">
+        <div className="flex items-center justify-between mt-4 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-400/20 text-xs text-amber-700 dark:text-amber-300">
           <span className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded-full bg-amber-50 border-[1.5px] border-amber-200 flex items-center justify-center text-[8px] leading-none">✌️</span>
+            <span className="w-4 h-4 rounded-full bg-amber-50 dark:bg-amber-900/15 border-[1.5px] border-amber-200 dark:border-amber-400/20 flex items-center justify-center text-[8px] leading-none">✌️</span>
             Avatar chosen by athlete
           </span>
           <button
             onClick={dismissLegend}
-            className="text-amber-400 hover:text-amber-600 p-0.5 rounded transition-colors"
+            className="text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 p-0.5 rounded transition-colors"
             aria-label="Dismiss legend"
           >
             <X size={14} />

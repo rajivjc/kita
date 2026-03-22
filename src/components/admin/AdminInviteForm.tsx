@@ -73,7 +73,7 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
           </select>
           <p className="text-xs text-text-muted mt-1.5">
             Athlete not listed?{' '}
-            <Link href="/admin/athletes/new" className="text-teal-600 hover:text-teal-700 font-medium underline">
+            <Link href="/admin/athletes/new" className="text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 font-medium underline">
               Add a new athlete first
             </Link>
           </p>
@@ -82,10 +82,10 @@ export default function AdminInviteForm({ athletes }: { athletes: Athlete[] }) {
 
       {/* Feedback */}
       {state.error && (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-red-600 dark:text-red-300">{state.error}</p>
       )}
       {state.success && (
-        <p className="text-sm text-green-600">{state.success}</p>
+        <p className="text-sm text-green-600 dark:text-green-300">{state.success}</p>
       )}
 
       <SubmitButton />

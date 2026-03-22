@@ -78,7 +78,7 @@ export function ResolveForm({
   return (
     <div>
       {/* Re-sync option */}
-      <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-5">
+      <div className="bg-orange-50 dark:bg-orange-900/15 border border-orange-200 dark:border-orange-400/20 rounded-xl p-4 mb-5">
         <p className="text-sm font-medium text-orange-800 mb-1">
           Already tagged in Strava?
         </p>
@@ -127,7 +127,7 @@ export function ResolveForm({
               disabled={busy}
               className={`w-full text-left px-4 py-3 text-sm border-b border-gray-50 last:border-b-0 transition-colors ${
                 selectedId === a.id
-                  ? 'bg-teal-50 text-teal-900 font-medium'
+                  ? 'bg-teal-50 dark:bg-teal-900/15 text-teal-900 font-medium'
                   : 'text-text-secondary hover:bg-surface-raised'
               }`}
             >
@@ -138,14 +138,14 @@ export function ResolveForm({
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 mb-3">{error}</p>
+        <p className="text-sm text-red-600 dark:text-red-300 mb-3">{error}</p>
       )}
 
       <button
         type="button"
         onClick={handleSubmit}
         disabled={!selectedId || busy}
-        className="w-full bg-teal-600 text-white font-medium rounded-lg py-3 text-sm hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-teal-600 text-white dark:bg-teal-400 dark:text-gray-950 font-medium rounded-lg py-3 text-sm hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {submitting ? 'Linking...' : 'Link to athlete'}
       </button>

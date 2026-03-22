@@ -95,7 +95,7 @@ export function NotificationList({ variant, notification }: Props) {
     return (
       <button
         disabled={busy}
-        className="text-xs text-teal-600 font-medium hover:text-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs text-teal-600 dark:text-teal-300 font-medium hover:text-teal-700 dark:hover:text-teal-300 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={async () => {
           setBusy(true)
           await markAllNotificationsRead()
@@ -147,7 +147,7 @@ export function NotificationList({ variant, notification }: Props) {
           ? 'bg-surface-raised border-border opacity-60 scale-[0.98]'
           : isRead
             ? 'bg-surface-raised border-border'
-            : 'bg-surface border-teal-200'
+            : 'bg-surface border-teal-200 dark:border-teal-400/20'
       } ${clickTarget ? 'cursor-pointer' : ''}`}
       onClick={handleClick}
     >
@@ -167,7 +167,7 @@ export function NotificationList({ variant, notification }: Props) {
           {showDismissedStyle && <span className="ml-2 text-text-hint italic">dismissed</span>}
         </p>
         {clickTarget && !isRead && clickHint && (
-          <p className="text-xs text-teal-600 mt-1">{clickHint}</p>
+          <p className="text-xs text-teal-600 dark:text-teal-300 mt-1">{clickHint}</p>
         )}
       </div>
       {!isRead && !explicitlyDismissed && (
@@ -182,7 +182,7 @@ export function NotificationList({ variant, notification }: Props) {
             </button>
           )}
           <button
-            className="text-xs text-teal-600 font-medium hover:text-teal-700"
+            className="text-xs text-teal-600 dark:text-teal-300 font-medium hover:text-teal-700 dark:hover:text-teal-300"
             onClick={async (e) => {
               e.stopPropagation()
               setExplicitlyDismissed(true)

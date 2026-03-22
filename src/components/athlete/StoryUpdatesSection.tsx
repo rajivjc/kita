@@ -87,7 +87,7 @@ export default function StoryUpdatesSection({
             {saving ? 'Saving…' : 'Add update'}
           </button>
         </div>
-        {error && <p className="text-xs text-red-600">{error}</p>}
+        {error && <p className="text-xs text-red-600 dark:text-red-300">{error}</p>}
       </div>
 
       {updates.length === 0 ? (

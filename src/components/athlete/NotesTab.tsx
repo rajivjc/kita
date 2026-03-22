@@ -83,7 +83,7 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
             rows={3}
             className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm resize-none transition-shadow duration-200 focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] focus:outline-none"
           />
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-red-600 dark:text-red-300">{error}</p>}
           <div className="flex justify-end gap-3">
             <button
               onClick={() => { setEditing(false); setEditText(note.content) }}
@@ -102,7 +102,7 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
         </div>
       ) : confirmingDelete ? (
         <div className="flex items-center justify-between">
-          <span className="text-sm text-red-600 font-medium">Delete this note?</span>
+          <span className="text-sm text-red-600 dark:text-red-300 font-medium">Delete this note?</span>
           <div className="flex items-center gap-2">
             <button onClick={handleDelete} disabled={saving}
               className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 active:scale-[0.97] disabled:opacity-60 rounded-lg px-3 py-1.5 transition-all duration-150">
@@ -126,7 +126,7 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
               )}
               <span className="text-xs text-text-hint">{formatDateTime(note.created_at)}</span>
               {storyIncluded && (
-                <span className="inline-flex items-center gap-0.5 text-[10px] text-teal-600 font-medium">
+                <span className="inline-flex items-center gap-0.5 text-[10px] text-teal-600 dark:text-teal-300 font-medium">
                   <BookOpen className="w-3 h-3" /> Story
                 </span>
               )}
@@ -140,8 +140,8 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
                     title={storyIncluded ? 'Remove from story page' : 'Include in story page'}
                     className={`text-xs transition-colors disabled:opacity-50 ${
                       storyIncluded
-                        ? 'text-teal-600 hover:text-teal-700'
-                        : 'text-text-hint hover:text-teal-600'
+                        ? 'text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300'
+                        : 'text-text-hint hover:text-teal-600 dark:hover:text-teal-300'
                     }`}
                   >
                     <BookOpen className="w-3.5 h-3.5 inline mr-0.5" />
@@ -150,7 +150,7 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
                 )}
                 <button
                   onClick={() => setEditing(true)}
-                  className="text-xs text-text-hint hover:text-teal-600 transition-colors"
+                  className="text-xs text-text-hint hover:text-teal-600 dark:hover:text-teal-300 transition-colors"
                 >
                   Edit
                 </button>
@@ -164,7 +164,7 @@ function NoteCard({ note, isOwner, athleteId, onChanged }: NoteCardProps) {
               </div>
             )}
           </div>
-          {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
+          {error && <p className="text-xs text-red-600 dark:text-red-300 mt-2">{error}</p>}
         </>
       )}
     </div>
@@ -216,7 +216,7 @@ export default function NotesTab({
           ) : (
             <button
               onClick={onToggleNoteInput}
-              className="w-full bg-teal-50 hover:bg-teal-100 active:scale-[0.98] border border-teal-200 text-teal-700 hover:text-teal-800 rounded-xl py-3.5 text-sm font-semibold transition-all duration-150"
+              className="w-full bg-teal-50 dark:bg-teal-900/15 hover:bg-teal-100 active:scale-[0.98] border border-teal-200 dark:border-teal-400/20 text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-300 rounded-xl py-3.5 text-sm font-semibold transition-all duration-150"
             >
               + Add note
             </button>

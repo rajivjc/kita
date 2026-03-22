@@ -44,7 +44,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
 
   if (remaining <= 0 || (justSent && remaining <= 1)) {
     return (
-      <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100/60">
+      <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100 dark:border-amber-400/20/60">
         <p className="text-2xl mb-1">🎉</p>
         <p className="text-sm font-medium text-text-secondary">All cheers sent today!</p>
         <p className="text-xs text-text-muted mt-0.5">Come back tomorrow to send more.</p>
@@ -54,7 +54,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
 
   if (justSent) {
     return (
-      <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100/60">
+      <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-5 text-center border border-amber-100 dark:border-amber-400/20/60">
         <p className="text-2xl mb-1">🎉</p>
         <p className="text-sm font-medium text-text-secondary">Cheer sent!</p>
         <p className="text-xs text-text-muted mt-0.5">{remaining - 1} left today.</p>
@@ -75,7 +75,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
       </div>
 
       {error && (
-        <p className="text-xs text-red-600 mb-2 px-1">{error}</p>
+        <p className="text-xs text-red-600 dark:text-red-300 mb-2 px-1">{error}</p>
       )}
 
       {/* Preset buttons — 2-column grid for larger touch targets */}
@@ -85,7 +85,7 @@ export default function CheerBox({ athleteId, athleteFirstName, cheersToday: ini
             key={i}
             onClick={() => handleSend(msg.full)}
             disabled={isPending}
-            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200/80 text-text-secondary text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
+            className="flex items-center justify-center gap-2 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30/60 hover:from-amber-100 hover:to-orange-100/60 active:scale-[0.97] border border-amber-200 dark:border-amber-400/80 text-text-secondary text-sm font-medium px-3 py-3 rounded-xl transition-all duration-150 disabled:opacity-50 min-h-[48px]"
           >
             <span className="text-base">{msg.emoji}</span>
             <span>{msg.text}</span>

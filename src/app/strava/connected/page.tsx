@@ -45,7 +45,7 @@ function StravaConnectedContent() {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-green-600"
+            className="h-8 w-8 text-green-600 dark:text-green-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -62,17 +62,17 @@ function StravaConnectedContent() {
 
         {!isStandalone && (
           <div className="pt-2 space-y-3">
-            <div className="rounded-lg bg-teal-50 border border-teal-200 px-4 py-3">
-              <p className="text-sm font-medium text-teal-800 mb-1">
+            <div className="rounded-lg bg-teal-50 dark:bg-teal-900/15 border border-teal-200 dark:border-teal-400/20 px-4 py-3">
+              <p className="text-sm font-medium text-teal-800 dark:text-teal-300 mb-1">
                 Go back to the SOSG Run app
               </p>
-              <p className="text-xs text-teal-600">
+              <p className="text-xs text-teal-600 dark:text-teal-300">
                 Tap your SOSG Run icon on the home screen. You can close this browser tab.
               </p>
             </div>
             <a
               href="/account?connected=strava"
-              className="inline-block text-sm text-text-muted hover:text-teal-600 transition-colors"
+              className="inline-block text-sm text-text-muted hover:text-teal-600 dark:hover:text-teal-300 transition-colors"
             >
               Or continue in browser
             </a>

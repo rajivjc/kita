@@ -174,7 +174,7 @@ export default function AthleteTabs({
             onClick={() => setActiveTab(tab.key)}
             className={`relative px-5 py-3 text-sm font-semibold cursor-pointer transition-colors ${
               activeTab === tab.key
-                ? 'text-teal-600'
+                ? 'text-teal-600 dark:text-teal-300'
                 : 'text-text-hint hover:text-text-secondary'
             }`}
           >

@@ -12,16 +12,16 @@ type HintCardProps = {
 
 const VARIANTS = {
   teal: {
-    container: 'bg-teal-50/60 border border-teal-200/40',
-    title: 'text-teal-800',
-    description: 'text-teal-700',
-    dismiss: 'text-teal-400 hover:text-teal-600',
+    container: 'bg-teal-50/60 dark:bg-teal-900/15 border border-teal-200 dark:border-teal-400/20',
+    title: 'text-teal-800 dark:text-teal-300',
+    description: 'text-teal-700 dark:text-teal-300',
+    dismiss: 'text-teal-400 hover:text-teal-600 dark:hover:text-teal-300',
   },
   amber: {
-    container: 'bg-amber-50/60 border border-amber-200/40',
-    title: 'text-amber-800',
-    description: 'text-amber-700',
-    dismiss: 'text-amber-400 hover:text-amber-600',
+    container: 'bg-amber-50/60 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-400/20',
+    title: 'text-amber-800 dark:text-amber-300',
+    description: 'text-amber-700 dark:text-amber-300',
+    dismiss: 'text-amber-400 hover:text-amber-600 dark:hover:text-amber-300',
   },
 }
 

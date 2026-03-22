@@ -202,7 +202,7 @@ export default function PhotosTab({
           <div className="flex items-center gap-2">
             <button
               onClick={selectAll}
-              className="text-xs font-medium text-teal-600 hover:text-teal-700 px-2 py-1"
+              className="text-xs font-medium text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 px-2 py-1"
             >
               Select all
             </button>
@@ -235,7 +235,7 @@ export default function PhotosTab({
             {photos.length > 1 && (
               <button
                 onClick={() => setSelectionMode(true)}
-                className="text-xs font-medium text-teal-600 hover:text-teal-700 px-2 py-1 rounded-lg hover:bg-teal-50 transition-colors"
+                className="text-xs font-medium text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 px-2 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/15 transition-colors"
               >
                 Select
               </button>
@@ -328,7 +328,7 @@ export default function PhotosTab({
         <div ref={sentinelRef} className="flex justify-center py-6">
           {loadingMore ? (
             <div className="flex items-center gap-2 text-xs text-text-hint">
-              <div className="w-4 h-4 border-2 border-border-strong border-t-teal-500 rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-border-strong border-t-teal-500 dark:border-t-teal-400 rounded-full animate-spin" />
               Loading more photos...
             </div>
           ) : (

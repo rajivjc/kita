@@ -46,7 +46,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
       <div className="relative flex flex-col items-center">
         <button
           onClick={handleOpen}
-          className="p-2 text-text-hint hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+          className="p-2 text-text-hint hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 rounded-lg transition-all"
           aria-label="Print QR code for athlete's personal page"
           title="Print QR code for athlete's personal page"
         >
@@ -56,7 +56,7 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
 
         {showHint && (
           <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-10 w-56">
-            <div className="bg-teal-700 text-white text-[11px] rounded-lg px-3 py-2 shadow-lg relative">
+            <div className="bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-[11px] rounded-lg px-3 py-2 shadow-lg relative">
               <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-teal-700 rotate-45 rounded-sm" />
               <p className="relative">New: Print a QR code for this athlete&apos;s personal page</p>
               <button
@@ -113,14 +113,14 @@ export default function AthleteQrCode({ athleteId, athleteName }: Props) {
             <div className="space-y-2">
               <button
                 onClick={() => window.print()}
-                className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl transition-colors"
+                className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-semibold rounded-xl transition-colors"
               >
                 Print QR code
               </button>
 
               <button
                 onClick={handleCopyLink}
-                className="w-full h-12 flex items-center justify-center gap-2 bg-surface border border-border hover:border-teal-300 hover:bg-teal-50 text-text-secondary text-sm font-medium rounded-xl transition-colors"
+                className="w-full h-12 flex items-center justify-center gap-2 bg-surface border border-border hover:border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 text-text-secondary text-sm font-medium rounded-xl transition-colors"
               >
                 {linkCopied ? (
                   <>

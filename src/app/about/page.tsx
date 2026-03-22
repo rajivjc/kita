@@ -163,8 +163,8 @@ export default function AboutPage() {
         <div className="w-12 h-0.5 bg-teal-200 mx-auto my-8" />
 
         {/* CTA */}
-        <div className="bg-teal-50 rounded-2xl px-6 py-5 text-center">
-          <p className="text-base text-teal-800 font-medium">
+        <div className="bg-teal-50 dark:bg-teal-900/15 rounded-2xl px-6 py-5 text-center">
+          <p className="text-base text-teal-800 dark:text-teal-300 font-medium">
             If you&apos;re a coach and this sounds familiar, we&apos;d love to
             hear from you.
           </p>

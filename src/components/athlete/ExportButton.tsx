@@ -51,7 +51,7 @@ export default function ExportButton({ athleteId }: { athleteId: string }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
-        className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-text-muted hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+        className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-text-muted hover:text-teal-600 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/15 rounded-lg transition-all"
         style={{ minHeight: '44px' }}
         aria-label="Export data"
       >
@@ -63,7 +63,7 @@ export default function ExportButton({ athleteId }: { athleteId: string }) {
           <button
             onClick={() => handleExport('csv')}
             disabled={!!loading}
-            className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:bg-teal-50 hover:text-teal-700 rounded-t-lg transition-colors"
+            className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:bg-teal-50 dark:hover:bg-teal-900/15 hover:text-teal-700 dark:hover:text-teal-300 rounded-t-lg transition-colors"
             style={{ minHeight: '44px' }}
           >
             {loading === 'csv' ? 'Downloading...' : 'Download CSV'}
@@ -71,7 +71,7 @@ export default function ExportButton({ athleteId }: { athleteId: string }) {
           <button
             onClick={() => handleExport('pdf')}
             disabled={!!loading}
-            className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:bg-teal-50 hover:text-teal-700 rounded-b-lg transition-colors"
+            className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:bg-teal-50 dark:hover:bg-teal-900/15 hover:text-teal-700 dark:hover:text-teal-300 rounded-b-lg transition-colors"
             style={{ minHeight: '44px' }}
           >
             {loading === 'pdf' ? 'Generating...' : 'Download PDF'}

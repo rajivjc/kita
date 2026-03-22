@@ -256,7 +256,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
                     onClick={() => setSelectedFeel(value)}
                     className={`flex-1 flex flex-col items-center py-2 rounded-xl text-2xl transition-all duration-200 ${
                       selectedFeel === value
-                        ? 'bg-teal-50 ring-2 ring-teal-400 scale-105'
+                        ? 'bg-teal-50 dark:bg-teal-900/15 ring-2 ring-teal-400 scale-105'
                         : 'bg-surface border border-border hover:bg-surface-raised active:scale-95'
                     }`}
                     aria-label={label}
@@ -323,7 +323,7 @@ export default function LogRunSheet({ athleteId, isOpen, onClose, onSaved, creat
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-300">{error}</p>}
 
             <div className="flex justify-end gap-3 pt-1">
               <button

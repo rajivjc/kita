@@ -46,7 +46,7 @@ export default async function EditAthletePage({ params }: PageProps) {
     <main className="max-w-2xl mx-auto px-4 py-6 pb-28">
       <Link
         href={`/athletes/${id}`}
-        className="inline-flex items-center gap-1 text-sm text-teal-600 mb-6"
+        className="inline-flex items-center gap-1 text-sm text-teal-600 dark:text-teal-300 mb-6"
       >
         ← {athlete.name}
       </Link>

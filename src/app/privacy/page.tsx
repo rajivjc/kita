@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <div className="mb-6">
           <Link
             href="/login"
-            className="text-sm text-teal-600 hover:text-teal-700 font-medium"
+            className="text-sm text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 font-medium"
           >
             &larr; Back to login
           </Link>
@@ -35,11 +35,11 @@ export default function PrivacyPage() {
         </p>
 
         {/* Short version summary */}
-        <div className="bg-teal-50 rounded-2xl px-6 py-5 mb-10">
-          <p className="text-base font-semibold text-teal-800 mb-3">
+        <div className="bg-teal-50 dark:bg-teal-900/15 rounded-2xl px-6 py-5 mb-10">
+          <p className="text-base font-semibold text-teal-800 dark:text-teal-300 mb-3">
             The short version
           </p>
-          <ul className="space-y-2 text-base text-teal-700">
+          <ul className="space-y-2 text-base text-teal-700 dark:text-teal-300">
             <li>We collect only what we need to run the app.</li>
             <li>Your data is stored securely in Singapore.</li>
             <li>We never sell or share your data with advertisers.</li>
@@ -311,7 +311,7 @@ export default function PrivacyPage() {
           <p className="text-sm text-text-muted mt-2">
             <Link
               href="/terms"
-              className="text-teal-600 hover:text-teal-700 font-medium underline"
+              className="text-teal-600 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-300 font-medium underline"
             >
               Terms of Service
             </Link>

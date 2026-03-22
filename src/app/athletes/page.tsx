@@ -92,7 +92,7 @@ export default async function AthletesPage({
         {isAdmin && !isCaregiver && (
           <Link
             href="/admin/athletes/new"
-            className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-gray-950 text-sm font-medium rounded-lg px-4 py-2 transition-colors shadow-sm"
           >
             + Add athlete
           </Link>
@@ -100,8 +100,8 @@ export default async function AthletesPage({
       </div>
 
       {searchParams.connected === 'strava' && (
-        <div className="mb-4 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800 flex items-center gap-2">
-          <span className="text-green-600 font-bold">✓</span>
+        <div className="mb-4 rounded-xl bg-green-50 dark:bg-green-900/15 border border-green-200 dark:border-green-400/20 px-4 py-3 text-sm text-green-800 dark:text-green-300 flex items-center gap-2">
+          <span className="text-green-600 dark:text-green-300 font-bold">✓</span>
           <span>Strava connected! Your runs will now sync automatically.</span>
         </div>
       )}

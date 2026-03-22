@@ -13,7 +13,7 @@ function NoteCard({ note }: { note: Props['notes'][number] }) {
   const isLong = note.content.length > 120
 
   return (
-    <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-3.5 border border-amber-100/60">
+    <div className="bg-gradient-to-br from-amber-50/60 to-orange-50/30 rounded-xl px-4 py-3.5 border border-amber-100 dark:border-amber-400/20/60">
       <div className="flex gap-3">
         <span className="text-amber-300 text-2xl leading-none font-serif select-none" aria-hidden="true">&ldquo;</span>
         <div className="flex-1 min-w-0">
@@ -23,7 +23,7 @@ function NoteCard({ note }: { note: Props['notes'][number] }) {
           {isLong && (
             <button
               onClick={() => setExpanded(v => !v)}
-              className="text-xs text-amber-600 hover:text-amber-700 font-medium mt-1 transition-colors"
+              className="text-xs text-amber-600 dark:text-amber-300 hover:text-amber-700 dark:hover:text-amber-300 font-medium mt-1 transition-colors"
             >
               {expanded ? 'Show less' : 'Read more'}
             </button>
@@ -48,7 +48,7 @@ export default function CaregiverNotesCard({ notes, athleteFirstName }: Props) {
   if (notes.length === 0) return null
 
   return (
-    <div className="bg-surface border border-amber-100 rounded-xl px-4 py-4 mb-5 shadow-sm">
+    <div className="bg-surface border border-amber-100 dark:border-amber-400/20 rounded-xl px-4 py-4 mb-5 shadow-sm">
       <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest mb-3">
         What coaches are saying about {athleteFirstName}
       </p>

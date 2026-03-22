@@ -30,13 +30,13 @@ interface Props {
 export default function SessionCard({ session: s, badges, kudosCount, kudosGivers, myKudos, isReadOnly, userId }: Props) {
   const hasMilestone = badges.length > 0
   const feelColor = s.feel ? (FEEL_BORDER[s.feel] ?? 'border-l-gray-200') : 'border-l-gray-200'
-  const cardBg = hasMilestone ? 'bg-amber-50/40' : 'bg-surface'
+  const cardBg = hasMilestone ? 'bg-amber-50/40 dark:bg-amber-900/15' : 'bg-surface'
   const pace = formatPace(s.distance_km, s.duration_seconds)
 
   const card = (
     <div className={`${cardBg} rounded-xl border border-border-subtle shadow-sm px-3.5 py-3 border-l-[5px] ${feelColor} hover:shadow-md active:scale-[0.98] transition-all duration-200`}>
       {s.strava_title && (
-        <p className="text-xs font-semibold text-orange-700 mb-1 truncate">{s.strava_title}</p>
+        <p className="text-xs font-semibold text-orange-700 dark:text-orange-300 mb-1 truncate">{s.strava_title}</p>
       )}
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <div className="min-w-0">
@@ -71,7 +71,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
           {badges.map((m, i) => (
             <span
               key={i}
-              className={`inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-semibold px-2 py-1 rounded-full ${m.id ? 'cursor-pointer hover:bg-amber-100 transition-colors' : ''}`}
+              className={`inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-400/20 text-amber-700 dark:text-amber-300 text-[11px] font-semibold px-2 py-1 rounded-full ${m.id ? 'cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-colors' : ''}`}
               onClick={m.id ? (e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -88,7 +88,7 @@ export default function SessionCard({ session: s, badges, kudosCount, kudosGiver
               } : undefined}
             >
               {m.icon || '🏆'} {m.label}
-              {m.id && <span className="ml-0.5 text-amber-600">↗</span>}
+              {m.id && <span className="ml-0.5 text-amber-600 dark:text-amber-300">↗</span>}
             </span>
           ))}
         </div>

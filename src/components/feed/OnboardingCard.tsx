@@ -106,10 +106,10 @@ export default function OnboardingCard({
     return (
       <button
         onClick={handleToggle}
-        className="w-full bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
+        className="w-full bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-3.5 mb-5 shadow-sm flex items-center justify-between text-left"
         aria-label="Expand setup guide"
       >
-        <span className="text-sm font-medium text-teal-700">
+        <span className="text-sm font-medium text-teal-700 dark:text-teal-300">
           Setup guide: {completedCount} of {totalCount} complete
         </span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-teal-400 flex-shrink-0">
@@ -120,19 +120,19 @@ export default function OnboardingCard({
   }
 
   return (
-    <div className="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
+    <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border border-teal-200 dark:border-teal-400/60 rounded-2xl px-5 py-5 mb-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-lg font-bold text-text-primary">
             Welcome, {firstName}!
           </p>
-          <p className="text-sm text-teal-700 mt-0.5">
+          <p className="text-sm text-teal-700 dark:text-teal-300 mt-0.5">
             Let&apos;s get you set up for coaching
           </p>
         </div>
         <button
           onClick={handleToggle}
-          className="text-teal-400 hover:text-teal-600 p-1 transition-colors"
+          className="text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 p-1 transition-colors"
           aria-label="Collapse setup guide"
           title="Collapse"
         >
@@ -145,7 +145,7 @@ export default function OnboardingCard({
       {/* Progress bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] text-teal-600 font-medium">
+          <span className="text-[10px] text-teal-600 dark:text-teal-300 font-medium">
             {completedCount} of {totalCount} complete
           </span>
           <span className="text-[10px] text-teal-500">{progressPct}%</span>
@@ -179,7 +179,7 @@ export default function OnboardingCard({
                 )}
               </span>
               <span className={`text-sm font-medium ${
-                step.completed ? 'text-teal-600 line-through' : 'text-text-primary'
+                step.completed ? 'text-teal-600 dark:text-teal-300 line-through' : 'text-text-primary'
               }`}>
                 {step.label}
               </span>

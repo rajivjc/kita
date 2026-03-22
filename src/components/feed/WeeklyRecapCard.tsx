@@ -13,7 +13,7 @@ export default function WeeklyRecapCard({ weeklyStats, weeklyRecap }: Props) {
   return (
     <div className="bg-surface border border-border-subtle rounded-xl px-4 py-3 mb-5 shadow-sm">
       <div className="flex items-center gap-3 recap-stat recap-stat-1">
-        <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/15 flex items-center justify-center flex-shrink-0">
           <span className="text-lg">🏃</span>
         </div>
         <div>
@@ -28,12 +28,12 @@ export default function WeeklyRecapCard({ weeklyStats, weeklyRecap }: Props) {
       {(weeklyRecap.starMoment || weeklyRecap.milestonesEarned > 0) && (
         <div className="mt-2 pt-2 border-t border-gray-50 space-y-1">
           {weeklyRecap.starMoment && (
-            <p className="text-xs text-teal-600 recap-stat recap-stat-2">
+            <p className="text-xs text-teal-600 dark:text-teal-300 recap-stat recap-stat-2">
               ⭐ {weeklyRecap.starMoment.athleteName} {weeklyRecap.starMoment.value}
             </p>
           )}
           {weeklyRecap.milestonesEarned > 0 && (
-            <p className="text-xs text-amber-600 recap-stat recap-stat-3">
+            <p className="text-xs text-amber-600 dark:text-amber-300 recap-stat recap-stat-3">
               🏆 {weeklyRecap.milestonesEarned} milestone{weeklyRecap.milestonesEarned !== 1 ? 's' : ''} earned this week
             </p>
           )}
