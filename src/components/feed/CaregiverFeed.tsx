@@ -11,8 +11,8 @@ import BetaBanner from '@/components/feed/BetaBanner'
 import HintCard from '@/components/ui/HintCard'
 import { HINT_KEYS } from '@/lib/hint-keys'
 import CaregiverWorkingOnCard from '@/components/feed/CaregiverWorkingOnCard'
-import CaregiverMonthlySummary from '@/components/feed/CaregiverMonthlySummary'
 import DigestTeaser from '@/components/feed/DigestTeaser'
+import { formatPace } from '@/lib/utils/dates'
 import type { CaregiverFeedData } from '@/lib/feed/types'
 
 const FEEL_EMOJI: Record<number, string> = {
@@ -57,6 +57,23 @@ export default function CaregiverFeed({ data, userId }: Props) {
   const firstName = user.name?.split(' ')[0] ?? 'there'
   const showOnboarding = onboarding != null
   const athleteFirstName = caregiverAthlete?.name?.split(' ')[0] ?? 'your athlete'
+
+  // Monthly comparison (absorbed from CaregiverMonthlySummary)
+  const avgDistanceThis = monthlySummary.thisMonth.runs > 0
+    ? monthlySummary.thisMonth.km / monthlySummary.thisMonth.runs : 0
+  const avgDistanceLast = monthlySummary.lastMonth.runs > 0
+    ? monthlySummary.lastMonth.km / monthlySummary.lastMonth.runs : 0
+  const distanceTrend = monthlySummary.lastMonth.runs > 0
+    ? avgDistanceThis - avgDistanceLast : 0
+  const trendIcon = distanceTrend > 0.05 ? '↑' : distanceTrend < -0.05 ? '↓' : '→'
+  const trendColor = distanceTrend > 0.05
+    ? 'text-green-600 dark:text-green-300'
+    : distanceTrend < -0.05
+      ? 'text-orange-500 dark:text-orange-300'
+      : 'text-text-muted'
+  const pace = monthlySummary.thisMonth.durationSeconds > 0
+    ? formatPace(monthlySummary.thisMonth.km, monthlySummary.thisMonth.durationSeconds)
+    : null
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6 pb-28">
@@ -126,28 +143,43 @@ export default function CaregiverFeed({ data, userId }: Props) {
                 <p className="text-sm text-amber-700 dark:text-amber-300 mt-1 mb-3">
                   Here&apos;s how {caregiverAthlete.name} is doing this month
                 </p>
-                <div className="flex items-center gap-4 bg-white/50 rounded-lg px-4 py-3">
+                {/* Stats grid — 3 columns like monthly summary */}
+                <div className="grid grid-cols-3 gap-3 bg-white/50 dark:bg-white/8 rounded-lg px-4 py-3">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-text-primary">{caregiverRecentSessions.length}</p>
-                    <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">run{caregiverRecentSessions.length !== 1 ? 's' : ''}</p>
-                  </div>
-                  <div className="w-px self-stretch bg-amber-200/60" />
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-text-primary">
-                      {caregiverRecentSessions.reduce((sum, s) => sum + (s.distance_km ?? 0), 0).toFixed(1)}
+                    <p className="text-2xl font-bold text-text-primary">{monthlySummary.thisMonth.runs}</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">
+                      run{monthlySummary.thisMonth.runs !== 1 ? 's' : ''}
                     </p>
-                    <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">km</p>
                   </div>
-                  <div className="w-px self-stretch bg-amber-200/60" />
                   <div className="text-center">
-                    <div className="flex items-center gap-0.5 justify-center">
-                      {caregiverRecentSessions.slice(0, 5).map((s, i) => (
-                        <span key={i} className="text-lg">{s.feel ? FEEL_EMOJI[s.feel] : '—'}</span>
-                      ))}
-                    </div>
-                    <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">recent feels</p>
+                    <p className="text-2xl font-bold text-text-primary">{monthlySummary.thisMonth.km.toFixed(1)}</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">km total</p>
                   </div>
+                  {pace && (
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-text-primary">{pace}</p>
+                      <p className="text-xs text-amber-600 dark:text-amber-300 font-medium">per km avg</p>
+                    </div>
+                  )}
                 </div>
+
+                {/* Feel emojis */}
+                {caregiverRecentSessions.some(s => s.feel) && (
+                  <div className="flex items-center gap-1 mt-2 justify-center">
+                    {caregiverRecentSessions.slice(0, 5).map((s, i) => (
+                      <span key={i} className="text-lg">{s.feel ? FEEL_EMOJI[s.feel] : '—'}</span>
+                    ))}
+                    <span className="text-xs text-amber-600 dark:text-amber-300 font-medium ml-1">recent feels</span>
+                  </div>
+                )}
+
+                {/* Monthly comparison — from CaregiverMonthlySummary */}
+                {monthlySummary.lastMonth.runs > 0 && (
+                  <div className="mt-2 text-xs text-amber-600/80 dark:text-amber-300/80 text-center">
+                    vs last month: {avgDistanceLast.toFixed(1)} km → {avgDistanceThis.toFixed(1)} km per run{' '}
+                    <span className={`font-semibold ${trendColor}`}>{trendIcon}</span>
+                  </div>
+                )}
               </>
             )}
             <div className="mt-3 text-center space-y-1">
@@ -166,12 +198,20 @@ export default function CaregiverFeed({ data, userId }: Props) {
         )}
       </div>
 
-      {/* Digest teaser card */}
+      {/* 2. Coach Notes — moved up for trust building */}
+      {caregiverAthlete && (
+        <CaregiverNotesCard
+          notes={caregiverRecentNotes}
+          athleteFirstName={athleteFirstName}
+        />
+      )}
+
+      {/* 3. Digest teaser */}
       {digestTeaser && (
         <DigestTeaser teaserText={digestTeaser.text} weekLabel={digestTeaser.weekLabel} />
       )}
 
-      {/* Card 1.5 — Working On status */}
+      {/* 4. Working On status */}
       {caregiverAthlete && workingOn.text && (
         <CaregiverWorkingOnCard
           athleteFirstName={athleteFirstName}
@@ -182,16 +222,7 @@ export default function CaregiverFeed({ data, userId }: Props) {
         />
       )}
 
-      {/* Card 1.75 — Auto-generated monthly summary */}
-      {caregiverAthlete && (
-        <CaregiverMonthlySummary
-          athleteFirstName={athleteFirstName}
-          thisMonth={monthlySummary.thisMonth}
-          lastMonth={monthlySummary.lastMonth}
-        />
-      )}
-
-      {/* Card 2 — Milestones & Progress */}
+      {/* 5. Milestones & Progress */}
       {caregiverAthlete && (
         <CaregiverMilestoneCard
           milestones={caregiverMilestones}
@@ -199,15 +230,7 @@ export default function CaregiverFeed({ data, userId }: Props) {
         />
       )}
 
-      {/* Card 3 — Coach Notes */}
-      {caregiverAthlete && (
-        <CaregiverNotesCard
-          notes={caregiverRecentNotes}
-          athleteFirstName={athleteFirstName}
-        />
-      )}
-
-      {/* Card 4 — Cheer Box */}
+      {/* 6. Send Encouragement */}
       {caregiverAthlete && (
         <CaregiverCheerCard
           athleteId={caregiverAthlete.id}
@@ -219,10 +242,10 @@ export default function CaregiverFeed({ data, userId }: Props) {
         />
       )}
 
-      {/* Weekly club summary */}
+      {/* 7. This week at the club */}
       <WeeklyRecapCard weeklyStats={weeklyStats} weeklyRecap={weeklyRecap} />
 
-      {/* Club statistics */}
+      {/* 8. Club Stats */}
       <ClubStats stats={clubStats} />
 
       {/* Empty state */}
