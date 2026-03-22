@@ -58,7 +58,7 @@ export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> 
       .limit(30),
     adminClient
       .from('milestones')
-      .select('id, athlete_id, session_id, label, achieved_at, athletes(name), milestone_definitions(icon)')
+      .select('id, athlete_id, session_id, label, achieved_at, awarded_by, athletes(name, theme_color, avatar), milestone_definitions(icon)')
       .order('achieved_at', { ascending: false })
       .limit(20),
     adminClient.from('sessions').select('athlete_id, distance_km').eq('coach_user_id', userId).gte('date', monthStart).eq('status', 'completed').is('strava_deleted_at', null),
@@ -148,15 +148,33 @@ export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> 
 
   const oneDayAgo = new Date()
   oneDayAgo.setDate(oneDayAgo.getDate() - 1)
-  const celebrationMilestones: CelebrationMilestone[] = (rawMilestones ?? [])
-    .filter(m => m.achieved_at && new Date(m.achieved_at) >= oneDayAgo)
-    .map(m => ({
+  const recentCelebrationRaw = (rawMilestones ?? []).filter(m => m.achieved_at && new Date(m.achieved_at) >= oneDayAgo)
+
+  // Fetch club name and coach names for celebration milestones
+  const celebrationCoachIds = [...new Set(recentCelebrationRaw.map(m => (m as { awarded_by?: string }).awarded_by).filter(Boolean))] as string[]
+  const [{ data: clubSettingsRow }, { data: celebCoachRows }] = await Promise.all([
+    adminClient.from('club_settings').select('name').limit(1).single(),
+    celebrationCoachIds.length > 0
+      ? adminClient.from('users').select('id, name').in('id', celebrationCoachIds)
+      : Promise.resolve({ data: [] as { id: string; name: string | null }[] }),
+  ])
+  const clubName = clubSettingsRow?.name ?? 'SOSG Running Club'
+  const celebCoachNameMap = Object.fromEntries((celebCoachRows ?? []).map(u => [u.id, u.name]))
+
+  const celebrationMilestones: CelebrationMilestone[] = recentCelebrationRaw.map(m => {
+    const mTyped = m as { athletes?: { name?: string; theme_color?: string; avatar?: string }; milestone_definitions?: { icon?: string }; awarded_by?: string }
+    return {
       id: m.id,
       label: m.label,
-      icon: (m as { milestone_definitions?: { icon?: string } }).milestone_definitions?.icon ?? '🏆',
-      athleteName: (m as { athletes?: { name?: string } }).athletes?.name ?? 'An athlete',
+      icon: mTyped.milestone_definitions?.icon ?? '🏆',
+      athleteName: mTyped.athletes?.name ?? 'An athlete',
       achievedAt: m.achieved_at,
-    }))
+      coachName: mTyped.awarded_by ? (celebCoachNameMap[mTyped.awarded_by] ?? null) : null,
+      themeColor: mTyped.athletes?.theme_color ?? null,
+      avatar: mTyped.athletes?.avatar ?? null,
+      clubName,
+    }
+  })
 
   // ─── Kudos ─────────────────────────────────────────────────────
   const kudosCounts: Record<string, number> = {}

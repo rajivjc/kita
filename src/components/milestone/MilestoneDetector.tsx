@@ -13,6 +13,10 @@ type MilestoneForDetection = {
   icon: string
   athleteName: string
   achievedAt: string
+  coachName: string | null
+  themeColor: string | null
+  avatar: string | null
+  clubName: string
 }
 
 type MilestoneDetectorProps = {
@@ -72,6 +76,11 @@ export default function MilestoneDetector({ recentMilestones }: MilestoneDetecto
       athleteName={celebrateMilestone.athleteName}
       milestoneLabel={celebrateMilestone.label}
       milestoneIcon={celebrateMilestone.icon}
+      achievedAt={celebrateMilestone.achievedAt}
+      coachName={celebrateMilestone.coachName}
+      themeColor={celebrateMilestone.themeColor}
+      avatar={celebrateMilestone.avatar}
+      clubName={celebrateMilestone.clubName}
       onDismiss={() => setCelebrateMilestone(null)}
     />
   )

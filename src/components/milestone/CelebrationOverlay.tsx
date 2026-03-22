@@ -2,12 +2,18 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import CertificateButton from './CertificateButton'
 
 type CelebrationOverlayProps = {
   milestoneId: string
   athleteName: string
   milestoneLabel: string
   milestoneIcon: string
+  achievedAt?: string
+  coachName?: string | null
+  themeColor?: string | null
+  avatar?: string | null
+  clubName?: string
   onDismiss: () => void
 }
 
@@ -25,6 +31,11 @@ export default function CelebrationOverlay({
   athleteName,
   milestoneLabel,
   milestoneIcon,
+  achievedAt,
+  coachName,
+  themeColor,
+  avatar,
+  clubName,
   onDismiss,
 }: CelebrationOverlayProps) {
   const [visible, setVisible] = useState(true)
@@ -101,13 +112,28 @@ export default function CelebrationOverlay({
         <p className="text-xl text-white/90 mb-8">
           {athleteName}
         </p>
-        <Link
-          href={`/milestone/${milestoneId}`}
-          className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors"
-          onClick={(e) => e.stopPropagation()}
-        >
-          Share this moment
-        </Link>
+        <div className="flex flex-col items-center gap-3">
+          <Link
+            href={`/milestone/${milestoneId}`}
+            className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Share this moment
+          </Link>
+          <CertificateButton
+            variant="overlay"
+            data={{
+              athleteName,
+              milestoneLabel,
+              milestoneIcon,
+              achievedAt: achievedAt ?? new Date().toISOString(),
+              coachName: coachName ?? null,
+              clubName: clubName ?? 'SOSG Running Club',
+              themeColor: themeColor ?? null,
+              avatar: avatar ?? null,
+            }}
+          />
+        </div>
         <p className="text-white/40 text-xs mt-6">Tap anywhere to dismiss</p>
       </div>
 
