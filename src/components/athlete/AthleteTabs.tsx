@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Json } from '@/lib/supabase/types'
+import type { Json, FocusArea } from '@/lib/supabase/types'
 import type { WeeklyVolume, FeelPoint, DistancePoint, MilestonePin } from '@/lib/analytics/session-trends'
+import type { GoalProgress } from '@/lib/goals'
 import dynamic from 'next/dynamic'
 import RunsTab from './RunsTab'
 import { createManualSession, loadMorePhotos } from '@/app/athletes/[id]/actions'
@@ -12,6 +13,7 @@ const CuesTab = dynamic(() => import('./CuesTab'))
 const NotesTab = dynamic(() => import('./NotesTab'))
 const PhotosTab = dynamic(() => import('./PhotosTab'))
 const LogRunSheet = dynamic(() => import('./LogRunSheet'))
+const PlanTab = dynamic(() => import('./PlanTab'))
 const StoryUpdatesSection = dynamic(() => import('./StoryUpdatesSection'))
 
 export type AthleteData = {
@@ -85,7 +87,7 @@ export type StoryUpdateData = {
   coach_user_id: string | null
 }
 
-type Tab = 'feed' | 'cues' | 'notes' | 'photos' | 'story'
+type Tab = 'feed' | 'plan' | 'cues' | 'notes' | 'photos' | 'story'
 
 type AthleteTabsProps = {
   athlete: AthleteData
@@ -110,6 +112,16 @@ type AthleteTabsProps = {
   isAdmin?: boolean
   storyUpdates?: StoryUpdateData[]
   onDeletePhoto?: (photoId: string) => Promise<void>
+  activeFocus?: FocusArea | null
+  focusHistory?: FocusArea[]
+  runningGoal?: string | null
+  goalType?: string | null
+  goalTarget?: number | null
+  goalProgress?: GoalProgress | null
+  athleteGoalChoice?: string | null
+  goalChoiceUpdatedAt?: string | null
+  previousGoalChoice?: string | null
+  previousGoalChoiceAt?: string | null
   themeColor?: string | null
   avatar?: string | null
   clubName?: string
@@ -138,6 +150,16 @@ export default function AthleteTabs({
   isAdmin = false,
   storyUpdates = [],
   onDeletePhoto,
+  activeFocus,
+  focusHistory = [],
+  runningGoal,
+  goalType,
+  goalTarget,
+  goalProgress,
+  athleteGoalChoice,
+  goalChoiceUpdatedAt,
+  previousGoalChoice,
+  previousGoalChoiceAt,
   themeColor,
   avatar,
   clubName,
@@ -151,6 +173,7 @@ export default function AthleteTabs({
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'feed', label: 'Runs' },
+    { key: 'plan', label: 'Plan' },
     ...(!isReadOnly ? [{ key: 'cues' as Tab, label: 'Cues' }] : []),
     ...(!isReadOnly ? [{ key: 'notes' as Tab, label: 'Notes' }] : []),
     ...(photoCount > 0 ? [{ key: 'photos' as Tab, label: `Photos (${photoCount})` }] : []),
@@ -214,6 +237,23 @@ export default function AthleteTabs({
           themeColor={themeColor}
           avatar={avatar}
           clubName={clubName}
+        />
+      )}
+      {activeTab === 'plan' && (
+        <PlanTab
+          athleteId={athlete.id}
+          athleteName={athlete.name}
+          activeFocus={activeFocus ?? null}
+          runningGoal={runningGoal ?? null}
+          goalType={goalType ?? null}
+          goalTarget={goalTarget ?? null}
+          goalProgress={goalProgress ?? null}
+          athleteGoalChoice={athleteGoalChoice ?? null}
+          goalChoiceUpdatedAt={goalChoiceUpdatedAt ?? null}
+          previousGoalChoice={previousGoalChoice ?? null}
+          previousGoalChoiceAt={previousGoalChoiceAt ?? null}
+          focusHistory={focusHistory}
+          isReadOnly={isReadOnly}
         />
       )}
       {activeTab === 'cues' && (
