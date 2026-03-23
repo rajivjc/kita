@@ -66,7 +66,7 @@ export interface StoryPageData {
 
 // ─── Data fetcher ─────────────────────────────────────────────────────────────
 
-export const getStoryData = cache(async (athleteId: string): Promise<StoryPageData | null> => {
+export const getStoryData = cache(async (athleteId: string, timezone = 'Asia/Singapore'): Promise<StoryPageData | null> => {
   const [
     { data: athlete },
     { data: sessions },
@@ -117,7 +117,7 @@ export const getStoryData = cache(async (athleteId: string): Promise<StoryPageDa
   }
 
   // Fetch monthly photos (one per calendar month)
-  const monthlyPhotos = await getMonthlyPhotos(athleteId)
+  const monthlyPhotos = await getMonthlyPhotos(athleteId, timezone)
 
   // Flatten milestones
   const flatMilestones: StoryMilestone[] = (milestones ?? []).map((m: any) => ({
@@ -156,7 +156,7 @@ export const getStoryData = cache(async (athleteId: string): Promise<StoryPageDa
 
 // ─── Monthly photos helper ────────────────────────────────────────────────────
 
-async function getMonthlyPhotos(athleteId: string): Promise<MonthlyPhoto[]> {
+async function getMonthlyPhotos(athleteId: string, timezone = 'Asia/Singapore'): Promise<MonthlyPhoto[]> {
   // Get photos joined with sessions, ordered by date
   const { data: photos } = await adminClient
     .from('media')
@@ -176,8 +176,8 @@ async function getMonthlyPhotos(athleteId: string): Promise<MonthlyPhoto[]> {
     if (!sessionDate) continue
 
     const d = new Date(sessionDate)
-    const sgDate = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
-    const key = `${sgDate.getFullYear()}-${String(sgDate.getMonth() + 1).padStart(2, '0')}`
+    const tzDate = new Date(d.toLocaleString('en-US', { timeZone: timezone }))
+    const key = `${tzDate.getFullYear()}-${String(tzDate.getMonth() + 1).padStart(2, '0')}`
     const feel = p.sessions?.feel ?? 0
 
     const existing = byMonth.get(key)

@@ -60,41 +60,41 @@ export interface StoryNarrative {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatMonthYear(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-SG', {
+
+function formatMonthYear(dateStr: string, locale = 'en-SG', timezone = 'Asia/Singapore'): string {
+  return new Date(dateStr).toLocaleDateString(locale, {
     month: 'long',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
 }
 
-function formatShortDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-SG', {
+function formatShortDate(dateStr: string, locale = 'en-SG', timezone = 'Asia/Singapore'): string {
+  return new Date(dateStr).toLocaleDateString(locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
 }
 
 /** Get the year-month key (e.g. "2026-03") for grouping. */
-function yearMonth(dateStr: string): string {
+function yearMonth(dateStr: string, timezone = 'Asia/Singapore'): string {
   const d = new Date(dateStr)
-  // Use Singapore timezone for consistency
-  const sgDate = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
-  const y = sgDate.getFullYear()
-  const m = String(sgDate.getMonth() + 1).padStart(2, '0')
+  const shifted = new Date(d.toLocaleString('en-US', { timeZone: timezone }))
+  const y = shifted.getFullYear()
+  const m = String(shifted.getMonth() + 1).padStart(2, '0')
   return `${y}-${m}`
 }
 
 /** Get ISO week number for streak calculation. */
-function getWeekKey(dateStr: string): string {
+function getWeekKey(dateStr: string, timezone = 'Asia/Singapore'): string {
   const d = new Date(dateStr)
-  const sgDate = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
+  const tzDate = new Date(d.toLocaleString('en-US', { timeZone: timezone }))
   // Get Monday of this week
-  const day = sgDate.getDay()
-  const diff = sgDate.getDate() - day + (day === 0 ? -6 : 1)
-  const monday = new Date(sgDate)
+  const day = tzDate.getDay()
+  const diff = tzDate.getDate() - day + (day === 0 ? -6 : 1)
+  const monday = new Date(tzDate)
   monday.setDate(diff)
   return monday.toISOString().slice(0, 10)
 }
@@ -115,7 +115,7 @@ function findPersonalBest(
 
 // ─── Main generator ───────────────────────────────────────────────────────────
 
-export function generateNarrative(input: NarrativeInput): StoryNarrative {
+export function generateNarrative(input: NarrativeInput, timezone = 'Asia/Singapore', locale = 'en-SG'): StoryNarrative {
   const { athleteName, joinedAt, sessions, milestones, clubName = 'the running club' } = input
   const sorted = [...sessions].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -127,7 +127,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
   // Handle empty case
   if (sorted.length === 0) {
     const startSentence = joinedAt
-      ? `${athleteName} joined ${clubName} in ${formatMonthYear(joinedAt)}.`
+      ? `${athleteName} joined ${clubName} in ${formatMonthYear(joinedAt, locale, timezone)}.`
       : `${athleteName} is part of the ${clubName} family.`
 
     return {
@@ -151,11 +151,11 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
   }
 
   // Group sessions into time buckets
-  const firstMonth = yearMonth(sorted[0].date)
-  const lastMonth = yearMonth(sorted[sorted.length - 1].date)
+  const firstMonth = yearMonth(sorted[0].date, timezone)
+  const lastMonth = yearMonth(sorted[sorted.length - 1].date, timezone)
 
   // Determine distinct months
-  const allMonths = new Set(sorted.map(s => yearMonth(s.date)))
+  const allMonths = new Set(sorted.map(s => yearMonth(s.date, timezone)))
   const monthsArray = Array.from(allMonths).sort()
 
   // Split sessions into chapter buckets
@@ -168,7 +168,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
       title: 'The Beginning',
       bucket: {
         sessions: sorted,
-        milestones: milestones.filter(m => yearMonth(m.achieved_at) === firstMonth),
+        milestones: milestones.filter(m => yearMonth(m.achieved_at, timezone) === firstMonth),
       },
     })
   } else {
@@ -180,30 +180,30 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
     const recentSessions = sorted.filter(
       s => new Date(s.date) >= recentThreshold
     )
-    const recentMonths = new Set(recentSessions.map(s => yearMonth(s.date)))
+    const recentMonths = new Set(recentSessions.map(s => yearMonth(s.date, timezone)))
 
     // "The Beginning" = first month
-    const beginningSessions = sorted.filter(s => beginningMonths.has(yearMonth(s.date)))
+    const beginningSessions = sorted.filter(s => beginningMonths.has(yearMonth(s.date, timezone)))
     chapters.push({
       title: 'The Beginning',
       bucket: {
         sessions: beginningSessions,
-        milestones: milestones.filter(m => beginningMonths.has(yearMonth(m.achieved_at))),
+        milestones: milestones.filter(m => beginningMonths.has(yearMonth(m.achieved_at, timezone))),
       },
     })
 
     // "Finding Their Stride" = everything between first month and recent 30 days
     const middleSessions = sorted.filter(s => {
-      const ym = yearMonth(s.date)
+      const ym = yearMonth(s.date, timezone)
       return !beginningMonths.has(ym) && !recentMonths.has(ym)
     })
     if (middleSessions.length > 0) {
-      const middleMonths = new Set(middleSessions.map(s => yearMonth(s.date)))
+      const middleMonths = new Set(middleSessions.map(s => yearMonth(s.date, timezone)))
       chapters.push({
         title: 'Finding Their Stride',
         bucket: {
           sessions: middleSessions,
-          milestones: milestones.filter(m => middleMonths.has(yearMonth(m.achieved_at))),
+          milestones: milestones.filter(m => middleMonths.has(yearMonth(m.achieved_at, timezone))),
         },
       })
     }
@@ -212,7 +212,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
     if (recentSessions.length > 0 && firstMonth !== lastMonth) {
       // Filter out sessions already in beginning
       const recentOnly = recentSessions.filter(
-        s => !beginningMonths.has(yearMonth(s.date))
+        s => !beginningMonths.has(yearMonth(s.date, timezone))
       )
       if (recentOnly.length > 0) {
         chapters.push({
@@ -221,7 +221,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
             sessions: recentOnly,
             milestones: milestones.filter(m => {
               const d = new Date(m.achieved_at)
-              return d >= recentThreshold && !beginningMonths.has(yearMonth(m.achieved_at))
+              return d >= recentThreshold && !beginningMonths.has(yearMonth(m.achieved_at, timezone))
             }),
           },
         })
@@ -244,7 +244,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
       if (idx === 0) {
         const startDate = joinedAt ?? sorted[0].date
         paragraphs.push(
-          `${athleteName} started running with ${clubName} in ${formatMonthYear(startDate)}.`
+          `${athleteName} started running with ${clubName} in ${formatMonthYear(startDate, locale, timezone)}.`
         )
       }
 
@@ -280,7 +280,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
       ) {
         pbForChapter = chapterPB
         paragraphs.push(
-          `${athleteName} ran their longest distance yet: ${chapterPB.distance.toFixed(1)}km on ${formatShortDate(chapterPB.date)}.`
+          `${athleteName} ran their longest distance yet: ${chapterPB.distance.toFixed(1)}km on ${formatShortDate(chapterPB.date, locale, timezone)}.`
         )
       }
 
@@ -315,7 +315,7 @@ export function generateNarrative(input: NarrativeInput): StoryNarrative {
   }
 
   // Streak callout: consecutive weeks with at least one session
-  const weekKeys = [...new Set(sorted.map(s => getWeekKey(s.date)))].sort()
+  const weekKeys = [...new Set(sorted.map(s => getWeekKey(s.date, timezone)))].sort()
   let maxStreak = 1
   let currentStreak = 1
   for (let i = 1; i < weekKeys.length; i++) {

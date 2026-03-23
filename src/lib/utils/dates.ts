@@ -1,6 +1,4 @@
-const SGT = 'Asia/Singapore'
-
-export function formatDate(dateStr: string | null | undefined): string {
+export function formatDate(dateStr: string | null | undefined, timezone = 'Asia/Singapore'): string {
   if (!dateStr) return '—'
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return '—'
@@ -8,11 +6,11 @@ export function formatDate(dateStr: string | null | undefined): string {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: SGT,
+    timeZone: timezone,
   }).format(d)
 }
 
-export function formatDateTime(dateStr: string | null | undefined): string {
+export function formatDateTime(dateStr: string | null | undefined, timezone = 'Asia/Singapore'): string {
   if (!dateStr) return '—'
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return '—'
@@ -22,7 +20,7 @@ export function formatDateTime(dateStr: string | null | undefined): string {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: SGT,
+    timeZone: timezone,
   }).format(d)
 }
 
@@ -41,21 +39,24 @@ export function formatDistance(metres: number): string {
 /**
  * Extract a YYYY-MM-DD string from a date value that may be either
  * a plain date string or a full ISO timestamp (from timestamptz columns).
- * Uses Asia/Singapore timezone for consistent date extraction.
+ * Uses the given timezone for consistent date extraction.
+ *
+ * @param value     Date string (YYYY-MM-DD or full ISO timestamp)
+ * @param timezone  IANA timezone string, e.g. 'Asia/Singapore'
  */
-export function toDateOnly(value: string | null | undefined): string {
+export function toDateOnly(value: string | null | undefined, timezone = 'Asia/Singapore'): string {
   if (!value) return ''
   // Already YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(value.trim())) return value.trim()
-  // Full ISO timestamp — extract date in SGT
+  // Full ISO timestamp — extract date in the given timezone
   const d = new Date(value)
   if (isNaN(d.getTime())) return ''
-  // Format as YYYY-MM-DD in Singapore timezone
+  // Format as YYYY-MM-DD in the given timezone
   const parts = new Intl.DateTimeFormat('en-CA', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    timeZone: SGT,
+    timeZone: timezone,
   }).format(d)
   return parts
 }
@@ -76,11 +77,11 @@ export function formatPace(distanceKm: number | null | undefined, durationSecond
   return `${mins}:${secs.toString().padStart(2, '0')}/km`
 }
 
-export function parseValidDate(value: string | null | undefined): string | null {
+export function parseValidDate(value: string | null | undefined, timezone = 'Asia/Singapore'): string | null {
   if (!value || typeof value !== 'string') return null
   const trimmed = value.trim()
   if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return null
-  const d = new Date(trimmed + 'T12:00:00+08:00')
+  const d = dateOnlyToDate(trimmed, timezone)
   if (isNaN(d.getTime())) return null
   return trimmed
 }

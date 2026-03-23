@@ -6,6 +6,7 @@
  */
 
 import { adminClient } from '@/lib/supabase/admin'
+import { nowInTimezone, getUtcOffset } from '@/lib/utils/dates'
 
 export interface CoachDigestData {
   coachUserId: string
@@ -32,36 +33,36 @@ export interface CaregiverDigestData {
  * Used by the in-app digest page (shows the current/most-recent week).
  * On Sunday, this captures the full week. On Monday, the week just started.
  */
-export function getCurrentWeekRange(): { weekStart: string; weekEnd: string; label: string } {
-  const now = new Date()
-  const sgt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
+export function getCurrentWeekRange(timezone = 'Asia/Singapore', locale = 'en-SG'): { weekStart: string; weekEnd: string; label: string } {
+  const tzNow = nowInTimezone(timezone)
+  const offset = getUtcOffset(timezone)
 
   // Find this week's Monday
-  const day = sgt.getDay() // 0=Sun, 1=Mon
+  const day = tzNow.getDay() // 0=Sun, 1=Mon
   const daysSinceMonday = day === 0 ? 6 : day - 1
-  const thisMonday = new Date(sgt)
-  thisMonday.setDate(sgt.getDate() - daysSinceMonday)
+  const thisMonday = new Date(tzNow)
+  thisMonday.setDate(tzNow.getDate() - daysSinceMonday)
   thisMonday.setHours(0, 0, 0, 0)
 
   const thisSunday = new Date(thisMonday)
   thisSunday.setDate(thisMonday.getDate() + 6)
   thisSunday.setHours(23, 59, 59, 999)
 
-  const toSgtIso = (d: Date) => {
+  const toTimezoneIso = (d: Date) => {
     const year = d.getFullYear()
     const month = String(d.getMonth() + 1).padStart(2, '0')
     const dayStr = String(d.getDate()).padStart(2, '0')
     const hours = String(d.getHours()).padStart(2, '0')
     const mins = String(d.getMinutes()).padStart(2, '0')
     const secs = String(d.getSeconds()).padStart(2, '0')
-    return `${year}-${month}-${dayStr}T${hours}:${mins}:${secs}+08:00`
+    return `${year}-${month}-${dayStr}T${hours}:${mins}:${secs}${offset}`
   }
 
-  const label = `${thisMonday.getDate()} ${thisMonday.toLocaleString('en-SG', { month: 'short' })} – ${thisSunday.getDate()} ${thisSunday.toLocaleString('en-SG', { month: 'short' })} ${thisSunday.getFullYear()}`
+  const label = `${thisMonday.getDate()} ${thisMonday.toLocaleString(locale, { month: 'short' })} – ${thisSunday.getDate()} ${thisSunday.toLocaleString(locale, { month: 'short' })} ${thisSunday.getFullYear()}`
 
   return {
-    weekStart: toSgtIso(thisMonday),
-    weekEnd: toSgtIso(thisSunday),
+    weekStart: toTimezoneIso(thisMonday),
+    weekEnd: toTimezoneIso(thisSunday),
     label,
   }
 }
@@ -69,38 +70,36 @@ export function getCurrentWeekRange(): { weekStart: string; weekEnd: string; lab
 /**
  * Compute the previous week's Monday 00:00 and Sunday 23:59:59 in SGT.
  */
-export function getPreviousWeekRange(): { weekStart: string; weekEnd: string; label: string } {
-  const now = new Date()
-  // Get current time in SGT
-  const sgt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
+export function getPreviousWeekRange(timezone = 'Asia/Singapore', locale = 'en-SG'): { weekStart: string; weekEnd: string; label: string } {
+  const tzNow = nowInTimezone(timezone)
+  const offset = getUtcOffset(timezone)
 
   // Go to previous Monday: subtract (dayOfWeek - 1 + 7) days
-  const day = sgt.getDay() // 0=Sun, 1=Mon
+  const day = tzNow.getDay() // 0=Sun, 1=Mon
   const daysSinceMonday = day === 0 ? 6 : day - 1
-  const prevMonday = new Date(sgt)
-  prevMonday.setDate(sgt.getDate() - daysSinceMonday - 7)
+  const prevMonday = new Date(tzNow)
+  prevMonday.setDate(tzNow.getDate() - daysSinceMonday - 7)
   prevMonday.setHours(0, 0, 0, 0)
 
   const prevSunday = new Date(prevMonday)
   prevSunday.setDate(prevMonday.getDate() + 6)
   prevSunday.setHours(23, 59, 59, 999)
 
-  // Format as ISO strings offset to SGT (UTC+8)
-  const toSgtIso = (d: Date) => {
+  const toTimezoneIso = (d: Date) => {
     const year = d.getFullYear()
     const month = String(d.getMonth() + 1).padStart(2, '0')
     const dayStr = String(d.getDate()).padStart(2, '0')
     const hours = String(d.getHours()).padStart(2, '0')
     const mins = String(d.getMinutes()).padStart(2, '0')
     const secs = String(d.getSeconds()).padStart(2, '0')
-    return `${year}-${month}-${dayStr}T${hours}:${mins}:${secs}+08:00`
+    return `${year}-${month}-${dayStr}T${hours}:${mins}:${secs}${offset}`
   }
 
-  const label = `${prevMonday.getDate()} ${prevMonday.toLocaleString('en-SG', { month: 'short' })} – ${prevSunday.getDate()} ${prevSunday.toLocaleString('en-SG', { month: 'short' })} ${prevSunday.getFullYear()}`
+  const label = `${prevMonday.getDate()} ${prevMonday.toLocaleString(locale, { month: 'short' })} – ${prevSunday.getDate()} ${prevSunday.toLocaleString(locale, { month: 'short' })} ${prevSunday.getFullYear()}`
 
   return {
-    weekStart: toSgtIso(prevMonday),
-    weekEnd: toSgtIso(prevSunday),
+    weekStart: toTimezoneIso(prevMonday),
+    weekEnd: toTimezoneIso(prevSunday),
     label,
   }
 }

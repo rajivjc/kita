@@ -8,7 +8,8 @@ import { getClub } from '@/lib/club'
 export async function checkAndAwardMilestones(
   athleteId: string,
   sessionId: string,
-  coachUserId?: string
+  coachUserId?: string,
+  locale = 'en-SG'
 ): Promise<number> {
   try {
     // 1. Fetch all active automatic milestone definitions (cached)
@@ -126,7 +127,7 @@ export async function checkAndAwardMilestones(
 
         if (caregiverAuth?.email) {
           for (const def of toAward) {
-            const date = new Date().toLocaleDateString('en-SG', {
+            const date = new Date().toLocaleDateString(locale, {
               day: 'numeric', month: 'long', year: 'numeric',
             })
             const milestoneId = insertedMilestones?.[toAward.indexOf(def)]?.id

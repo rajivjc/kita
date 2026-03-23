@@ -37,7 +37,7 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, '')
 }
 
-export async function generateCertificatePdf(data: CertificateData): Promise<void> {
+export async function generateCertificatePdf(data: CertificateData, timezone = 'Asia/Singapore', locale = 'en-SG'): Promise<void> {
   const theme = THEME_HEX[data.themeColor ?? ''] ?? THEME_HEX.teal
   const primaryRgb = hexToRgb(theme.primary)
   const avatar = data.avatar ?? '🏃'
@@ -106,11 +106,11 @@ export async function generateCertificatePdf(data: CertificateData): Promise<voi
   doc.line(centerX - 20, 113, centerX + 20, 113)
 
   // ─── Date ─────────────────────────────────────────────────────
-  const dateStr = new Date(data.achievedAt).toLocaleDateString('en-SG', {
+  const dateStr = new Date(data.achievedAt).toLocaleDateString(locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
   doc.setFont('Helvetica', 'normal')
   doc.setFontSize(11)

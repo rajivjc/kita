@@ -17,7 +17,7 @@ type ExportResult =
   | { data: ExportSession[]; athleteName: string; error?: undefined }
   | { error: string; data?: undefined; athleteName?: undefined }
 
-export async function getExportData(athleteId: string): Promise<ExportResult> {
+export async function getExportData(athleteId: string, timezone = 'Asia/Singapore'): Promise<ExportResult> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Your session has expired. Please sign in again.' }
@@ -50,8 +50,6 @@ export async function getExportData(athleteId: string): Promise<ExportResult> {
 
   if (error) return { error: 'Could not fetch session data. Please try again.' }
 
-  const SGT = 'Asia/Singapore'
-
   const formatted: ExportSession[] = (sessions ?? []).map((s: any) => {
     const distKm = s.distance_km ?? 0
     const durationSec = s.duration_seconds ?? 0
@@ -72,7 +70,7 @@ export async function getExportData(athleteId: string): Promise<ExportResult> {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
-        timeZone: SGT,
+        timeZone: timezone,
       }).format(d)
     }
 
