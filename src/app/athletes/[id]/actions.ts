@@ -9,6 +9,7 @@ import { parseValidDate } from '@/lib/utils/dates'
 import { getAthletePhotosPaginated, withSignedUrls, deleteMediaForSession, deleteMediaById } from '@/lib/media'
 import { sendPushToRole } from '@/lib/push'
 import { logAudit } from '@/lib/audit'
+import type { FocusArea, ProgressLevel } from '@/lib/supabase/types'
 
 export async function addCoachNote(athleteId: string, content: string, includeInStory = false): Promise<{ error?: string }> {
   const supabase = await createClient()
@@ -875,5 +876,151 @@ export async function deleteStoryUpdate(
 
   revalidatePath(`/athletes/${athleteId}`)
   revalidatePath(`/story/${athleteId}`)
+  return {}
+}
+
+// ─── Focus Areas ──────────────────────────────────────────────────
+
+export async function saveFocusArea(
+  athleteId: string,
+  data: {
+    id?: string
+    title: string
+    progress_note?: string | null
+    progress_level?: ProgressLevel
+  }
+): Promise<{ error?: string; data?: FocusArea }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can manage focus areas.' }
+  }
+
+  if (data.id) {
+    // Update existing
+    const { data: updated, error } = await adminClient
+      .from('focus_areas')
+      .update({
+        title: data.title,
+        progress_note: data.progress_note ?? null,
+        progress_level: data.progress_level ?? undefined,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', data.id)
+      .select()
+      .single()
+
+    if (error) return { error: 'Could not update focus area. Please try again.' }
+    revalidatePath(`/athletes/${athleteId}`)
+    revalidatePath('/feed')
+    return { data: updated as FocusArea }
+  }
+
+  // Creating new: check no other active focus exists
+  const { data: existing } = await adminClient
+    .from('focus_areas')
+    .select('id')
+    .eq('athlete_id', athleteId)
+    .eq('status', 'active')
+    .limit(1)
+
+  if (existing && existing.length > 0) {
+    return { error: 'This athlete already has an active focus. Mark it as achieved first.' }
+  }
+
+  const { data: created, error } = await adminClient
+    .from('focus_areas')
+    .insert({
+      athlete_id: athleteId,
+      title: data.title,
+      progress_note: data.progress_note ?? null,
+      progress_level: data.progress_level ?? 'just_started',
+      status: 'active',
+      created_by: user.id,
+    })
+    .select()
+    .single()
+
+  if (error) return { error: 'Could not create focus area. Please try again.' }
+  revalidatePath(`/athletes/${athleteId}`)
+  revalidatePath('/feed')
+  return { data: created as FocusArea }
+}
+
+export async function achieveFocus(
+  focusId: string,
+  athleteId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can manage focus areas.' }
+  }
+
+  const { error } = await adminClient
+    .from('focus_areas')
+    .update({
+      status: 'achieved',
+      achieved_at: new Date().toISOString(),
+      progress_level: 'achieved',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', focusId)
+
+  if (error) return { error: 'Could not update focus area. Please try again.' }
+  revalidatePath(`/athletes/${athleteId}`)
+  revalidatePath('/feed')
+  return {}
+}
+
+export async function updateAthleteGoal(
+  athleteId: string,
+  data: {
+    running_goal: string | null
+    goal_type: string | null
+    goal_target: number | null
+  }
+): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session has expired. Please sign in again.' }
+
+  const { data: callerUser } = await adminClient
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  if (callerUser?.role !== 'admin' && callerUser?.role !== 'coach') {
+    return { error: 'Only coaches and admins can update athlete goals.' }
+  }
+
+  const { error } = await adminClient
+    .from('athletes')
+    .update({
+      running_goal: data.running_goal,
+      goal_type: data.goal_type,
+      goal_target: data.goal_target,
+      updated_at: new Date().toISOString(),
+      updated_by: user.id,
+    })
+    .eq('id', athleteId)
+
+  if (error) return { error: 'Could not update goal. Please try again.' }
+  revalidatePath(`/athletes/${athleteId}`)
+  revalidatePath('/feed')
   return {}
 }

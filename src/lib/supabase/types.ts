@@ -90,4 +90,11 @@ export type AthleteMood = Database['public']['Tables']['athlete_moods']['Row'] &
 
 export type AthleteFavorite = Database['public']['Tables']['athlete_favorites']['Row']
 
+export type FocusArea = Database['public']['Tables']['focus_areas']['Row'] & {
+  progress_level: 'just_started' | 'making_progress' | 'almost_there' | 'achieved'
+  status: 'active' | 'achieved' | 'paused'
+}
+
+export type ProgressLevel = FocusArea['progress_level']
+
 export type AuditLog = Database['public']['Tables']['audit_log']['Row']

@@ -47,6 +47,9 @@ export type Database = {
           working_on_updated_at: string | null
           working_on_updated_by: string | null
           avatar: string | null
+          goal_choice_updated_at: string | null
+          previous_goal_choice: string | null
+          previous_goal_choice_at: string | null
         }
         Insert: {
           id?: string
@@ -77,6 +80,9 @@ export type Database = {
           working_on_updated_at?: string | null
           working_on_updated_by?: string | null
           avatar?: string | null
+          goal_choice_updated_at?: string | null
+          previous_goal_choice?: string | null
+          previous_goal_choice_at?: string | null
         }
         Update: {
           id?: string
@@ -107,6 +113,9 @@ export type Database = {
           working_on_updated_at?: string | null
           working_on_updated_by?: string | null
           avatar?: string | null
+          goal_choice_updated_at?: string | null
+          previous_goal_choice?: string | null
+          previous_goal_choice_at?: string | null
         }
         Relationships: [
           {
@@ -453,6 +462,60 @@ export type Database = {
           {
             foreignKeyName: "cues_updated_by_fkey"
             columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      focus_areas: {
+        Row: {
+          id: string
+          athlete_id: string
+          title: string
+          progress_note: string | null
+          progress_level: string | null
+          status: string | null
+          created_by: string | null
+          created_at: string | null
+          achieved_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          athlete_id: string
+          title: string
+          progress_note?: string | null
+          progress_level?: string | null
+          status?: string | null
+          created_by?: string | null
+          created_at?: string | null
+          achieved_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          athlete_id?: string
+          title?: string
+          progress_note?: string | null
+          progress_level?: string | null
+          status?: string | null
+          created_by?: string | null
+          created_at?: string | null
+          achieved_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_areas_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "focus_areas_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

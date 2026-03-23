@@ -269,9 +269,28 @@ export async function setAthleteGoal(
     return { error: 'Please pick a goal.' }
   }
 
+  // Read current goal to track history
+  const { data: athlete } = await adminClient
+    .from('athletes')
+    .select('athlete_goal_choice, goal_choice_updated_at')
+    .eq('id', athleteId)
+    .single()
+
+  const currentChoice = athlete?.athlete_goal_choice
+  const previousFields: Record<string, string | null> = {}
+
+  if (currentChoice && currentChoice !== choice) {
+    previousFields.previous_goal_choice = currentChoice
+    previousFields.previous_goal_choice_at = athlete?.goal_choice_updated_at ?? null
+  }
+
   const { error } = await adminClient
     .from('athletes')
-    .update({ athlete_goal_choice: choice as 'run_further' | 'run_more' | 'feel_stronger' })
+    .update({
+      athlete_goal_choice: choice as 'run_further' | 'run_more' | 'feel_stronger',
+      goal_choice_updated_at: new Date().toISOString(),
+      ...previousFields,
+    })
     .eq('id', athleteId)
 
   if (error) return { error: 'Could not save goal. Try again.' }
