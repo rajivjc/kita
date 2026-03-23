@@ -8,10 +8,79 @@
  * 4. Icons paired with text labels
  * 5. Visual progress bars alongside numbers
  * 6. Privacy: no sensitive data exposure
+ * 7. setAthleteGoal goal_choice_updated_at tracking
  */
+
+// ── Mocks (must be before imports) ───────────────────────────────────────────
+
+const mockFrom = jest.fn()
+
+jest.mock('@/lib/supabase/admin', () => ({
+  adminClient: {
+    from: (...args: unknown[]) => mockFrom(...args),
+  },
+}))
+
+const mockCookieGet = jest.fn()
+const mockCookieSet = jest.fn()
+
+jest.mock('next/headers', () => ({
+  cookies: jest.fn().mockResolvedValue({
+    get: (...args: unknown[]) => mockCookieGet(...args),
+    set: (...args: unknown[]) => mockCookieSet(...args),
+  }),
+}))
+
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+  hash: jest.fn(),
+}))
 
 import * as fs from 'fs'
 import * as path from 'path'
+import { setAthleteGoal } from '@/app/my/[athleteId]/actions'
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function createQueueMock() {
+  const queues: Record<string, Array<{ data: unknown; error: unknown }>> = {}
+  const updatePayloads: Record<string, unknown[]> = {}
+
+  function enqueue(table: string, ...responses: Array<{ data: unknown; error?: unknown }>) {
+    if (!queues[table]) queues[table] = []
+    for (const r of responses) {
+      queues[table].push({ data: r.data, error: r.error ?? null })
+    }
+  }
+
+  function impl(table: string) {
+    const obj: Record<string, unknown> = {}
+    const handler: ProxyHandler<Record<string, unknown>> = {
+      get(_target, prop: string) {
+        if (prop === 'then') {
+          const queue = queues[table]
+          const response = queue?.shift() ?? { data: null, error: null }
+          return (resolve: (v: unknown) => void) => resolve(response)
+        }
+        if (prop === 'update') {
+          return (payload: unknown) => {
+            if (!updatePayloads[table]) updatePayloads[table] = []
+            updatePayloads[table].push(payload)
+            return new Proxy(obj, handler)
+          }
+        }
+        return (..._args: unknown[]) => new Proxy(obj, handler)
+      },
+    }
+    return new Proxy(obj, handler)
+  }
+
+  return { enqueue, impl, updatePayloads }
+}
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 
 describe('MyJourneyDashboard accessibility', () => {
   const filePath = path.join(
@@ -231,5 +300,98 @@ describe('Database migration for athlete PIN', () => {
 
   it('creates indexes for efficient queries', () => {
     expect(migrationContent).toContain('CREATE INDEX')
+  })
+})
+
+// ── setAthleteGoal date tracking ────────────────────────────────────────────
+
+const athleteId = 'athlete-456'
+
+describe('setAthleteGoal goal_choice_updated_at tracking', () => {
+  beforeEach(() => {
+    // Simulate verified cookie
+    mockCookieGet.mockReturnValue({ value: 'verified' })
+  })
+
+  it('sets goal_choice_updated_at on first pick', async () => {
+    const mock = createQueueMock()
+    // 1. Read current athlete (no current choice)
+    mock.enqueue('athletes', {
+      data: { athlete_goal_choice: null, goal_choice_updated_at: null },
+    })
+    // 2. Update result
+    mock.enqueue('athletes', { data: null, error: null })
+    mockFrom.mockImplementation((table: string) => mock.impl(table))
+
+    const before = new Date()
+    const result = await setAthleteGoal(athleteId, 'run_further')
+    const after = new Date()
+
+    expect(result.error).toBeUndefined()
+    expect(result.success).toBe(true)
+    const payload = mock.updatePayloads['athletes']![0] as Record<string, unknown>
+    const ts = new Date(payload.goal_choice_updated_at as string)
+    expect(ts.getTime()).toBeGreaterThanOrEqual(before.getTime())
+    expect(ts.getTime()).toBeLessThanOrEqual(after.getTime())
+  })
+
+  it('tracks previous when changing goals', async () => {
+    const mock = createQueueMock()
+    mock.enqueue('athletes', {
+      data: {
+        athlete_goal_choice: 'run_further',
+        goal_choice_updated_at: '2026-01-15T00:00:00.000Z',
+      },
+    })
+    mock.enqueue('athletes', { data: null, error: null })
+    mockFrom.mockImplementation((table: string) => mock.impl(table))
+
+    const result = await setAthleteGoal(athleteId, 'feel_stronger')
+
+    expect(result.success).toBe(true)
+    const payload = mock.updatePayloads['athletes']![0] as Record<string, unknown>
+    expect(payload.previous_goal_choice).toBe('run_further')
+    expect(payload.previous_goal_choice_at).toBe('2026-01-15T00:00:00.000Z')
+    expect(payload.athlete_goal_choice).toBe('feel_stronger')
+    expect(payload.goal_choice_updated_at).toBeDefined()
+  })
+
+  it('does not set previous on first pick', async () => {
+    const mock = createQueueMock()
+    mock.enqueue('athletes', {
+      data: { athlete_goal_choice: null, goal_choice_updated_at: null },
+    })
+    mock.enqueue('athletes', { data: null, error: null })
+    mockFrom.mockImplementation((table: string) => mock.impl(table))
+
+    const result = await setAthleteGoal(athleteId, 'run_more')
+
+    expect(result.success).toBe(true)
+    const payload = mock.updatePayloads['athletes']![0] as Record<string, unknown>
+    expect(payload.previous_goal_choice).toBeUndefined()
+    expect(payload.previous_goal_choice_at).toBeUndefined()
+    expect(payload.athlete_goal_choice).toBe('run_more')
+    expect(payload.goal_choice_updated_at).toBeDefined()
+  })
+
+  it('does not change previous when re-picking same goal', async () => {
+    const mock = createQueueMock()
+    mock.enqueue('athletes', {
+      data: {
+        athlete_goal_choice: 'run_further',
+        goal_choice_updated_at: '2026-01-15T00:00:00.000Z',
+      },
+    })
+    mock.enqueue('athletes', { data: null, error: null })
+    mockFrom.mockImplementation((table: string) => mock.impl(table))
+
+    const result = await setAthleteGoal(athleteId, 'run_further')
+
+    expect(result.success).toBe(true)
+    const payload = mock.updatePayloads['athletes']![0] as Record<string, unknown>
+    expect(payload.previous_goal_choice).toBeUndefined()
+    expect(payload.athlete_goal_choice).toBe('run_further')
+    // goal_choice_updated_at should still be refreshed
+    expect(payload.goal_choice_updated_at).toBeDefined()
   })
 })
