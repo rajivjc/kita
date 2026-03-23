@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function StoryPage({ params }: PageProps) {
-  const data = await getStoryData(params.id)
+  const data = await getStoryData(params.id, (await getClub()).timezone)
   if (!data) notFound()
 
   const { athlete, sessions, milestones, heroPhotoUrl, coachReflections, storyUpdates, monthlyPhotos } = data
@@ -145,7 +145,7 @@ export default async function StoryPage({ params }: PageProps) {
       icon: m.icon,
     })),
     clubName: club.name,
-  })
+  }, club.timezone, club.locale)
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
 
@@ -189,7 +189,7 @@ export default async function StoryPage({ params }: PageProps) {
             </h2>
             <div className="space-y-3">
               {coachReflections.map(r => (
-                <StoryCoachReflection key={r.id} reflection={r} />
+                <StoryCoachReflection key={r.id} reflection={r} timezone={club.timezone} locale={club.locale} />
               ))}
             </div>
           </section>
@@ -203,7 +203,7 @@ export default async function StoryPage({ params }: PageProps) {
             </h2>
             <div>
               {storyUpdates.map(u => (
-                <StoryUpdateCard key={u.id} update={u} />
+                <StoryUpdateCard key={u.id} update={u} timezone={club.timezone} locale={club.locale} />
               ))}
             </div>
           </section>

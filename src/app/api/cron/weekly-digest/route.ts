@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
 
   const dryRun = request.nextUrl.searchParams.get('dry') === 'true'
 
-  const { weekStart, weekEnd, label: weekDateRange } = getPreviousWeekRange()
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
   const club = await getClub()
+  const { weekStart, weekEnd, label: weekDateRange } = getPreviousWeekRange(club.timezone, club.locale)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
 
   let coachEmailsSent = 0
   let caregiverEmailsSent = 0
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       let narrativeHtml = ''
       const digestUrl = `${appUrl}/digest`
       try {
-        const narrativeData = await getCoachDigestData(digest.coachUserId)
+        const narrativeData = await getCoachDigestData(digest.coachUserId, club.timezone, club.locale)
         if (narrativeData) {
           const narrative = generateCoachNarrative(narrativeData)
           narrativeHtml = narrativeToEmailHtml(narrative)
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
       let cgNarrativeHtml = ''
       const cgDigestUrl = `${appUrl}/digest`
       try {
-        const cgNarrativeData = await getCaregiverDigestData(digest.caregiverUserId)
+        const cgNarrativeData = await getCaregiverDigestData(digest.caregiverUserId, club.timezone, club.locale)
         if (cgNarrativeData) {
           const cgNarrative = generateCaregiverNarrative(cgNarrativeData)
           cgNarrativeHtml = narrativeToEmailHtml(cgNarrative)

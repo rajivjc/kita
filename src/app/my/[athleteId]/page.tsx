@@ -1,4 +1,5 @@
 import { adminClient } from '@/lib/supabase/admin'
+import { getClub } from '@/lib/club'
 import { calculateGoalProgress } from '@/lib/goals'
 import { calculateWeeklyStreak } from '@/lib/streaks'
 import { verifyAthleteCookie } from './actions'
@@ -141,7 +142,8 @@ export default async function MyJourneyPage({ params }: PageProps) {
   }
 
   // Compute streak using the shared streaks module
-  const streak = calculateWeeklyStreak(allSessions.map(s => s.date))
+  const club = await getClub()
+  const streak = calculateWeeklyStreak(allSessions.map(s => s.date), club.timezone)
 
   // Compute personal best (longest run)
   let personalBest: { distance_km: number; date: string } | null = null

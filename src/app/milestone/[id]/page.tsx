@@ -156,8 +156,8 @@ export default async function MilestoneSharePage({ params }: PageProps) {
   const themeColor = milestone.athletes?.theme_color ?? null
   const avatar = milestone.athletes?.avatar ?? null
   const clubName = club.name
-  const date = new Date(milestone.achieved_at).toLocaleDateString('en-SG', {
-    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Singapore'
+  const date = new Date(milestone.achieved_at).toLocaleDateString(club.locale ?? 'en-SG', {
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: club.timezone ?? 'Asia/Singapore'
   })
 
   return (

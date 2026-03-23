@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { disconnectStrava } from '@/app/account/actions'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 type Connection = {
   strava_athlete_id: number | null
@@ -15,6 +16,7 @@ type Connection = {
 export default function StravaStatus({ connection }: { connection: Connection }) {
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
+  const { locale } = useClubConfig()
 
   if (!connection) {
     return (
@@ -35,7 +37,7 @@ export default function StravaStatus({ connection }: { connection: Connection })
 
   const isHealthy = connection.last_sync_status === 'ok' || connection.last_sync_status === null
   const lastSync = connection.last_sync_at
-    ? new Date(connection.last_sync_at).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })
+    ? new Date(connection.last_sync_at).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
     : 'Never'
 
   return (

@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { saveFocusArea, updateAthleteGoal } from '@/app/athletes/[id]/actions'
 import { formatDate } from '@/lib/utils/dates'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 import type { FocusArea, ProgressLevel } from '@/lib/supabase/types'
 import type { GoalProgress } from '@/lib/goals'
 
@@ -103,14 +104,14 @@ export type PlanTabProps = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function formatMonthYear(dateStr: string | null | undefined): string {
+function _formatMonthYear(dateStr: string | null | undefined, timezone = 'Asia/Singapore'): string {
   if (!dateStr) return '—'
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return '—'
   return new Intl.DateTimeFormat('en-GB', {
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   }).format(d)
 }
 
@@ -142,6 +143,8 @@ export default function PlanTab({
   focusHistory,
   isReadOnly,
 }: PlanTabProps) {
+  const { timezone } = useClubConfig()
+  const formatMonthYear = (dateStr: string | null | undefined) => _formatMonthYear(dateStr, timezone)
   const firstName = athleteName.split(' ')[0]
 
   // ── Focus editing state ──

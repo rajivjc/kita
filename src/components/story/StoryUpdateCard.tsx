@@ -2,14 +2,16 @@ import type { StoryUpdateItem } from '@/lib/story/data'
 
 interface StoryUpdateCardProps {
   update: StoryUpdateItem
+  timezone?: string
+  locale?: string
 }
 
-export default function StoryUpdateCard({ update }: StoryUpdateCardProps) {
-  const date = new Date(update.created_at).toLocaleDateString('en-SG', {
+export default function StoryUpdateCard({ update, timezone = 'Asia/Singapore', locale = 'en-SG' }: StoryUpdateCardProps) {
+  const date = new Date(update.created_at).toLocaleDateString(locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
 
   return (

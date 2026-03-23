@@ -36,6 +36,8 @@ export default async function AccountPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const club = await getClub()
+
   const { data: userRow } = await adminClient
     .from('users')
     .select('name, role')
@@ -67,7 +69,7 @@ export default async function AccountPage({
   const totalAthletes = new Set((statsData ?? []).map((s: any) => s.athlete_id)).size
   const coachThisMonth = (statsData ?? []).filter((s: any) => s.date >= monthStart).length
   const coachStreak = !isCaregiver && totalSessions > 0
-    ? calculateStreakDetails((statsData ?? []).map((s: any) => s.date).filter(Boolean))
+    ? calculateStreakDetails((statsData ?? []).map((s: any) => s.date).filter(Boolean), 12, club.timezone)
     : null
 
   // Coach badges
@@ -160,7 +162,7 @@ export default async function AccountPage({
 
   // Athlete streak (for caregiver)
   const athleteStreak = isCaregiver && athleteAllSessionDates.length > 0
-    ? calculateStreakDetails(athleteAllSessionDates)
+    ? calculateStreakDetails(athleteAllSessionDates, 12, club.timezone)
     : null
 
   // Goal progress (no new query — uses already-fetched sessions)
@@ -399,7 +401,7 @@ export default async function AccountPage({
                   <p className="text-xl font-bold text-text-primary">
                     {latestSession.distance_km != null ? formatDistance(latestSession.distance_km * 1000) : '—'}
                   </p>
-                  <p className="text-xs text-text-muted mt-0.5">{formatDate(latestSession.date)}</p>
+                  <p className="text-xs text-text-muted mt-0.5">{formatDate(latestSession.date, club.timezone)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   {latestSession.feel && (
