@@ -240,14 +240,14 @@ export default function PhotosTab({
                 Select
               </button>
             )}
-            {photos.length > 1 && (
+            {photos.length > 0 && (
               <button
                 onClick={() => handleDownload(photos.map(p => p.id))}
                 disabled={downloading}
                 className="flex items-center gap-1.5 bg-surface-raised hover:bg-surface-alt active:scale-[0.97] border border-border text-text-secondary text-xs font-medium rounded-lg px-3 py-2 transition-all duration-150 disabled:opacity-50"
               >
                 <Download size={14} />
-                {downloading ? downloadProgress || 'Downloading...' : 'Download all'}
+                {downloading ? downloadProgress || 'Downloading...' : photos.length === 1 ? 'Download' : 'Download all'}
               </button>
             )}
           </div>
