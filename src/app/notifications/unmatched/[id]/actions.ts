@@ -110,7 +110,9 @@ export async function resolveUnmatchedRun(
   }
 
   // Award milestones and sync badges
-  await checkAndAwardMilestones(athleteId, session.id, unmatched.coach_user_id ?? user.id)
+  const { getClub } = await import('@/lib/club')
+  const club = await getClub()
+  await checkAndAwardMilestones(athleteId, session.id, unmatched.coach_user_id ?? user.id, club.locale)
   await syncBadges(unmatched.coach_user_id ?? user.id)
 
   revalidatePath('/notifications')

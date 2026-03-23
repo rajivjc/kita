@@ -1,5 +1,6 @@
 import { adminClient } from '@/lib/supabase/admin'
 import { calculateStreakDetails, type StreakDetails } from '@/lib/streaks'
+import { todayInTimezone } from '@/lib/utils/dates'
 import {
   detectFeelDecline,
   detectRecentPersonalBest,
@@ -38,7 +39,7 @@ export interface CaregiverFocusData {
  * Fetch Today's Focus data for a coach.
  * Returns streak info + actionable focus items (max 3).
  */
-export async function getCoachFocusData(coachUserId: string): Promise<CoachFocusData> {
+export async function getCoachFocusData(coachUserId: string, timezone = 'Asia/Singapore'): Promise<CoachFocusData> {
   const ninetyDaysAgo = new Date()
   ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
   const ninetyDaysAgoStr = ninetyDaysAgo.toISOString().split('T')[0]
@@ -149,7 +150,7 @@ export async function getCoachFocusData(coachUserId: string): Promise<CoachFocus
   }
 
   // 8. Athletes not seen recently (>14 days)
-  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Singapore' })
+  const todayStr = todayInTimezone(timezone)
   const todayMs = new Date(todayStr + 'T00:00:00').getTime()
 
   for (const athleteId of athleteIds) {

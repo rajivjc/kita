@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, useTransition } from 'react'
 import { Download, CheckCircle, X, Share2 } from 'lucide-react'
 import { formatDate } from '@/lib/utils/dates'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 import { savePhoto, downloadZipViaForm } from '@/lib/utils/download'
 import PhotoLightbox from './PhotoLightbox'
 
@@ -28,7 +29,7 @@ type PhotosTabProps = {
 }
 
 /** Group photos by month (e.g. "March 2026") */
-function groupByMonth(photos: PhotoData[]): { month: string; photos: PhotoData[] }[] {
+function groupByMonth(photos: PhotoData[], timezone = 'Asia/Singapore'): { month: string; photos: PhotoData[] }[] {
   const groups: Map<string, PhotoData[]> = new Map()
   for (const photo of photos) {
     const d = new Date(photo.created_at)
@@ -36,7 +37,7 @@ function groupByMonth(photos: PhotoData[]): { month: string; photos: PhotoData[]
     const key = new Intl.DateTimeFormat('en-GB', {
       month: 'long',
       year: 'numeric',
-      timeZone: 'Asia/Singapore',
+      timeZone: timezone,
     }).format(d)
     const existing = groups.get(key)
     if (existing) existing.push(photo)
@@ -54,6 +55,7 @@ export default function PhotosTab({
   loadMore,
   onDeletePhoto,
 }: PhotosTabProps) {
+  const { timezone } = useClubConfig()
   const [photos, setPhotos] = useState<PhotoData[]>(initialPhotos)
   const [cursor, setCursor] = useState<string | null>(initialCursor)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
@@ -179,7 +181,7 @@ export default function PhotosTab({
     )
   }
 
-  const groups = groupByMonth(photos)
+  const groups = groupByMonth(photos, timezone)
   const selectedCount = selectedIds.size
 
   return (

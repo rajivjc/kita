@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 interface DigestTeaserProps {
   /** One-line teaser text, e.g. "Wei Jie hit a new personal best this week" */
@@ -10,14 +11,15 @@ interface DigestTeaserProps {
 }
 
 export default function DigestTeaser({ teaserText, weekLabel }: DigestTeaserProps) {
+  const { timezone } = useClubConfig()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    // Show Sunday (0) through Tuesday (2) in SGT
+    // Show Sunday (0) through Tuesday (2) in club timezone
     const now = new Date()
-    const sgtDay = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' })).getDay()
-    setVisible(sgtDay === 0 || sgtDay === 1 || sgtDay === 2)
-  }, [])
+    const tzDay = new Date(now.toLocaleString('en-US', { timeZone: timezone })).getDay()
+    setVisible(tzDay === 0 || tzDay === 1 || tzDay === 2)
+  }, [timezone])
 
   if (!visible) return null
 

@@ -25,7 +25,7 @@ type AuditRow = {
   created_at: string
 }
 
-function formatRelativeTime(dateStr: string): string {
+function formatRelativeTime(dateStr: string, locale = 'en-SG', timezone = 'Asia/Singapore'): string {
   const now = new Date()
   const date = new Date(dateStr)
   const diffMs = now.getTime() - date.getTime()
@@ -38,12 +38,12 @@ function formatRelativeTime(dateStr: string): string {
   if (diffMin < 60) return `${diffMin}m ago`
   if (diffHr < 24) return `${diffHr}h ago`
   if (diffDay < 7) return `${diffDay}d ago`
-  return date.toLocaleDateString('en-SG', { timeZone: 'Asia/Singapore' })
+  return date.toLocaleDateString(locale, { timeZone: timezone })
 }
 
-function formatFullTimestamp(dateStr: string): string {
-  return new Date(dateStr).toLocaleString('en-SG', {
-    timeZone: 'Asia/Singapore',
+function formatFullTimestamp(dateStr: string, locale = 'en-SG', timezone = 'Asia/Singapore'): string {
+  return new Date(dateStr).toLocaleString(locale, {
+    timeZone: timezone,
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -130,6 +130,8 @@ export default async function AuditPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const club = await getClub()
+
   const { data: callerUser } = await adminClient
     .from('users')
     .select('role')
@@ -184,10 +186,10 @@ export default async function AuditPage() {
                 </div>
                 <span
                   className="text-xs text-text-hint whitespace-nowrap flex-shrink-0"
-                  title={formatFullTimestamp(entry.created_at)}
-                  aria-label={formatFullTimestamp(entry.created_at)}
+                  title={formatFullTimestamp(entry.created_at, club.locale, club.timezone)}
+                  aria-label={formatFullTimestamp(entry.created_at, club.locale, club.timezone)}
                 >
-                  {formatRelativeTime(entry.created_at)}
+                  {formatRelativeTime(entry.created_at, club.locale, club.timezone)}
                 </span>
               </div>
             </div>

@@ -3,9 +3,7 @@ import autoTable from 'jspdf-autotable'
 import type { ExportSession } from '@/lib/export'
 import { sharePdf } from '@/lib/utils/ios-download-fix'
 
-const SGT = 'Asia/Singapore'
-
-export function calculateSummaryStats(sessions: ExportSession[]): {
+export function calculateSummaryStats(sessions: ExportSession[], timezone = 'Asia/Singapore'): {
   totalSessions: number
   totalDistanceKm: number
   averagePace: string
@@ -36,7 +34,7 @@ export function calculateSummaryStats(sessions: ExportSession[]): {
   let dateRange = '—'
   if (parsedDates.length > 0) {
     const fmt = (d: Date) =>
-      new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: SGT }).format(d)
+      new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: timezone }).format(d)
     const earliest = fmt(parsedDates[0])
     const latest = fmt(parsedDates[parsedDates.length - 1])
     dateRange = earliest === latest ? earliest : `${earliest} – ${latest}`
@@ -45,13 +43,13 @@ export function calculateSummaryStats(sessions: ExportSession[]): {
   return { totalSessions, totalDistanceKm, averagePace, dateRange }
 }
 
-export async function generateProgressReport(data: ExportSession[], athleteName: string, clubName: string = 'Running Club'): Promise<void> {
+export async function generateProgressReport(data: ExportSession[], athleteName: string, clubName: string = 'Running Club', timezone = 'Asia/Singapore'): Promise<void> {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
   const margin = 18
 
-  const stats = calculateSummaryStats(data)
+  const stats = calculateSummaryStats(data, timezone)
 
   // Header
   doc.setFont('helvetica', 'bold')
@@ -103,7 +101,7 @@ export async function generateProgressReport(data: ExportSession[], athleteName:
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: SGT,
+    timeZone: timezone,
   }).format(new Date())
 
   // Session table

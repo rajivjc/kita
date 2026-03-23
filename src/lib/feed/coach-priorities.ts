@@ -7,6 +7,7 @@
 
 import { adminClient } from '@/lib/supabase/admin'
 import { getMilestoneDefinitions } from '@/lib/feed/shared-queries'
+import { todayInTimezone, dateOnlyToDate } from '@/lib/utils/dates'
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -61,8 +62,8 @@ export function median(values: number[]): number {
 /**
  * Compute "days since last session" using Asia/Singapore timezone.
  */
-export function daysSince(dateStr: string, now?: Date): number {
-  const todayStr = (now ?? new Date()).toLocaleDateString('en-CA', { timeZone: 'Asia/Singapore' })
+export function daysSince(dateStr: string, now?: Date, timezone = 'Asia/Singapore'): number {
+  const todayStr = (now ?? new Date()).toLocaleDateString('en-CA', { timeZone: timezone })
   const todayMs = new Date(todayStr + 'T00:00:00').getTime()
   const dateOnly = dateStr.split('T')[0]
   const dateMs = new Date(dateOnly + 'T00:00:00').getTime()
@@ -153,6 +154,8 @@ export function computeGoingQuiet(
   athletes: AthleteRow[],
   sessionsByAthlete: Record<string, SessionRow[]>,
   now?: Date,
+  timezone = 'Asia/Singapore',
+  locale = 'en-SG',
 ): GoingQuietAthlete[] {
   const results: GoingQuietAthlete[] = []
   const nameMap = Object.fromEntries(athletes.map(a => [a.id, a]))
@@ -168,7 +171,7 @@ export function computeGoingQuiet(
     // Use last 10 sessions for cadence calculation
     const recent = sorted.slice(-10)
     const lastSession = sorted[sorted.length - 1]
-    const days = daysSince(lastSession.date, now)
+    const days = daysSince(lastSession.date, now, timezone)
 
     // Must be at least 14 days since last session
     if (days < 14) continue
@@ -189,12 +192,12 @@ export function computeGoingQuiet(
 
     // Flag if absence exceeds 2× their cadence
     if (days >= avgCadence * 2) {
-      const dateStr = new Date(lastSession.date.split('T')[0] + 'T00:00:00+08:00')
-        .toLocaleDateString('en-SG', {
+      const dateStr = dateOnlyToDate(lastSession.date, timezone)
+        .toLocaleDateString(locale, {
           day: 'numeric',
           month: 'short',
           year: 'numeric',
-          timeZone: 'Asia/Singapore',
+          timeZone: timezone,
         })
 
       results.push({

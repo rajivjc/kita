@@ -20,6 +20,8 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const club = await getClub()
+
   // Role guard — only admins
   const { data: callerUser } = await adminClient
     .from('users')
@@ -144,7 +146,7 @@ export default async function AdminPage() {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <p className="text-xs text-text-hint">
-                    {inv.created_at ? new Date(inv.created_at).toLocaleDateString('en-SG') : ''}
+                    {inv.created_at ? new Date(inv.created_at).toLocaleDateString(club.locale ?? 'en-SG') : ''}
                   </p>
                   <CancelInviteButton invitationId={inv.id} email={inv.email} />
                 </div>

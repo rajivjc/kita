@@ -24,11 +24,13 @@ function subtractWeek(mondayStr: string): string {
   return date.toISOString().split('T')[0]
 }
 
-function getTodaySGT(): string {
-  return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Singapore' })
+import { todayInTimezone } from '@/lib/utils/dates'
+
+function getTodayInTimezone(timezone = 'Asia/Singapore'): string {
+  return todayInTimezone(timezone)
 }
 
-export function calculateWeeklyStreak(sessionDates: string[]): {
+export function calculateWeeklyStreak(sessionDates: string[], timezone = 'Asia/Singapore'): {
   current: number
   activeThisWeek: boolean
 } {
@@ -36,7 +38,7 @@ export function calculateWeeklyStreak(sessionDates: string[]): {
   if (validDates.length === 0) return { current: 0, activeThisWeek: false }
 
   const activeWeeks = new Set(validDates.map(getMondayUTC))
-  const currentMonday = getMondayUTC(getTodaySGT())
+  const currentMonday = getMondayUTC(getTodayInTimezone(timezone))
   const activeThisWeek = activeWeeks.has(currentMonday)
 
   // Start from current week if active, otherwise from the previous week
@@ -67,10 +69,10 @@ export interface StreakDetails {
  * @param sessionDates  Array of YYYY-MM-DD (or ISO timestamp) strings
  * @param weekCount     Number of recent weeks to include in weeklyActivity (default 12)
  */
-export function calculateStreakDetails(sessionDates: string[], weekCount = 12): StreakDetails {
+export function calculateStreakDetails(sessionDates: string[], weekCount = 12, timezone = 'Asia/Singapore'): StreakDetails {
   const validDates = sessionDates.filter(d => d != null && d !== '')
   if (validDates.length === 0) {
-    const currentMonday = getMondayUTC(getTodaySGT())
+    const currentMonday = getMondayUTC(getTodayInTimezone(timezone))
     const weeklyActivity: StreakDetails['weeklyActivity'] = []
     let week = currentMonday
     for (let i = 0; i < weekCount; i++) {
@@ -81,7 +83,7 @@ export function calculateStreakDetails(sessionDates: string[], weekCount = 12): 
   }
 
   const activeWeeks = new Set(validDates.map(getMondayUTC))
-  const currentMonday = getMondayUTC(getTodaySGT())
+  const currentMonday = getMondayUTC(getTodayInTimezone(timezone))
   const activeThisWeek = activeWeeks.has(currentMonday)
 
   // Current streak (same logic as calculateWeeklyStreak)

@@ -230,7 +230,9 @@ export async function createManualSession(
       }
     }
 
-    await checkAndAwardMilestones(athleteId, newSession.id, user.id)
+    const { getClub } = await import('@/lib/club')
+    const club = await getClub()
+    await checkAndAwardMilestones(athleteId, newSession.id, user.id, club.locale)
 
     const { data: athleteRow } = await adminClient
       .from('athletes')

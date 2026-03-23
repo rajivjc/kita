@@ -1,5 +1,6 @@
 import webpush from 'web-push'
 import { adminClient } from '@/lib/supabase/admin'
+import { nowInTimezone } from '@/lib/utils/dates'
 
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY ?? ''
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY ?? ''
@@ -17,16 +18,13 @@ interface PushPayload {
 }
 
 /**
- * Check if current time is within quiet hours (10pm–7am SGT).
+ * Check if current time is within quiet hours (10pm–7am in the club's timezone).
  * During quiet hours, push notifications are silently skipped.
+ *
+ * @param timezone  IANA timezone string, e.g. 'Asia/Singapore'
  */
-function isQuietHours(): boolean {
-  const sgtHour = new Date().toLocaleString('en-US', {
-    hour: 'numeric',
-    hour12: false,
-    timeZone: 'Asia/Singapore',
-  })
-  const hour = parseInt(sgtHour, 10)
+function isQuietHours(timezone = 'Asia/Singapore'): boolean {
+  const hour = nowInTimezone(timezone).getHours()
   return hour >= 22 || hour < 7
 }
 
@@ -36,15 +34,16 @@ function isQuietHours(): boolean {
  */
 export async function sendPushToUser(
   userId: string,
-  payload: PushPayload
+  payload: PushPayload,
+  timezone = 'Asia/Singapore'
 ): Promise<void> {
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
     console.warn('[push] VAPID keys not configured — skipping push for user', userId)
     return
   }
-  if (isQuietHours()) {
-    const sgtHour = new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Singapore' })
-    console.log('[push] Quiet hours (SGT hour:', sgtHour, ') — skipping push for user', userId)
+  if (isQuietHours(timezone)) {
+    const tzHour = nowInTimezone(timezone).getHours()
+    console.log('[push] Quiet hours (hour:', tzHour, 'in', timezone, ') — skipping push for user', userId)
     return
   }
 
@@ -106,15 +105,16 @@ export async function sendPushToUser(
  */
 export async function sendPushToRole(
   role: 'admin' | 'coach' | 'caregiver',
-  payload: PushPayload
+  payload: PushPayload,
+  timezone = 'Asia/Singapore'
 ): Promise<void> {
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
     console.warn('[push] VAPID keys not configured — skipping push for role', role)
     return
   }
-  if (isQuietHours()) {
-    const sgtHour = new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Singapore' })
-    console.log('[push] Quiet hours (SGT hour:', sgtHour, ') — skipping push for role', role)
+  if (isQuietHours(timezone)) {
+    const tzHour = nowInTimezone(timezone).getHours()
+    console.log('[push] Quiet hours (hour:', tzHour, 'in', timezone, ') — skipping push for role', role)
     return
   }
 
@@ -132,6 +132,6 @@ export async function sendPushToRole(
   console.log('[push] Sending to role', role, '—', users.length, 'user(s), title:', payload.title)
 
   await Promise.allSettled(
-    users.map((u) => sendPushToUser(u.id, payload))
+    users.map((u) => sendPushToUser(u.id, payload, timezone))
   )
 }

@@ -7,6 +7,7 @@
 
 import { adminClient } from '@/lib/supabase/admin'
 import { getCurrentWeekRange } from '@/lib/email/weekly-digest'
+import { todayInTimezone } from '@/lib/utils/dates'
 import {
   detectFeelDecline,
   detectRecentPersonalBest,
@@ -18,8 +19,8 @@ import type { CoachDigestInput, CaregiverDigestInput, AthleteWeekData } from './
 /**
  * Fetch digest data for a coach. Returns null if the user is not a coach/admin.
  */
-export async function getCoachDigestData(userId: string): Promise<CoachDigestInput | null> {
-  const { weekStart, weekEnd, label: weekLabel } = getCurrentWeekRange()
+export async function getCoachDigestData(userId: string, timezone = 'Asia/Singapore', locale = 'en-SG'): Promise<CoachDigestInput | null> {
+  const { weekStart, weekEnd, label: weekLabel } = getCurrentWeekRange(timezone, locale)
 
   // Verify user is a coach/admin and get name
   const { data: userRow } = await adminClient
@@ -187,7 +188,7 @@ export async function getCoachDigestData(userId: string): Promise<CoachDigestInp
         .sort()
       const lastDate = sortedDates[sortedDates.length - 1]
       if (lastDate) {
-        const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Singapore' })
+        const todayStr = todayInTimezone(timezone)
         const todayMs = new Date(todayStr + 'T00:00:00').getTime()
         const lastDateOnly = lastDate.split('T')[0]
         const lastMs = new Date(lastDateOnly + 'T00:00:00').getTime()
@@ -299,8 +300,8 @@ export async function getCoachDigestData(userId: string): Promise<CoachDigestInp
  * Fetch digest data for a caregiver. Returns null if the user is not a caregiver
  * or has no linked athlete.
  */
-export async function getCaregiverDigestData(userId: string): Promise<CaregiverDigestInput | null> {
-  const { weekStart, weekEnd, label: weekLabel } = getCurrentWeekRange()
+export async function getCaregiverDigestData(userId: string, timezone = 'Asia/Singapore', locale = 'en-SG'): Promise<CaregiverDigestInput | null> {
+  const { weekStart, weekEnd, label: weekLabel } = getCurrentWeekRange(timezone, locale)
 
   // Verify user is a caregiver and get name
   const { data: userRow } = await adminClient

@@ -70,8 +70,14 @@ export async function sendCheer(
     url: '/feed',
     tag: `cheer-${athleteId}`,
   }
-  sendPushToRole('coach', pushPayload).catch(() => {})
-  sendPushToRole('admin', pushPayload).catch(() => {})
+  let clubTimezone = 'Asia/Singapore'
+  try {
+    const { getClub } = await import('@/lib/club')
+    const club = await getClub()
+    clubTimezone = club.timezone
+  } catch { /* use default timezone */ }
+  sendPushToRole('coach', pushPayload, clubTimezone).catch(() => {})
+  sendPushToRole('admin', pushPayload, clubTimezone).catch(() => {})
 
   revalidatePath('/feed')
   revalidatePath(`/athletes/${athleteId}`)

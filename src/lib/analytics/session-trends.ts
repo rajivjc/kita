@@ -5,7 +5,7 @@
  * and return structured data ready for chart components.
  */
 
-const SGT = 'Asia/Singapore'
+import { dateOnlyToDate } from '@/lib/utils/dates'
 
 /**
  * Extract the YYYY-MM-DD portion from a date string that may be
@@ -41,18 +41,18 @@ export interface WeeklyVolume {
 /**
  * Get the Monday (ISO week start) of a given date string.
  */
-function getMonday(dateStr: string): Date {
-  const d = new Date(toDateOnly(dateStr) + 'T12:00:00+08:00') // SGT noon to avoid DST issues
+function getMonday(dateStr: string, timezone = 'Asia/Singapore'): Date {
+  const d = dateOnlyToDate(toDateOnly(dateStr), timezone)
   const day = d.getDay()
   const diff = d.getDate() - day + (day === 0 ? -6 : 1)
   return new Date(d.getFullYear(), d.getMonth(), diff)
 }
 
-function formatWeekLabel(monday: Date): string {
-  return monday.toLocaleDateString('en-SG', {
+function formatWeekLabel(monday: Date, locale = 'en-SG', timezone = 'Asia/Singapore'): string {
+  return monday.toLocaleDateString(locale, {
     day: 'numeric',
     month: 'short',
-    timeZone: SGT,
+    timeZone: timezone,
   })
 }
 
@@ -63,11 +63,13 @@ function toISODate(d: Date): string {
 
 export function computeWeeklyVolume(
   sessions: SessionForTrends[],
-  weekCount = 12
+  weekCount = 12,
+  timezone = 'Asia/Singapore',
+  locale = 'en-SG'
 ): WeeklyVolume[] {
   const valid = sessions.filter(s => s.date && !isNaN(new Date(s.date).getTime()))
   const now = new Date()
-  const currentMonday = getMonday(toISODate(now))
+  const currentMonday = getMonday(toISODate(now), timezone)
 
   // Build empty week buckets
   const weeks: WeeklyVolume[] = []
@@ -75,7 +77,7 @@ export function computeWeeklyVolume(
     const monday = new Date(currentMonday)
     monday.setDate(monday.getDate() - i * 7)
     weeks.push({
-      weekLabel: formatWeekLabel(monday),
+      weekLabel: formatWeekLabel(monday, locale, timezone),
       weekStart: toISODate(monday),
       totalKm: 0,
       sessionCount: 0,
@@ -86,7 +88,7 @@ export function computeWeeklyVolume(
 
   for (const s of valid) {
     if (s.date < cutoff) continue
-    const monday = getMonday(s.date)
+    const monday = getMonday(s.date, timezone)
     const weekKey = toISODate(monday)
     const week = weeks.find(w => w.weekStart === weekKey)
     if (week) {
@@ -111,15 +113,15 @@ export interface FeelPoint {
   feel: number
 }
 
-export function computeFeelTrend(sessions: SessionForTrends[]): FeelPoint[] {
+export function computeFeelTrend(sessions: SessionForTrends[], timezone = 'Asia/Singapore', locale = 'en-SG'): FeelPoint[] {
   return sessions
     .filter(s => s.date && !isNaN(new Date(s.date).getTime()) && s.feel != null)
     .map(s => ({
       date: s.date,
-      dateLabel: new Date(toDateOnly(s.date) + 'T12:00:00+08:00').toLocaleDateString('en-SG', {
+      dateLabel: dateOnlyToDate(toDateOnly(s.date), timezone).toLocaleDateString(locale, {
         day: 'numeric',
         month: 'short',
-        timeZone: SGT,
+        timeZone: timezone,
       }),
       feel: s.feel!,
     }))
@@ -136,7 +138,9 @@ export interface DistancePoint {
 }
 
 export function computeDistanceTimeline(
-  sessions: SessionForTrends[]
+  sessions: SessionForTrends[],
+  timezone = 'Asia/Singapore',
+  locale = 'en-SG'
 ): DistancePoint[] {
   const sorted = [...sessions]
     .filter(s => s.date && !isNaN(new Date(s.date).getTime()) && s.distance_km != null && s.distance_km > 0)
@@ -147,10 +151,10 @@ export function computeDistanceTimeline(
     cumulative += s.distance_km ?? 0
     return {
       date: s.date,
-      dateLabel: new Date(toDateOnly(s.date) + 'T12:00:00+08:00').toLocaleDateString('en-SG', {
+      dateLabel: dateOnlyToDate(toDateOnly(s.date), timezone).toLocaleDateString(locale, {
         day: 'numeric',
         month: 'short',
-        timeZone: SGT,
+        timeZone: timezone,
       }),
       distanceKm: Math.round((s.distance_km ?? 0) * 10) / 10,
       cumulativeKm: Math.round(cumulative * 10) / 10,

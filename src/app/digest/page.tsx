@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCoachDigestData, getCaregiverDigestData } from '@/lib/digest/data'
 import { generateCoachNarrative, generateCaregiverNarrative } from '@/lib/digest/narrative'
 import type { DigestNarrative, NarrativeParagraph } from '@/lib/digest/types'
+import { getClub } from '@/lib/club'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { getClub } = await import('@/lib/club')
@@ -24,15 +25,17 @@ export default async function DigestPage() {
     .eq('id', user.id)
     .single()
 
+  const club = await getClub()
+
   if (userRow?.role === 'coach' || userRow?.role === 'admin') {
-    const data = await getCoachDigestData(user.id)
+    const data = await getCoachDigestData(user.id, club.timezone, club.locale)
     if (!data) return <EmptyDigest />
     const narrative = generateCoachNarrative(data)
     return <DigestView narrative={narrative} role="coach" />
   }
 
   if (userRow?.role === 'caregiver') {
-    const data = await getCaregiverDigestData(user.id)
+    const data = await getCaregiverDigestData(user.id, club.timezone, club.locale)
     if (!data) return <EmptyDigest />
     const narrative = generateCaregiverNarrative(data)
     return <DigestView narrative={narrative} role="caregiver" />

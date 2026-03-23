@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 interface EarnedMilestone {
   id: string
@@ -22,17 +23,18 @@ interface Props {
   currentSessionCount: number
 }
 
-function formatDate(dateStr: string): string {
+function formatMilestoneDate(dateStr: string, timezone = 'Asia/Singapore'): string {
   const d = new Date(dateStr)
   return d.toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
 }
 
 export default function MilestoneTimeline({ earned, definitions, currentSessionCount }: Props) {
+  const { timezone } = useClubConfig()
   // Build a map of earned milestones by definition id
   const earnedMap = new Map<string, EarnedMilestone>()
   for (const m of earned) {
@@ -111,7 +113,7 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
 
                 {isEarned && earnedData ? (
                   <p className="text-[10px] text-amber-500 mt-0.5">
-                    {formatDate(earnedData.achieved_at)}
+                    {formatMilestoneDate(earnedData.achieved_at, timezone)}
                   </p>
                 ) : (
                   <div className="mt-1">
@@ -142,7 +144,7 @@ export default function MilestoneTimeline({ earned, definitions, currentSessionC
                   <span className="text-xl flex-shrink-0">{m.icon}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-text-primary">{m.label}</p>
-                    <p className="text-[10px] text-amber-500">{formatDate(m.achieved_at)}</p>
+                    <p className="text-[10px] text-amber-500">{formatMilestoneDate(m.achieved_at, timezone)}</p>
                   </div>
                   <span className="text-xs text-amber-400">Share ↗</span>
                 </div>

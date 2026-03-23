@@ -13,6 +13,8 @@ import { sendAthleteMessage, toggleFavoriteRun, setAthleteGoal } from '@/app/my/
 import MoodCheckIn from '@/components/athlete/MoodCheckIn'
 import AvatarPicker from '@/components/athlete/AvatarPicker'
 import ThemeColorPicker from '@/components/athlete/ThemeColorPicker'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
+import { dateOnlyToDate } from '@/lib/utils/dates'
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -192,17 +194,19 @@ export default function MyJourneyDashboard({
     setSelectedColor(color)
   }, [])
 
+  const { timezone, locale } = useClubConfig()
+
   const formatRunDate = (dateStr: string) => {
     // dateStr may be a full ISO timestamp (timestamptz) or YYYY-MM-DD
     const date = dateStr.includes('T')
       ? new Date(dateStr)
-      : new Date(dateStr + 'T12:00:00+08:00')
+      : dateOnlyToDate(dateStr, timezone)
     if (isNaN(date.getTime())) return '—'
-    return date.toLocaleDateString('en-SG', {
+    return date.toLocaleDateString(locale, {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
-      timeZone: 'Asia/Singapore',
+      timeZone: timezone,
     })
   }
 

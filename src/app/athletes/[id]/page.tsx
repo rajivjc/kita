@@ -264,9 +264,9 @@ export default async function AthleteHubPage({ params }: PageProps) {
       feel: s.feel as number | null,
     }))
 
-  const weeklyVolume = computeWeeklyVolume(chartSessions, 12)
-  const feelTrend = computeFeelTrend(chartSessions)
-  const distanceTimeline = computeDistanceTimeline(chartSessions)
+  const weeklyVolume = computeWeeklyVolume(chartSessions, 12, club.timezone, club.locale)
+  const feelTrend = computeFeelTrend(chartSessions, club.timezone, club.locale)
+  const distanceTimeline = computeDistanceTimeline(chartSessions, club.timezone, club.locale)
   const milestonePins: MilestonePin[] = flatMilestones
     .filter(m => m.achieved_at != null)
     .map(m => ({
@@ -400,7 +400,7 @@ export default async function AthleteHubPage({ params }: PageProps) {
             {(cheers ?? []).map((c: any) => (
               <div key={c.id} className="bg-amber-50/50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-400/20 rounded-lg px-3 py-2">
                 <p className="text-sm text-amber-800 dark:text-amber-300">&ldquo;{c.message}&rdquo;</p>
-                <p className="text-[10px] text-amber-400 mt-0.5">{formatDate(c.created_at)}</p>
+                <p className="text-[10px] text-amber-400 mt-0.5">{formatDate(c.created_at, club.timezone)}</p>
               </div>
             ))}
           </div>

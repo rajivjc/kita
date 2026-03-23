@@ -3,13 +3,17 @@
  */
 
 import type { FeedSession } from '@/lib/feed/types'
+import { nowInTimezone } from '@/lib/utils/dates'
 
 /**
  * Group sessions into date buckets: Today, Yesterday, This week, Earlier.
- * Uses Asia/Singapore timezone for consistency with the rest of the app.
+ * Uses the given timezone for consistency with the rest of the app.
+ *
+ * @param sessions  Array of feed sessions
+ * @param timezone  IANA timezone string, e.g. 'Asia/Singapore'
  */
-export function groupByDate(sessions: FeedSession[]): Record<string, FeedSession[]> {
-  const sgNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
+export function groupByDate(sessions: FeedSession[], timezone = 'Asia/Singapore'): Record<string, FeedSession[]> {
+  const sgNow = nowInTimezone(timezone)
   const today = new Date(sgNow)
   today.setHours(0, 0, 0, 0)
   const yesterday = new Date(today)

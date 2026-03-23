@@ -38,6 +38,7 @@ export async function GET(
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: club.timezone ?? 'Asia/Singapore',
   })
 
   return new ImageResponse(

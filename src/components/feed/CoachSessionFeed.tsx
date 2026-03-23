@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import SessionGroup from '@/components/feed/SessionGroup'
 import AthleteFilter from '@/components/feed/AthleteFilter'
 import type { FeedSession, MilestoneBadge } from '@/lib/feed/types'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 interface Props {
   sessions: FeedSession[]
@@ -15,8 +16,8 @@ interface Props {
   userId: string
 }
 
-function groupByDate(sessions: FeedSession[]): Record<string, FeedSession[]> {
-  const sgNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }))
+function groupByDate(sessions: FeedSession[], timezone = 'Asia/Singapore'): Record<string, FeedSession[]> {
+  const sgNow = new Date(new Date().toLocaleString('en-US', { timeZone: timezone }))
   const today = new Date(sgNow)
   today.setHours(0, 0, 0, 0)
   const yesterday = new Date(today)
@@ -42,6 +43,7 @@ function groupByDate(sessions: FeedSession[]): Record<string, FeedSession[]> {
 }
 
 export default function CoachSessionFeed({ sessions, groups, milestonesBySession, kudosCounts, kudosGivers, myKudos, userId }: Props) {
+  const { timezone } = useClubConfig()
   const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null)
 
   const athletes = useMemo(() => {
@@ -57,8 +59,8 @@ export default function CoachSessionFeed({ sessions, groups, milestonesBySession
   const filteredGroups = useMemo(() => {
     if (!selectedAthlete) return groups
     const filtered = sessions.filter(s => s.athlete_id === selectedAthlete)
-    return groupByDate(filtered)
-  }, [selectedAthlete, sessions, groups])
+    return groupByDate(filtered, timezone)
+  }, [selectedAthlete, sessions, groups, timezone])
 
   const showFilter = athletes.length > 1
 

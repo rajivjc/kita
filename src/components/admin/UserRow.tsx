@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { toggleUserActive, changeUserRole, deleteUser } from '@/app/admin/actions'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 type AthleteOption = { id: string; name: string }
 
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export default function UserRow({ userId, email, role, active, createdAt, isSelf, athletes, linkedAthleteName }: Props) {
+  const { locale } = useClubConfig()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentRole, setCurrentRole] = useState(role)
@@ -126,7 +128,7 @@ export default function UserRow({ userId, email, role, active, createdAt, isSelf
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <p className="text-xs text-text-hint">
-            {new Date(createdAt).toLocaleDateString('en-SG')}
+            {new Date(createdAt).toLocaleDateString(locale)}
           </p>
           {!isSelf && (
             <div className="flex items-center gap-1.5">

@@ -2,14 +2,16 @@ import type { StoryCoachReflection as ReflectionType } from '@/lib/story/data'
 
 interface StoryCoachReflectionProps {
   reflection: ReflectionType
+  timezone?: string
+  locale?: string
 }
 
-export default function StoryCoachReflection({ reflection }: StoryCoachReflectionProps) {
-  const date = new Date(reflection.created_at).toLocaleDateString('en-SG', {
+export default function StoryCoachReflection({ reflection, timezone = 'Asia/Singapore', locale = 'en-SG' }: StoryCoachReflectionProps) {
+  const date = new Date(reflection.created_at).toLocaleDateString(locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: 'Asia/Singapore',
+    timeZone: timezone,
   })
 
   return (

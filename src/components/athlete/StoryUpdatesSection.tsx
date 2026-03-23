@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Trash2 } from 'lucide-react'
 import { addStoryUpdate, deleteStoryUpdate } from '@/app/athletes/[id]/actions'
+import { useClubConfig } from '@/components/providers/ClubConfigProvider'
 
 export type StoryUpdateData = {
   id: string
@@ -52,12 +53,14 @@ export default function StoryUpdatesSection({
     router.refresh()
   }
 
+  const { timezone, locale } = useClubConfig()
+
   function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString('en-SG', {
+    return new Date(dateStr).toLocaleDateString(locale, {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
-      timeZone: 'Asia/Singapore',
+      timeZone: timezone,
     })
   }
 
