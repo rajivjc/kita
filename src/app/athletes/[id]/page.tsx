@@ -13,7 +13,7 @@ import { calculateGoalProgress } from '@/lib/goals'
 import type { GoalType } from '@/lib/goals'
 import { computeWeeklyVolume, computeFeelTrend, computeDistanceTimeline } from '@/lib/analytics/session-trends'
 import type { MilestonePin } from '@/lib/analytics/session-trends'
-import WorkingOnCard from '@/components/athlete/WorkingOnCard'
+import type { FocusArea } from '@/lib/supabase/types'
 import CheerViewTracker from '@/components/feed/CheerViewTracker'
 import HintCard from '@/components/ui/HintCard'
 import { HINT_KEYS } from '@/lib/hint-keys'
@@ -92,10 +92,11 @@ export default async function AthleteHubPage({ params }: PageProps) {
     { data: milestones },
     { data: cheers },
     { data: storyUpdates },
+    { data: focusAreas },
   ] = await Promise.all([
     adminClient
       .from('athletes')
-      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact, athlete_pin, working_on, recent_progress, working_on_updated_at, working_on_updated_by, avatar, theme_color')
+      .select('id, name, photo_url, active, date_of_birth, running_goal, goal_type, goal_target, communication_notes, medical_notes, emergency_contact, athlete_pin, working_on, recent_progress, working_on_updated_at, working_on_updated_by, avatar, theme_color, athlete_goal_choice, goal_choice_updated_at, previous_goal_choice, previous_goal_choice_at')
       .eq('id', id)
       .single(),
 
@@ -138,6 +139,12 @@ export default async function AthleteHubPage({ params }: PageProps) {
       .eq('athlete_id', id)
       .order('created_at', { ascending: false })
       .limit(20),
+    adminClient
+      .from('focus_areas')
+      .select('*')
+      .eq('athlete_id', id)
+      .order('achieved_at', { ascending: false, nullsFirst: true })
+      .order('created_at', { ascending: false }),
   ])
 
   const flatNotes = (notes ?? []).map((n: any) => ({
@@ -155,6 +162,11 @@ export default async function AthleteHubPage({ params }: PageProps) {
     coach_user_id: u.coach_user_id,
     coach_name: u.users?.name ?? null,
   }))
+
+  // Separate active focus from history
+  const allFocusAreas = (focusAreas ?? []) as FocusArea[]
+  const activeFocus = allFocusAreas.find(f => f.status === 'active') ?? null
+  const focusHistory = allFocusAreas.filter(f => f.status === 'achieved')
 
   // Build a map of coach user_id -> display name from the users we already fetched
   const workingOnUpdatedBy = (athlete as any)?.working_on_updated_by as string | null
@@ -354,11 +366,8 @@ export default async function AthleteHubPage({ params }: PageProps) {
       />
 
       {/* Profile strip */}
-      {(athlete.running_goal || athlete.medical_notes || athlete.emergency_contact || athlete.communication_notes) && (
+      {(athlete.medical_notes || athlete.emergency_contact || athlete.communication_notes) && (
         <div className="mb-6 bg-surface-raised rounded-xl px-4 py-3 space-y-1.5">
-          {athlete.running_goal && (
-            <p className="text-sm text-teal-700 dark:text-teal-300 font-medium line-clamp-1">🎯 {athlete.running_goal}</p>
-          )}
           {athlete.medical_notes && (
             <p className="text-sm text-orange-700 dark:text-orange-300 line-clamp-2">🏥 {athlete.medical_notes}</p>
           )}
@@ -371,49 +380,10 @@ export default async function AthleteHubPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Goal progress */}
-      {goalProgress && (
-        <div className="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20 border border-teal-100 dark:border-teal-400/20 rounded-xl px-4 py-3">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-teal-800 dark:text-teal-300">🎯 {goalProgress.label}</span>
-            <span className="text-[10px] text-teal-600 dark:text-teal-300 font-medium">
-              {goalProgress.current} / {goalProgress.target} {goalProgress.unit}
-            </span>
-          </div>
-          <div className="w-full bg-teal-100 rounded-full h-2">
-            <div
-              className="bg-teal-500 h-2 rounded-full transition-all"
-              style={{ width: `${goalProgress.pct}%` }}
-            />
-          </div>
-          {goalProgress.pct >= 100 && (
-            <p className="text-[10px] text-teal-600 dark:text-teal-300 mt-1 font-medium">Goal achieved! 🎉</p>
-          )}
-          {goalProgress.pct >= 75 && goalProgress.pct < 100 && (
-            <p className="text-[10px] text-teal-600 dark:text-teal-300 mt-1">Almost there!</p>
-          )}
-        </div>
-      )}
-
       {/* Connection strength */}
       {mySessionsWithAthlete > 0 && !isReadOnly && (
         <ConnectionCard count={mySessionsWithAthlete} coachName={myCoachName} />
       )}
-
-      {/* Working On status */}
-      <WorkingOnCard
-        athleteId={id}
-        athleteName={athlete.name}
-        workingOn={(athlete as any).working_on ?? null}
-        recentProgress={(athlete as any).recent_progress ?? null}
-        updatedAt={(athlete as any).working_on_updated_at ?? null}
-        updatedByName={
-          (athlete as any).working_on_updated_by
-            ? coachMap[(athlete as any).working_on_updated_by] ?? null
-            : null
-        }
-        isReadOnly={isReadOnly}
-      />
 
       {/* Cheers from home */}
       {(cheers ?? []).length > 0 && (
@@ -457,6 +427,16 @@ export default async function AthleteHubPage({ params }: PageProps) {
         currentUserId={user?.id}
         isAdmin={currentUserRow?.role === 'admin'}
         storyUpdates={flatStoryUpdates}
+        activeFocus={activeFocus}
+        focusHistory={focusHistory}
+        runningGoal={athlete.running_goal}
+        goalType={athlete.goal_type}
+        goalTarget={athlete.goal_target}
+        goalProgress={goalProgress}
+        athleteGoalChoice={(athlete as any).athlete_goal_choice ?? null}
+        goalChoiceUpdatedAt={(athlete as any).goal_choice_updated_at ?? null}
+        previousGoalChoice={(athlete as any).previous_goal_choice ?? null}
+        previousGoalChoiceAt={(athlete as any).previous_goal_choice_at ?? null}
         themeColor={(athlete as Record<string, unknown>).theme_color as string | null ?? null}
         avatar={(athlete as Record<string, unknown>).avatar as string | null ?? null}
         clubName={clubName}

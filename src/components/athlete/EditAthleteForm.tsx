@@ -9,9 +9,6 @@ type AthleteProfile = {
   id: string
   name: string
   date_of_birth: string | null
-  running_goal: string | null
-  goal_type: string | null
-  goal_target: number | null
   communication_notes: string | null
   medical_notes: string | null
   emergency_contact: string | null
@@ -90,53 +87,6 @@ export default function EditAthleteForm({ athlete, onUpdate }: Props) {
           onKeyDown={(e) => e.preventDefault()}
           className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
         />
-      </div>
-
-      {/* Running goal */}
-      <div>
-        <label className="block text-sm font-medium text-text-secondary mb-1">
-          Running goal <span className="text-xs text-text-hint font-normal">(optional)</span>
-        </label>
-        <input
-          type="text"
-          name="running_goal"
-          defaultValue={athlete.running_goal ?? ''}
-          placeholder="e.g. Complete 5km without stopping"
-          className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
-        />
-      </div>
-
-      {/* Structured goal — track with progress bar */}
-      <div className="bg-teal-50/50 dark:bg-teal-900/10 border border-teal-100 dark:border-teal-400/20 rounded-lg px-4 py-3 space-y-3">
-        <p className="text-xs font-semibold text-teal-700 dark:text-teal-300">Track goal progress</p>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs text-text-muted mb-1">Goal type</label>
-            <select
-              name="goal_type"
-              defaultValue={athlete.goal_type ?? ''}
-              className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)] bg-surface"
-            >
-              <option value="">None</option>
-              <option value="distance_total">Total distance (km)</option>
-              <option value="distance_single">Single run distance (km)</option>
-              <option value="session_count">Number of sessions</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs text-text-muted mb-1">Target</label>
-            <input
-              type="number"
-              name="goal_target"
-              step="0.1"
-              min="0"
-              defaultValue={athlete.goal_target ?? ''}
-              placeholder="e.g. 25"
-              className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:shadow-[0_0_0_3px_rgba(13,148,136,0.08)]"
-            />
-          </div>
-        </div>
-        <p className="text-[10px] text-teal-600 dark:text-teal-300">Set a measurable goal to show a progress bar on the athlete profile and caregiver dashboard.</p>
       </div>
 
       {/* Communication notes */}

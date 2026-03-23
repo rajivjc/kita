@@ -60,13 +60,6 @@ export async function updateAthlete(
   const dobRaw = (formData.get('date_of_birth') as string ?? '').trim()
   const date_of_birth = dobRaw ? parseValidDate(dobRaw) : null
   if (dobRaw && !date_of_birth) return { error: 'Date of birth must be a valid date (YYYY-MM-DD)' }
-  const running_goal = (formData.get('running_goal') as string ?? '').trim() || null
-  const goal_type = (formData.get('goal_type') as string ?? '').trim() || null
-  const goal_target_raw = (formData.get('goal_target') as string ?? '').trim()
-  const goal_target = goal_target_raw ? parseFloat(goal_target_raw) : null
-  if (goal_target !== null && (!isFinite(goal_target) || goal_target < 0 || goal_target > 10000)) {
-    return { error: 'Goal target must be between 0 and 10,000' }
-  }
   const communication_notes = (formData.get('communication_notes') as string ?? '').trim() || null
   const medical_notes = (formData.get('medical_notes') as string ?? '').trim() || null
   const emergency_contact = (formData.get('emergency_contact') as string ?? '').trim() || null
@@ -95,9 +88,6 @@ export async function updateAthlete(
     .update({
       name,
       date_of_birth,
-      running_goal,
-      goal_type: goal_type as 'distance_total' | 'distance_single' | 'session_count' | null,
-      goal_target: goal_target !== null && !isNaN(goal_target) ? goal_target : null,
       communication_notes,
       medical_notes,
       emergency_contact,
