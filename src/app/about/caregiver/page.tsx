@@ -6,10 +6,10 @@ import { getClub } from '@/lib/club'
 export async function generateMetadata(): Promise<Metadata> {
   const club = await getClub()
   return {
-    title: `Our Running Club — ${club.name}`,
+    title: club.name,
     description: 'This app exists because every run deserves to be remembered.',
     openGraph: {
-      title: `Our Running Club — ${club.name}`,
+      title: club.name,
       description: 'This app exists because every run deserves to be remembered.',
       type: 'article',
     },
@@ -31,7 +31,7 @@ export default async function CaregiverAboutPage() {
 
         {/* Title */}
         <h1 className="text-3xl font-bold text-text-primary mb-8">
-          Our Running Club
+          {club.name}
         </h1>
 
         {/* Body */}
@@ -68,7 +68,7 @@ export default async function CaregiverAboutPage() {
         {/* Footer */}
         <div className="mt-8 flex flex-col items-center gap-4">
           <ShareButton
-            title={`Our Running Club — ${club.name}`}
+            title={club.name}
             text="This app exists because every run deserves to be remembered."
             url={`${appUrl}/about/caregiver`}
             buttonText="Share this"
