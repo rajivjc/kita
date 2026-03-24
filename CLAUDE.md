@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SOSG Running Club Hub — a Next.js 14 web application for managing a running club for athletes with special needs. Coaches log runs (manually or via Strava sync), track athlete progress through milestones, record coaching cues, write notes, and celebrate achievements. Caregivers get read-only access to their linked athlete with the ability to send cheers and view milestone celebrations. Athletes themselves can access their own PIN-protected personal page to view their running journey, check in with their mood, pick goals, choose an avatar, favourite their best runs, and message their coach.
+A Next.js 14 web application for managing a running club for athletes with special needs. The club name, timezone, and locale are all configured dynamically from the `clubs` table in the database. Coaches log runs (manually or via Strava sync), track athlete progress through milestones, record coaching cues, write notes, and celebrate achievements. Caregivers get read-only access to their linked athlete with the ability to send cheers and view milestone celebrations. Athletes themselves can access their own PIN-protected personal page to view their running journey, check in with their mood, pick goals, choose an avatar, favourite their best runs, and message their coach.
 
 **Tech stack:** Next.js 14 (App Router) · React 18 · TypeScript · Supabase (auth + Postgres + RLS) · Tailwind CSS v4 · Recharts · Resend · Lucide React · Sharp
 
@@ -43,7 +43,7 @@ npm run test:e2e     # Playwright E2E tests (requires dev server)
 
 ### Strava Integration
 
-Pipeline: OAuth connect → webhook receives activity events → `processStravaActivity()` in `lib/strava/sync.ts` matches to athlete (via `#sosg <name>` hashtag or schedule proximity) → creates session → awards milestones → syncs badges → notifies. Token refresh is automatic with expiry notifications. Unmatched activities are stored in `strava_unmatched` for manual resolution.
+Pipeline: OAuth connect → webhook receives activity events → `processStravaActivity()` in `lib/strava/sync.ts` matches to athlete (via club hashtag prefix from `clubs.strava_hashtag_prefix` or schedule proximity) → creates session → awards milestones → syncs badges → notifies. Token refresh is automatic with expiry notifications. Unmatched activities are stored in `strava_unmatched` for manual resolution.
 
 ### Milestones
 
@@ -118,7 +118,8 @@ Role-specific feeds with separate data loaders:
 - **Never import `adminClient` in client components** — it uses the service role key
 - **Always verify auth** (`getUser()`) at the start of every Server Action
 - **Always verify role** for admin-only operations
-- **Date formatting** uses `Asia/Singapore` timezone throughout
+- **Date formatting** uses dynamic timezone from `getClub().timezone` (server) or `useClubConfig().timezone` (client). Never hardcode `'Asia/Singapore'`, `'en-SG'`, or `'+08:00'` — the `timezone-guard.spec.ts` CI test enforces this.
+- **Email sender name** uses `clubName` from `getClub()` — all `sendEmail()` callers must pass `clubName: club.name` so the From field matches the database club name
 - **The root route `/`** redirects to `/feed`
 - **`revalidatePath()`** must be called after mutations
 - **Server Actions** follow the pattern `(prevState, formData) → Promise<{ error?, success? }>`
