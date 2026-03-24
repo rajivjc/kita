@@ -29,7 +29,7 @@ export interface CaregiverDigestData {
 }
 
 /**
- * Compute the current week's Monday 00:00 to Sunday 23:59:59 in SGT.
+ * Compute the current week's Monday 00:00 to Sunday 23:59:59 in the club's timezone.
  * Used by the in-app digest page (shows the current/most-recent week).
  * On Sunday, this captures the full week. On Monday, the week just started.
  */
@@ -68,7 +68,7 @@ export function getCurrentWeekRange(timezone = 'Asia/Singapore', locale = 'en-SG
 }
 
 /**
- * Compute the previous week's Monday 00:00 and Sunday 23:59:59 in SGT.
+ * Compute the previous week's Monday 00:00 and Sunday 23:59:59 in the club's timezone.
  */
 export function getPreviousWeekRange(timezone = 'Asia/Singapore', locale = 'en-SG'): { weekStart: string; weekEnd: string; label: string } {
   const tzNow = nowInTimezone(timezone)

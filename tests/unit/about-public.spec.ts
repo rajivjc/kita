@@ -88,7 +88,7 @@ describe('caregiver about page (public)', () => {
 
   it('preserves essay content', () => {
     expect(content).toContain('every run deserves to be remembered')
-    expect(content).toContain('Our Running Club')
+    expect(content).toContain('{club.name}')
   })
 
   it('preserves ShareButton component', () => {
