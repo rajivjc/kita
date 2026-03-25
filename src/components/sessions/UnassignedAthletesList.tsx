@@ -64,7 +64,7 @@ export default function UnassignedAthletesList({
               placeholder="Search athletes..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-md border border-amber-200 bg-white py-1.5 pr-2 pl-7 text-xs text-text-primary outline-none"
+              className="w-full rounded-md border border-amber-200 bg-surface py-1.5 pr-2 pl-7 text-xs text-text-primary outline-none"
             />
           </div>
 
