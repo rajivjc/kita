@@ -4,6 +4,7 @@ import { adminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { logAudit } from '@/lib/audit'
+import { notifyPairingsStale } from '@/lib/sessions/notifications'
 
 export type RsvpActionState = {
   error?: string
@@ -106,11 +107,17 @@ export async function coachRsvp(
 
   // If changing from available to unavailable after pairings published
   if (wasAvailable && status === 'unavailable') {
-    await handlePairingsStale(sessionId, session.pairings_published_at, {
+    const hadAssignments = await handlePairingsStale(sessionId, session.pairings_published_at, {
       column: 'coach_id',
       value: user.id,
     })
-    // TODO: Phase 5 — notify admin
+    if (hadAssignments) {
+      const coachName = user.email?.split('@')[0] ?? 'A coach'
+      notifyPairingsStale(
+        sessionId,
+        `Coach ${coachName} is no longer available — athletes need reassignment`
+      ).catch(err => console.error('[coachRsvp] stale notification error:', err))
+    }
   }
 
   revalidatePath(`/sessions/${sessionId}`)
@@ -132,7 +139,7 @@ export async function caregiverAthleteRsvp(
   // Verify current user is linked caregiver for this athlete
   const { data: athlete } = await adminClient
     .from('athletes')
-    .select('id, caregiver_user_id')
+    .select('id, name, caregiver_user_id')
     .eq('id', athleteId)
     .single()
 
@@ -171,11 +178,17 @@ export async function caregiverAthleteRsvp(
 
   // If changing from attending to not_attending after pairings published
   if (wasAttending && status === 'not_attending') {
-    await handlePairingsStale(sessionId, session.pairings_published_at, {
+    const hadAssignments = await handlePairingsStale(sessionId, session.pairings_published_at, {
       column: 'athlete_id',
       value: athleteId,
     })
-    // TODO: Phase 5 — notify admin and affected coach
+    if (hadAssignments) {
+      const athleteName = athlete?.name ?? 'An athlete'
+      notifyPairingsStale(
+        sessionId,
+        `${athleteName} won't be attending — coach may need reassignment`
+      ).catch(err => console.error('[caregiverAthleteRsvp] stale notification error:', err))
+    }
   }
 
   revalidatePath(`/sessions/${sessionId}`)

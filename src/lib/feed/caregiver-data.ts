@@ -18,12 +18,16 @@ import { generateCaregiverNarrative, generateTeaserText } from '@/lib/digest/nar
 import { calculateGoalProgress } from '@/lib/goals'
 import type { GoalType } from '@/lib/goals'
 import type { ProgressLevel } from '@/lib/supabase/types'
+import { isSessionToday, isSessionTomorrow } from '@/lib/sessions/datetime'
 import type {
   CaregiverFeedData,
   FeedSession,
   MilestoneBadge,
   CelebrationMilestone,
   FeedCheer,
+  CaregiverSessionRsvpCardData,
+  CaregiverSessionConfirmedCardData,
+  SessionCardData,
 } from '@/lib/feed/types'
 
 export async function loadCaregiverFeedData(userId: string): Promise<CaregiverFeedData> {
@@ -343,6 +347,11 @@ export async function loadCaregiverFeedData(userId: string): Promise<CaregiverFe
     )
   }
 
+  // ─── Session cards (training sessions) ────────────────────────
+  const sessionCards = caregiverAthlete
+    ? await buildCaregiverSessionCards(userId, caregiverAthlete.id, club)
+    : []
+
   // ─── Caregiver onboarding ────────────────────────────────────
   const caregiverOnboarding = computeCaregiverOnboardingState({
     hasLinkedAthlete: !!caregiverAthlete,
@@ -399,5 +408,152 @@ export async function loadCaregiverFeedData(userId: string): Promise<CaregiverFe
       thisMonth: { runs: thisMonthCount, km: thisMonthKm, durationSeconds: thisMonthDurationTotal },
       lastMonth: { runs: lastMonthCount, km: lastMonthKm },
     },
+    sessionCards,
   }
+}
+
+// ─── Build caregiver session cards ────────────────────────────────
+
+function isSessionCardVisible(sessionStart: string, status: string): boolean {
+  if (status !== 'published') return false
+  const sessionStartMs = new Date(sessionStart).getTime()
+  const bufferMs = 24 * 60 * 60 * 1000
+  return Date.now() < sessionStartMs + bufferMs
+}
+
+function toSessionCardData(s: {
+  id: string
+  title: string | null
+  session_start: string
+  session_end: string | null
+  location: string
+  status: string
+  pairings_published_at: string | null
+  pairings_stale: boolean
+}): SessionCardData {
+  return {
+    id: s.id,
+    title: s.title,
+    sessionStart: s.session_start,
+    sessionEnd: s.session_end,
+    location: s.location,
+    status: s.status as SessionCardData['status'],
+    pairingsPublishedAt: s.pairings_published_at,
+    pairingsStale: s.pairings_stale,
+  }
+}
+
+async function buildCaregiverSessionCards(
+  userId: string,
+  primaryAthleteId: string,
+  club: { timezone: string }
+): Promise<(CaregiverSessionRsvpCardData | CaregiverSessionConfirmedCardData)[]> {
+  // Get all athletes linked to this caregiver
+  const { data: linkedAthletes } = await adminClient
+    .from('athletes')
+    .select('id, name')
+    .eq('caregiver_user_id', userId)
+    .eq('active', true)
+
+  if (!linkedAthletes || linkedAthletes.length === 0) return []
+
+  const athleteIds = linkedAthletes.map(a => a.id)
+  const athleteNameMap = Object.fromEntries(linkedAthletes.map(a => [a.id, a.name]))
+
+  // Fetch published training sessions
+  const { data: trainingSessions } = await adminClient
+    .from('training_sessions')
+    .select('id, title, session_start, session_end, location, status, pairings_published_at, pairings_stale')
+    .eq('status', 'published')
+    .order('session_start', { ascending: true })
+
+  if (!trainingSessions || trainingSessions.length === 0) return []
+
+  const visible = trainingSessions.filter(s => isSessionCardVisible(s.session_start, s.status))
+  if (visible.length === 0) return []
+
+  const sessionIds = visible.map(s => s.id)
+
+  // Batch: athlete RSVPs + assignments for linked athletes
+  const [
+    { data: athleteRsvps },
+    { data: assignments },
+  ] = await Promise.all([
+    adminClient
+      .from('session_athlete_rsvps')
+      .select('session_id, athlete_id, status')
+      .in('session_id', sessionIds)
+      .in('athlete_id', athleteIds),
+    adminClient
+      .from('session_assignments')
+      .select('session_id, athlete_id, coach_id, users!session_assignments_coach_id_fkey(name)')
+      .in('session_id', sessionIds)
+      .in('athlete_id', athleteIds),
+  ])
+
+  // Index RSVPs by session
+  const rsvpBySessionAthlete: Record<string, Record<string, string>> = {}
+  for (const r of athleteRsvps ?? []) {
+    if (!rsvpBySessionAthlete[r.session_id]) rsvpBySessionAthlete[r.session_id] = {}
+    rsvpBySessionAthlete[r.session_id][r.athlete_id] = r.status
+  }
+
+  // Index assignments by session
+  const assignmentsBySession: Record<string, { athleteId: string; coachName: string }[]> = {}
+  for (const a of assignments ?? []) {
+    if (!assignmentsBySession[a.session_id]) assignmentsBySession[a.session_id] = []
+    const coachName = (a as unknown as { users?: { name?: string } }).users?.name ?? 'Coach'
+    assignmentsBySession[a.session_id].push({ athleteId: a.athlete_id, coachName })
+  }
+
+  const cards: (CaregiverSessionRsvpCardData | CaregiverSessionConfirmedCardData)[] = []
+
+  for (const s of visible) {
+    const sessionCard = toSessionCardData(s)
+    const sessionRsvps = rsvpBySessionAthlete[s.id] ?? {}
+    const sessionAssignments = assignmentsBySession[s.id] ?? []
+
+    // Check if any linked athletes have RSVPs for this session
+    const relevantAthletes = linkedAthletes.filter(a => sessionRsvps[a.id] !== undefined)
+    if (relevantAthletes.length === 0) continue
+
+    // If pairings published and athletes are assigned → confirmed card
+    if (s.pairings_published_at && sessionAssignments.length > 0) {
+      const confirmedAthletes = sessionAssignments
+        .filter(a => athleteIds.includes(a.athleteId))
+        .map(a => ({
+          athleteId: a.athleteId,
+          athleteName: athleteNameMap[a.athleteId] ?? 'Athlete',
+          coachName: a.coachName,
+        }))
+
+      if (confirmedAthletes.length > 0) {
+        cards.push({
+          type: 'caregiver_session_confirmed',
+          session: sessionCard,
+          athletes: confirmedAthletes,
+        })
+        continue // Don't also show RSVP card for this session
+      }
+    }
+
+    // Otherwise → RSVP card (ONE combined card per session with all athletes)
+    const hasPendingRsvps = relevantAthletes.some(
+      a => !sessionRsvps[a.id] || sessionRsvps[a.id] === 'pending'
+    )
+
+    const athleteList = relevantAthletes.map(a => ({
+      athleteId: a.id,
+      athleteName: a.name,
+      rsvpStatus: (sessionRsvps[a.id] ?? 'pending') as 'pending' | 'attending' | 'not_attending',
+    }))
+
+    cards.push({
+      type: 'caregiver_session_rsvp',
+      session: sessionCard,
+      athletes: athleteList,
+    })
+  }
+
+  return cards
 }

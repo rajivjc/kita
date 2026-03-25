@@ -12,6 +12,8 @@ import HintCard from '@/components/ui/HintCard'
 import { HINT_KEYS } from '@/lib/hint-keys'
 import CaregiverPlanCard from '@/components/feed/CaregiverPlanCard'
 import DigestTeaser from '@/components/feed/DigestTeaser'
+import CaregiverRsvpCard from '@/components/sessions/CaregiverRsvpCard'
+import CaregiverSessionDayCard from '@/components/sessions/CaregiverSessionDayCard'
 import { formatPace } from '@/lib/utils/dates'
 import type { CaregiverFeedData } from '@/lib/feed/types'
 
@@ -52,6 +54,7 @@ export default function CaregiverFeed({ data, userId }: Props) {
     planData,
     monthlySummary,
     clubName,
+    sessionCards,
   } = data
 
   const hour = new Date().getHours()
@@ -102,6 +105,21 @@ export default function CaregiverFeed({ data, userId }: Props) {
         description="This is where you'll see sessions, milestones, and weekly recaps. You can send cheers to encourage your athlete before their next run."
         variant="amber"
       />
+
+      {/* Session cards — RSVP, confirmed */}
+      {sessionCards.length > 0 && (
+        <div className="space-y-3 mb-5">
+          {sessionCards.map((card, i) => {
+            if (card.type === 'caregiver_session_rsvp') {
+              return <CaregiverRsvpCard key={`rsvp-${card.session.id}-${i}`} card={card} />
+            }
+            if (card.type === 'caregiver_session_confirmed') {
+              return <CaregiverSessionDayCard key={`confirmed-${card.session.id}-${i}`} card={card} />
+            }
+            return null
+          })}
+        </div>
+      )}
 
       {/* Card 1 — Athlete Status */}
       <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/15 border border-amber-200 dark:border-amber-400/30 rounded-2xl px-5 py-4 mb-5 shadow-sm">

@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { logAudit } from '@/lib/audit'
 import { getClub } from '@/lib/club'
 import { combineDateTime } from '@/lib/sessions/datetime'
+import { notifySessionPublished, notifySessionCancelled } from '@/lib/sessions/notifications'
 
 export type SessionActionState = {
   error?: string
@@ -254,7 +255,10 @@ export async function publishSession(sessionId: string): Promise<SessionActionSt
     console.warn('[publishSession] No active athletes found — no athlete RSVP rows created')
   }
 
-  // TODO: Phase 5 — send notifications to coaches and athletes
+  // Send push notifications (non-blocking)
+  notifySessionPublished(sessionId).catch(err =>
+    console.error('[publishSession] notification error:', err)
+  )
 
   logAudit({
     actorId: auth.userId,
@@ -298,7 +302,12 @@ export async function cancelSession(sessionId: string): Promise<SessionActionSta
 
   if (error) return { error: 'Could not cancel the session. Please try again.' }
 
-  // TODO: Phase 5 — notify affected coaches and athletes if session was published
+  // Send cancellation notifications if session was published (non-blocking)
+  if (session.status === 'published') {
+    notifySessionCancelled(sessionId).catch(err =>
+      console.error('[cancelSession] notification error:', err)
+    )
+  }
 
   logAudit({
     actorId: auth.userId,
