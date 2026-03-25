@@ -28,8 +28,17 @@ jest.mock('@/lib/audit', () => ({
   logAudit: (...args: unknown[]) => mockLogAudit(...args),
 }))
 
+jest.mock('@/lib/push', () => ({
+  sendPushToUser: jest.fn().mockResolvedValue(undefined),
+}))
+
+jest.mock('@/lib/club', () => ({
+  getClub: jest.fn().mockResolvedValue({ id: 'club-1', name: 'Test', timezone: 'UTC' }),
+}))
+
 jest.mock('next/cache', () => ({
   revalidatePath: (...args: unknown[]) => mockRevalidatePath(...args),
+  unstable_cache: (fn: Function) => fn,
 }))
 
 import { coachRsvp, caregiverAthleteRsvp, proxyRsvp } from '@/lib/sessions/rsvp-actions'

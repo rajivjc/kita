@@ -15,6 +15,7 @@ import { groupByDate } from '@/lib/feed/utils'
 import { loadClubStats } from '@/lib/feed/shared-queries'
 import { getCoachDigestData } from '@/lib/digest/data'
 import { generateCoachNarrative, generateTeaserText } from '@/lib/digest/narrative'
+import { isSessionToday, isSessionTomorrow } from '@/lib/sessions/datetime'
 import type {
   CoachFeedData,
   FeedSession,
@@ -23,6 +24,10 @@ import type {
   CelebrationMilestone,
   FeedCheer,
   FeedAthleteMessage,
+  CoachRsvpCardData,
+  PairingsReviewCardData,
+  AssignmentCardData,
+  SessionCardData,
 } from '@/lib/feed/types'
 
 export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> {
@@ -239,6 +244,9 @@ export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> 
     created_at: m.created_at,
   }))
 
+  // ─── Session cards (training sessions) ────────────────────────
+  const sessionCards = await buildCoachSessionCards(userId, club)
+
   // ─── Await focus data ──────────────────────────────────────────
   const coachFocus = await coachFocusPromise
 
@@ -280,5 +288,195 @@ export async function loadCoachFeedData(userId: string): Promise<CoachFeedData> 
     weeklyStats,
     digestTeaser,
     clubName,
+    sessionCards,
   }
+}
+
+// ─── Build coach session cards ─────────────────────────────────────
+
+function isSessionCardVisible(sessionStart: string, status: string, timezone: string): boolean {
+  if (status !== 'published') return false
+  const sessionStartMs = new Date(sessionStart).getTime()
+  const bufferMs = 24 * 60 * 60 * 1000 // 24 hours
+  return Date.now() < sessionStartMs + bufferMs
+}
+
+function toSessionCardData(s: {
+  id: string
+  title: string | null
+  session_start: string
+  session_end: string | null
+  location: string
+  status: string
+  pairings_published_at: string | null
+  pairings_stale: boolean
+}): SessionCardData {
+  return {
+    id: s.id,
+    title: s.title,
+    sessionStart: s.session_start,
+    sessionEnd: s.session_end,
+    location: s.location,
+    status: s.status as SessionCardData['status'],
+    pairingsPublishedAt: s.pairings_published_at,
+    pairingsStale: s.pairings_stale,
+  }
+}
+
+async function buildCoachSessionCards(
+  userId: string,
+  club: { timezone: string }
+): Promise<(CoachRsvpCardData | PairingsReviewCardData | AssignmentCardData)[]> {
+  // Fetch published training sessions that are still relevant
+  const { data: trainingSessions } = await adminClient
+    .from('training_sessions')
+    .select('id, title, session_start, session_end, location, status, pairings_published_at, pairings_stale')
+    .eq('status', 'published')
+    .order('session_start', { ascending: true })
+
+  if (!trainingSessions || trainingSessions.length === 0) return []
+
+  // Filter to visible sessions (published + within 24h buffer)
+  const visible = trainingSessions.filter(s =>
+    isSessionCardVisible(s.session_start, s.status, club.timezone)
+  )
+  if (visible.length === 0) return []
+
+  const sessionIds = visible.map(s => s.id)
+
+  // Batch fetch: coach RSVPs for this user, aggregate counts, assignments
+  const [
+    { data: myRsvps },
+    { data: coachRsvpCounts },
+    { data: athleteRsvpCounts },
+    { data: myAssignments },
+    { data: userRow },
+  ] = await Promise.all([
+    adminClient
+      .from('session_coach_rsvps')
+      .select('session_id, status')
+      .eq('coach_id', userId)
+      .in('session_id', sessionIds),
+    adminClient
+      .from('session_coach_rsvps')
+      .select('session_id, status')
+      .in('session_id', sessionIds)
+      .in('status', ['available', 'unavailable']),
+    adminClient
+      .from('session_athlete_rsvps')
+      .select('session_id, status')
+      .in('session_id', sessionIds)
+      .in('status', ['attending', 'not_attending']),
+    adminClient
+      .from('session_assignments')
+      .select('session_id, athlete_id, athletes(id, name, avatar)')
+      .eq('coach_id', userId)
+      .in('session_id', sessionIds),
+    adminClient
+      .from('users')
+      .select('role, can_manage_sessions')
+      .eq('id', userId)
+      .single(),
+  ])
+
+  const isAdmin = userRow?.role === 'admin'
+  const canManageSessions = isAdmin || (userRow?.role === 'coach' && userRow?.can_manage_sessions)
+
+  // Index RSVPs by session
+  const myRsvpBySession = Object.fromEntries(
+    (myRsvps ?? []).map(r => [r.session_id, r.status])
+  )
+
+  // Aggregate coach/athlete response counts per session
+  const coachCountBySession: Record<string, number> = {}
+  for (const r of coachRsvpCounts ?? []) {
+    coachCountBySession[r.session_id] = (coachCountBySession[r.session_id] ?? 0) + 1
+  }
+  const athleteCountBySession: Record<string, number> = {}
+  for (const r of athleteRsvpCounts ?? []) {
+    athleteCountBySession[r.session_id] = (athleteCountBySession[r.session_id] ?? 0) + 1
+  }
+
+  // Index assignments by session
+  const assignmentsBySession: Record<string, { id: string; name: string; avatar: string | null }[]> = {}
+  for (const a of myAssignments ?? []) {
+    if (!assignmentsBySession[a.session_id]) assignmentsBySession[a.session_id] = []
+    const ath = (a as unknown as { athletes?: { id: string; name: string; avatar: string | null } }).athletes
+    if (ath) {
+      assignmentsBySession[a.session_id].push({ id: ath.id, name: ath.name, avatar: ath.avatar })
+    }
+  }
+
+  // Fetch cues for assigned athletes
+  const allAssignedAthleteIds = [...new Set(
+    (myAssignments ?? []).map(a => a.athlete_id)
+  )]
+  const cuesByAthleteId: Record<string, string | null> = {}
+  if (allAssignedAthleteIds.length > 0) {
+    const { data: cueRows } = await adminClient
+      .from('cues')
+      .select('athlete_id, best_cues')
+      .in('athlete_id', allAssignedAthleteIds)
+    for (const c of cueRows ?? []) {
+      // best_cues is a string array — join the first few for a summary
+      const cues = c.best_cues
+      cuesByAthleteId[c.athlete_id] = cues && cues.length > 0 ? cues.slice(0, 2).join(', ') : null
+    }
+  }
+
+  const cards: (CoachRsvpCardData | PairingsReviewCardData | AssignmentCardData)[] = []
+
+  for (const s of visible) {
+    const sessionCard = toSessionCardData(s)
+    const rsvpStatus = (myRsvpBySession[s.id] ?? 'pending') as 'pending' | 'available' | 'unavailable'
+    const isTodayOrTomorrow = isSessionToday(s.session_start, club.timezone) || isSessionTomorrow(s.session_start, club.timezone)
+
+    // Priority 1: RSVP needed
+    if (rsvpStatus === 'pending') {
+      cards.push({
+        type: 'session_rsvp',
+        session: sessionCard,
+        rsvpStatus: 'pending',
+        coachCount: coachCountBySession[s.id] ?? 0,
+        athleteCount: athleteCountBySession[s.id] ?? 0,
+      })
+    }
+
+    // Priority 2: Pairings need review (admin/can_manage_sessions only)
+    if (canManageSessions && s.pairings_stale) {
+      cards.push({
+        type: 'session_pairings_review',
+        session: sessionCard,
+        staleDetails: 'Changes have occurred since pairings were published. Some athletes may need reassignment.',
+      })
+    }
+
+    // Priority 3: Assignments (day before + day of)
+    const assignments = assignmentsBySession[s.id]
+    if (assignments && assignments.length > 0 && isTodayOrTomorrow && s.pairings_published_at) {
+      cards.push({
+        type: 'session_assignment',
+        session: sessionCard,
+        athletes: assignments.map(a => ({
+          id: a.id,
+          name: a.name,
+          cues: cuesByAthleteId[a.id] ?? null,
+          avatar: a.avatar,
+        })),
+      })
+    }
+
+    // Also show responded RSVP card (compact) if not pending
+    if (rsvpStatus !== 'pending') {
+      cards.push({
+        type: 'session_rsvp',
+        session: sessionCard,
+        rsvpStatus,
+        coachCount: coachCountBySession[s.id] ?? 0,
+        athleteCount: athleteCountBySession[s.id] ?? 0,
+      })
+    }
+  }
+
+  return cards
 }

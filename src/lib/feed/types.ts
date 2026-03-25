@@ -15,6 +15,64 @@ import type { ClubBestWeek } from '@/lib/analytics/club-records'
 import type { ProgressLevel } from '@/lib/supabase/types'
 import type { GoalProgress } from '@/lib/goals'
 
+// ─── Training session feed card shapes ──────────────────────────
+
+export interface SessionCardData {
+  id: string
+  title: string | null
+  sessionStart: string
+  sessionEnd: string | null
+  location: string
+  status: 'draft' | 'published' | 'completed' | 'cancelled'
+  pairingsPublishedAt: string | null
+  pairingsStale: boolean
+}
+
+export interface CoachRsvpCardData {
+  type: 'session_rsvp'
+  session: SessionCardData
+  rsvpStatus: 'pending' | 'available' | 'unavailable'
+  coachCount: number
+  athleteCount: number
+}
+
+export interface PairingsReviewCardData {
+  type: 'session_pairings_review'
+  session: SessionCardData
+  staleDetails: string
+}
+
+export interface AssignmentCardData {
+  type: 'session_assignment'
+  session: SessionCardData
+  athletes: { id: string; name: string; cues: string | null; avatar: string | null }[]
+}
+
+export interface CaregiverRsvpAthleteData {
+  athleteId: string
+  athleteName: string
+  rsvpStatus: 'pending' | 'attending' | 'not_attending'
+}
+
+export interface CaregiverSessionRsvpCardData {
+  type: 'caregiver_session_rsvp'
+  session: SessionCardData
+  athletes: CaregiverRsvpAthleteData[]
+}
+
+export interface CaregiverSessionConfirmedCardData {
+  type: 'caregiver_session_confirmed'
+  session: SessionCardData
+  athletes: { athleteId: string; athleteName: string; coachName: string }[]
+}
+
+export type SessionFeedCard =
+  | CoachRsvpCardData
+  | PairingsReviewCardData
+  | AssignmentCardData
+  | CaregiverSessionRsvpCardData
+  | CaregiverSessionConfirmedCardData
+
 // ─── Session & Milestone shapes ──────────────────────────────────
 
 export interface FeedSession {
@@ -120,6 +178,7 @@ export interface CoachFeedData {
   weeklyStats: { count: number; km: number; athletes: number }
   digestTeaser: { text: string; weekLabel: string } | null
   clubName: string
+  sessionCards: (CoachRsvpCardData | PairingsReviewCardData | AssignmentCardData)[]
 }
 
 // ─── Caregiver feed data ─────────────────────────────────────────
@@ -188,4 +247,5 @@ export interface CaregiverFeedData {
     thisMonth: { runs: number; km: number; durationSeconds: number }
     lastMonth: { runs: number; km: number }
   }
+  sessionCards: (CaregiverSessionRsvpCardData | CaregiverSessionConfirmedCardData)[]
 }

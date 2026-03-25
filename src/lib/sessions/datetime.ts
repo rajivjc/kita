@@ -59,6 +59,18 @@ export function isSessionToday(sessionStart: string, timezone: string): boolean 
   return todayStr === sessionStr
 }
 
+/** True if session_start falls on tomorrow in the club's timezone */
+export function isSessionTomorrow(sessionStart: string, timezone: string): boolean {
+  const now = new Date()
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+  const sessionDate = new Date(sessionStart)
+
+  const tomorrowStr = new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(tomorrow)
+  const sessionStr = new Intl.DateTimeFormat('en-CA', { timeZone: timezone }).format(sessionDate)
+
+  return tomorrowStr === sessionStr
+}
+
 /** True if session has ended. Uses session_end if available, otherwise session_start + 4 hours */
 export function isSessionPast(
   sessionStart: string,
