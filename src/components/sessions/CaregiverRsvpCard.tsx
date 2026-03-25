@@ -48,9 +48,7 @@ export default function CaregiverRsvpCard({ card }: Props) {
   // All responded — compact summary
   if (allResponded) {
     return (
-      <div className="bg-surface rounded-xl border border-border-subtle shadow-sm overflow-hidden"
-        style={{ borderLeftWidth: 5, borderLeftColor: 'var(--color-accent)' }}
-      >
+      <div className="bg-surface rounded-xl border border-border-subtle border-l-[5px] border-l-accent shadow-sm overflow-hidden">
         <div className="px-3.5 py-3">
           <div className="flex items-center gap-1.5 mb-1.5">
             <Calendar size={14} className="text-accent shrink-0" />

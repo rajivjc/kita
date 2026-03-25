@@ -18,9 +18,7 @@ export default function CaregiverSessionDayCard({ card }: Props) {
   const timeStr = formatSessionTime(session.sessionStart, timezone)
 
   return (
-    <div className="bg-surface rounded-xl border border-border-subtle shadow-sm overflow-hidden"
-      style={{ borderLeftWidth: 5, borderLeftColor: 'var(--color-accent)' }}
-    >
+    <div className="bg-surface rounded-xl border border-border-subtle border-l-[5px] border-l-accent shadow-sm overflow-hidden">
       <div className="px-3.5 py-3.5">
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="text-[11px] font-bold tracking-wide text-accent uppercase"
