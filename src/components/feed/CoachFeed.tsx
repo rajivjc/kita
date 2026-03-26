@@ -122,6 +122,24 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
         </>
       )}
 
+      {/* Session cards — RSVP, assignments, pairings review */}
+      {sessionCards.length > 0 && (
+        <div className="space-y-3 mb-5">
+          {sessionCards.map((card, i) => {
+            if (card.type === 'session_rsvp') {
+              return <CoachRsvpCard key={`rsvp-${card.session.id}-${i}`} card={card} />
+            }
+            if (card.type === 'session_pairings_review') {
+              return <PairingsReviewCard key={`pairings-${card.session.id}-${i}`} card={card} />
+            }
+            if (card.type === 'session_assignment') {
+              return <AssignmentCard key={`assign-${card.session.id}-${i}`} card={card} />
+            }
+            return null
+          })}
+        </div>
+      )}
+
       {/* Digest teaser card */}
       {!showOnboarding && digestTeaser && (
         <DigestTeaser teaserText={digestTeaser.text} weekLabel={digestTeaser.weekLabel} />
@@ -274,24 +292,6 @@ export default function CoachFeed({ data, userId, priorities }: Props) {
           </div>
         )
       })()}
-
-      {/* Session cards — RSVP, assignments, pairings review */}
-      {sessionCards.length > 0 && (
-        <div className="space-y-3 mb-5">
-          {sessionCards.map((card, i) => {
-            if (card.type === 'session_rsvp') {
-              return <CoachRsvpCard key={`rsvp-${card.session.id}-${i}`} card={card} />
-            }
-            if (card.type === 'session_pairings_review') {
-              return <PairingsReviewCard key={`pairings-${card.session.id}-${i}`} card={card} />
-            }
-            if (card.type === 'session_assignment') {
-              return <AssignmentCard key={`assign-${card.session.id}-${i}`} card={card} />
-            }
-            return null
-          })}
-        </div>
-      )}
 
       {/* This Week's Story — unified weekly card */}
       {!showOnboarding && (
