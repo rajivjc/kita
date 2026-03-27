@@ -5,6 +5,9 @@ import { getClub } from '@/lib/club'
 import { autoCompleteSessions } from '@/lib/sessions/completion'
 import { formatSessionDate, formatSessionTime } from '@/lib/sessions/datetime'
 
+// #todo Upgrade to Vercel Pro to run this cron hourly (`0 * * * *`) instead of
+// daily. Hourly gives tighter RSVP deadline and morning-of reminder windows.
+// Currently daily at 6 AM UTC — reminders use wider time windows to compensate.
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
@@ -49,9 +52,10 @@ async function sendRsvpDeadlineReminders() {
   const caregiverReminders: string[] = []
   const errors: string[] = []
 
-  // Find sessions with upcoming coach RSVP deadline (within 23-25h window for idempotency)
-  const windowStart = new Date(now.getTime() + 23 * 60 * 60 * 1000).toISOString()
-  const windowEnd = new Date(now.getTime() + 25 * 60 * 60 * 1000).toISOString()
+  // Find sessions with upcoming RSVP deadline within the next 24h.
+  // #todo When running hourly, narrow this to a 23-25h window for tighter idempotency.
+  const windowStart = now.toISOString()
+  const windowEnd = new Date(now.getTime() + 48 * 60 * 60 * 1000).toISOString()
 
   // Coach RSVP deadline reminders
   try {
@@ -190,9 +194,10 @@ async function sendMorningReminders() {
   const sent: string[] = []
   const errors: string[] = []
 
-  // Find sessions starting within 1-3h (2h target, 1h window for idempotency with hourly cron)
-  const windowStart = new Date(now.getTime() + 1 * 60 * 60 * 1000).toISOString()
-  const windowEnd = new Date(now.getTime() + 3 * 60 * 60 * 1000).toISOString()
+  // Find sessions starting within the next 24h (runs daily at 6 AM UTC).
+  // #todo When running hourly, narrow to a 1-3h window for tighter timing.
+  const windowStart = now.toISOString()
+  const windowEnd = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()
 
   const { data: upcomingSessions } = await adminClient
     .from('training_sessions')

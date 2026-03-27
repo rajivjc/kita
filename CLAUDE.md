@@ -80,10 +80,11 @@ Structured goal progress tracking (`lib/goals.ts`). Athletes set targets for `di
 All cron routes are protected by `CRON_SECRET` Bearer token auth. Configured in `vercel.json`.
 
 - **Weekly digest** (`/api/cron/weekly-digest`): Sends weekly summary emails to coaches and caregivers. Runs Mondays at 9 AM UTC.
-- **Session reminders** (`/api/cron/session-reminders`): Runs hourly. Handles three tasks:
+- **Session reminders** (`/api/cron/session-reminders`): Runs daily at 6 AM UTC. Handles three tasks:
   - **Auto-completion**: Completes published sessions that have ended (session_end or session_start + 4h) and have at least one logged run. Logic extracted to `lib/sessions/completion.ts`.
-  - **RSVP deadline reminders**: Sends push notifications to non-responding coaches/caregivers ~24h before their RSVP deadline. Uses a 23-25h time window for idempotency.
-  - **Morning-of reminders**: Sends push notifications to assigned coaches ~2h before session start with their athlete assignments.
+  - **RSVP deadline reminders**: Sends push notifications to non-responding coaches/caregivers when their RSVP deadline is within the next 48h.
+  - **Morning-of reminders**: Sends push notifications to assigned coaches when their session starts within the next 24h.
+  - *Note:* Upgrade to Vercel Pro to run hourly (`0 * * * *`) for tighter reminder windows. See `#todo` comments in route file.
 - **Auto-draft sessions** (`/api/cron/draft-sessions`): Runs daily at 10 AM UTC (6 PM SGT). Creates a draft training session for the next occurrence of the configured recurring session day if no draft/published session already exists. Cancelled sessions do not block auto-draft. Notifies admins on creation. Requires `recurring_auto_draft = true` in club settings.
 
 ### Public Sharing
