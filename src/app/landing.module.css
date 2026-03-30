@@ -5,12 +5,6 @@
  *         text-muted=#6B7280, amber=#D97706, coral=#EA580C
  */
 
-@media (prefers-reduced-motion: no-preference) {
-  :global(html) {
-    scroll-behavior: smooth;
-  }
-}
-
 /* ============================================
    PAGE WRAPPER — override layout's pb-16
    ============================================ */
