@@ -126,7 +126,7 @@ describe('login page redesign', () => {
 
     it('preserves PWA auto-auth logic', () => {
       expect(content).toContain('pwaAuthAttempted')
-      expect(content).toContain('sosg-pwa-token')
+      expect(content).toContain('kita-pwa-token')
       expect(content).toContain('pwa-launch')
     })
 

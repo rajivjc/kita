@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sosg-v13'
-const NAV_CACHE = 'sosg-pending-nav'
+const CACHE_NAME = 'kita-v14'
+const NAV_CACHE = 'kita-pending-nav'
 const SHELL_ASSETS = ['/icon-192.png', '/icon-512.png']
 
 self.addEventListener('install', (event) => {
@@ -14,7 +14,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((k) => k !== CACHE_NAME && k !== NAV_CACHE && k !== 'sosg-pwa-token')
+          .filter((k) => k !== CACHE_NAME && k !== NAV_CACHE && k !== 'kita-pwa-token')
           .map((k) => caches.delete(k))
       )
     )
@@ -31,7 +31,7 @@ self.addEventListener('push', (event) => {
       body: data.body || '',
       icon: '/icon-192.png',
       badge: '/icon-192.png',
-      tag: data.tag || 'sosg-notification',
+      tag: data.tag || 'kita-notification',
       data: { url: data.url || '/' },
     }
     event.waitUntil(self.registration.showNotification(data.title || 'SOSG Running Club', options))
@@ -101,7 +101,7 @@ self.addEventListener('notificationclick', (event) => {
       // Use pwa-launch with token so the new window has auth.
       let launchUrl = url
       try {
-        const tokenCache = await caches.open('sosg-pwa-token')
+        const tokenCache = await caches.open('kita-pwa-token')
         const tokenResp = await tokenCache.match('/_token')
         if (tokenResp) {
           const token = await tokenResp.text()

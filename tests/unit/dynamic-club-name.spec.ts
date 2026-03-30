@@ -8,7 +8,6 @@ describe('Dynamic club name — no hardcoded SOSG Running Club', () => {
   // Allowed locations for 'SOSG Running Club'
   const ALLOWED_FILES = [
     'src/lib/supabase/database.types.ts',
-    'src/components/ui/PoweredByBadge.tsx', // Phase C
   ]
 
   test('no hardcoded "SOSG Running Club" in src/ except allowed locations', () => {

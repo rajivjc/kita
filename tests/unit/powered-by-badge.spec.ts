@@ -23,7 +23,7 @@ describe('PoweredByBadge', () => {
   })
 
   it('renders the badge text', () => {
-    expect(content).toContain('Powered by SOSG Running Club Hub')
+    expect(content).toContain('Powered by Kita')
   })
 
   it('links to /login', () => {
@@ -31,7 +31,7 @@ describe('PoweredByBadge', () => {
   })
 
   it('has aria-label on the link', () => {
-    expect(content).toContain('aria-label="Visit SOSG Running Club Hub"')
+    expect(content).toContain('aria-label="Visit Kita Run"')
   })
 
   it('renders as a footer element', () => {
