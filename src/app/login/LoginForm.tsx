@@ -41,7 +41,7 @@ export default function LoginForm({ clubName, tagline }: { clubName: string; tag
     setPwaAuthAttempted(true)
     ;(async () => {
       try {
-        const tokenCache = await caches.open('sosg-pwa-token')
+        const tokenCache = await caches.open('kita-pwa-token')
         const tokenResp = await tokenCache.match('/_token')
         if (tokenResp) {
           const token = await tokenResp.text()

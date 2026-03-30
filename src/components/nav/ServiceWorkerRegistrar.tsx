@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 let navigating = false
 
 // ID for the freeze overlay element
-const FREEZE_OVERLAY_ID = 'sosg-freeze-overlay'
+const FREEZE_OVERLAY_ID = 'kita-freeze-overlay'
 
 /**
  * Show a full-screen overlay that matches the app background.
@@ -113,7 +113,7 @@ async function consumePendingNavigation(
 ) {
   if (navigating) return
   try {
-    const navCache = await caches.open('sosg-pending-nav')
+    const navCache = await caches.open('kita-pending-nav')
     const response = await navCache.match('/_pending')
     if (response) {
       const url = await response.text()
@@ -147,7 +147,7 @@ async function cachePwaToken() {
     const data = await res.json()
     const token: string | undefined = data.token
     if (token) {
-      const tokenCache = await caches.open('sosg-pwa-token')
+      const tokenCache = await caches.open('kita-pwa-token')
       await tokenCache.put('/_token', new Response(token))
     }
   } catch {
@@ -156,7 +156,7 @@ async function cachePwaToken() {
 }
 
 // BroadcastChannel name for duplicate PWA instance detection
-const INSTANCE_CHANNEL = 'sosg-pwa-instance'
+const INSTANCE_CHANNEL = 'kita-pwa-instance'
 
 export default function ServiceWorkerRegistrar() {
   const router = useRouter()
@@ -208,7 +208,7 @@ export default function ServiceWorkerRegistrar() {
       if (event.data?.type === 'NAVIGATE' && typeof event.data.url === 'string') {
         navigating = true
         // Clear the cache fallback since we're handling it now
-        caches.open('sosg-pending-nav').then((c) => c.delete('/_pending')).catch(() => {})
+        caches.open('kita-pending-nav').then((c) => c.delete('/_pending')).catch(() => {})
         handleNotificationNav(event.data.url, routerRef)
       }
     }
