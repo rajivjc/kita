@@ -8,6 +8,7 @@ import ScreenshotGallery from '@/components/landing/ScreenshotGallery'
 import styles from './landing.module.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kitarun.com'),
   title: 'Kita — The running app where every athlete belongs',
   description: 'Built for coaches, caregivers, and athletes with intellectual disabilities. Not a disability tool. A running app — designed so everyone is a first-class citizen.',
   openGraph: {
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
     url: 'https://kitarun.com',
     siteName: 'Kita',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kita — The running app where every athlete belongs',
+    description: 'Built for coaches, caregivers, and athletes with intellectual disabilities.',
   },
 }
 
