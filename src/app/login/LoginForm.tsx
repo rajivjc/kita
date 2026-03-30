@@ -407,7 +407,14 @@ export default function LoginForm({ clubName, tagline }: { clubName: string; tag
           </a>
         </div>
         <p className="text-xs text-white/50">
-          Invite only — contact your administrator to join
+          Invite only —{' '}
+          <a
+            href="mailto:hello@kitarun.com?subject=I'd like to join"
+            className="underline hover:text-white/70 transition-colors"
+          >
+            contact us
+          </a>
+          {' '}to join
         </p>
       </div>
     </main>
