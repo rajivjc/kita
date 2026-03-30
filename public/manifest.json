@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "SOSG Running Club",
-  "short_name": "SOSG Run",
-  "description": "Running club hub for coaches and athletes — growing together",
+  "name": "Kita Run",
+  "short_name": "Kita",
+  "description": "Inclusive running club platform — growing together, one run at a time",
   "start_url": "/feed",
   "scope": "/",
   "display": "standalone",
@@ -12,7 +12,7 @@
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
