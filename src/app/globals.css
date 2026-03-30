@@ -2,6 +2,14 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Smooth scrolling for anchor links (landing page nav).
+   Respects prefers-reduced-motion — users who prefer reduced motion get instant jumps. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* ============================================
    SEMANTIC COLOUR TOKENS
    Light mode values. Dark mode overrides in .dark class.

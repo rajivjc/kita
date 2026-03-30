@@ -31,10 +31,10 @@ function KitaLogo({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="512" height="512" rx="96" fill="#0F766E" />
-      <path d="M120 180 C200 180, 260 220, 340 256" stroke="white" strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.5" />
-      <path d="M100 256 C180 256, 260 256, 380 256" stroke="white" strokeWidth="32" strokeLinecap="round" fill="none" />
-      <path d="M120 332 C200 332, 260 292, 340 256" stroke="white" strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.5" />
-      <circle cx="380" cy="256" r="18" fill="white" />
+      <path d="M100 190 C180 190, 240 230, 380 256" stroke="white" strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.5" />
+      <path d="M110 256 C200 256, 300 256, 390 256" stroke="white" strokeWidth="30" strokeLinecap="round" fill="none" />
+      <path d="M100 322 C180 322, 240 282, 380 256" stroke="white" strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.5" />
+      <circle cx="390" cy="256" r="16" fill="white" />
     </svg>
   )
 }
@@ -285,19 +285,23 @@ export default async function Home() {
             <div className={styles.inclusiveGrid}>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>WCAG 2.2 AAA</p>
-                <p className={styles.inclusiveCardText}>7:1 contrast everywhere</p>
+                <p className={styles.inclusiveCardTitle}>7:1 contrast everywhere</p>
+                <p className={styles.inclusiveCardDesc}>Not AA. AAA. 56px+ touch targets on athlete pages. Semantic HTML. Live-region announcements for screen readers.</p>
               </div>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Cognitive (W3C COGA)</p>
-                <p className={styles.inclusiveCardText}>Literal language only</p>
+                <p className={styles.inclusiveCardTitle}>Literal language only</p>
+                <p className={styles.inclusiveCardDesc}>&ldquo;Great run today!&rdquo; not &ldquo;You&apos;re on fire!&rdquo; No metaphors that confuse literal thinkers. No infantilising praise. Warm but dignified.</p>
               </div>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Sensory safety</p>
-                <p className={styles.inclusiveCardText}>Celebrations that don&apos;t overwhelm</p>
+                <p className={styles.inclusiveCardTitle}>Celebrations that don&apos;t overwhelm</p>
+                <p className={styles.inclusiveCardDesc}>No seizure-risk animations. Soft coral instead of saturated red. Reduced-motion users still get their celebration — just a quieter version.</p>
               </div>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Privacy by design</p>
-                <p className={styles.inclusiveCardText}>Medical data never leaks</p>
+                <p className={styles.inclusiveCardTitle}>Medical data never leaks</p>
+                <p className={styles.inclusiveCardDesc}>Public pages never show medical info, feel ratings, or coach notes. Sharing is opt-in. Caregivers have veto power over what&apos;s visible.</p>
               </div>
             </div>
           </ScrollReveal>

@@ -99,7 +99,7 @@ async function processImage(config: ImageConfig): Promise<void> {
   // Resize to target width and save as optimised PNG
   await image
     .resize(TARGET_WIDTH, null, { withoutEnlargement: true })
-    .png({ quality: 85, compressionLevel: 9 })
+    .png({ palette: false, compressionLevel: 9 })
     .toFile(outputPath);
 
   // Report output size
