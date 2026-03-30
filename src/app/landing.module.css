@@ -5,12 +5,21 @@
  *         text-muted=#6B7280, amber=#D97706, coral=#EA580C
  */
 
+@media (prefers-reduced-motion: no-preference) {
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+}
+
 /* ============================================
    PAGE WRAPPER — override layout's pb-16
    ============================================ */
 .page {
   background: #FBF9F7;
   padding-bottom: 0 !important;
+  /* Counteract root layout's pb-16 (64px) which exists for the authenticated app's bottom nav.
+     The landing page has its own footer and doesn't need that padding.
+     TODO: Use a route group layout to avoid this override. */
   margin-bottom: -64px;
 }
 
@@ -494,12 +503,19 @@
   margin: 0 0 8px;
 }
 
-.inclusiveCardText {
+.inclusiveCardTitle {
   font-size: 18px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
-  margin: 0;
+  margin: 0 0 8px;
   line-height: 1.4;
+}
+
+.inclusiveCardDesc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  line-height: 1.6;
 }
 
 @media (max-width: 640px) {

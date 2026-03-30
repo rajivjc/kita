@@ -29,27 +29,27 @@ export default function TwitterImage() {
           style={{ marginBottom: '32px' }}
         >
           <path
-            d="M80 160 C180 160, 260 210, 360 256"
+            d="M100 190 C180 190, 240 230, 380 256"
             stroke="rgba(255,255,255,0.5)"
-            strokeWidth="28"
+            strokeWidth="26"
             strokeLinecap="round"
             fill="none"
           />
           <path
-            d="M60 256 C160 256, 260 256, 400 256"
+            d="M110 256 C200 256, 300 256, 390 256"
             stroke="white"
-            strokeWidth="32"
+            strokeWidth="30"
             strokeLinecap="round"
             fill="none"
           />
           <path
-            d="M80 352 C180 352, 260 302, 360 256"
+            d="M100 322 C180 322, 240 282, 380 256"
             stroke="rgba(255,255,255,0.5)"
-            strokeWidth="28"
+            strokeWidth="26"
             strokeLinecap="round"
             fill="none"
           />
-          <circle cx="400" cy="256" r="18" fill="white" />
+          <circle cx="390" cy="256" r="16" fill="white" />
         </svg>
 
         {/* Main text */}
