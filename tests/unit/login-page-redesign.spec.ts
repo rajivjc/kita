@@ -71,7 +71,9 @@ describe('login page redesign', () => {
 
     it('shows invite-only messaging', () => {
       expect(content).toContain('Invite only')
-      expect(content).toContain('contact your administrator to join')
+      expect(content).toContain('contact us')
+      expect(content).toContain('to join')
+      expect(content).toContain('mailto:hello@kitarun.com')
     })
 
     it('uses white text on teal background for footer links', () => {
