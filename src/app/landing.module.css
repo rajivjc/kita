@@ -679,6 +679,52 @@
 }
 
 /* ============================================
+   FAQ
+   ============================================ */
+.faqSection {
+  background: #F5F2EE;
+}
+
+.faqContent {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.faqList {
+  margin-top: 40px;
+}
+
+.faqItem {
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.faqItem:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.faqQuestion {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.faqAnswer {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4B5563;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .faqItem {
+    padding: 20px 0;
+  }
+}
+
+/* ============================================
    CTA
    ============================================ */
 .ctaSection {

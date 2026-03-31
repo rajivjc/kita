@@ -304,6 +304,62 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ========== FAQ ========== */}
+      <section id="faq" className={`${styles.section} ${styles.faqSection}`}>
+        <div className={styles.sectionInner}>
+          <ScrollReveal>
+            <div className={styles.faqContent}>
+              <p className={styles.sectionLabel}>COMMON QUESTIONS</p>
+              <h2 className={styles.sectionTitle}>Everything you need to know</h2>
+
+              <div className={styles.faqList}>
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Is Kita free?</h3>
+                  <p className={styles.faqAnswer}>
+                    Yes. Kita is free for any inclusive running club and always will be. The code is open source on GitHub.
+                  </p>
+                </div>
+
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Do athletes need an email account or smartphone?</h3>
+                  <p className={styles.faqAnswer}>
+                    No. Athletes access their personal Journey page by scanning a QR code and entering a 4-digit PIN. No email, no password, no app download required.
+                  </p>
+                </div>
+
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Who can see athlete data?</h3>
+                  <p className={styles.faqAnswer}>
+                    Only people with a role in your club. Coaches see their athletes. Caregivers see only the athlete linked to them. Athletes see everything their caregiver sees. Medical information, coach notes, and feel ratings are never shown on public pages. Caregivers have veto power over what gets shared.
+                  </p>
+                </div>
+
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Does it work with Strava?</h3>
+                  <p className={styles.faqAnswer}>
+                    Yes. Coaches can connect Strava and runs are automatically matched to athletes. You can also log sessions manually.
+                  </p>
+                </div>
+
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Who built this?</h3>
+                  <p className={styles.faqAnswer}>
+                    One person &mdash; a volunteer running coach in Singapore who needed a better way to track sessions and share progress with caregivers. The code is open source and the full story is in the essay above.
+                  </p>
+                </div>
+
+                <div className={styles.faqItem}>
+                  <h3 className={styles.faqQuestion}>Can I use Kita for other inclusive sports?</h3>
+                  <p className={styles.faqAnswer}>
+                    Kita is built for running clubs right now. The session tracking, milestones, and coaching tools are designed around running. If you run a different sport and want to explore it, get in touch &mdash; we&apos;d love to hear what you need.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ========== CTA ========== */}
       <section id="contact" className={styles.ctaSection}>
         <ScrollReveal>
