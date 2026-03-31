@@ -108,7 +108,7 @@ describe('Landing page', () => {
 
     it('contains the story section', () => {
       expect(html).toContain('WHY I BUILT THIS')
-      expect(html).toContain('It started with a moment I almost missed')
+      expect(html).toContain('An athlete finished a 5km run and looked around to see if anyone was watching')
     })
 
     it('contains the screenshots section', () => {
