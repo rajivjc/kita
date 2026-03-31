@@ -1,6 +1,15 @@
 User-agent: *
+Allow: /privacy
+Allow: /terms
 Allow: /milestone/
 Allow: /story/
-Allow: /login
-Allow: /feed
-Disallow: /
+Disallow: /feed
+Disallow: /athletes
+Disallow: /admin
+Disallow: /account
+Disallow: /my/
+Disallow: /api/
+Disallow: /digest
+Disallow: /about
+
+Sitemap: https://kitarun.com/sitemap.xml
