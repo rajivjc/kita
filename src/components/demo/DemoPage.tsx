@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { ROLES, type RoleId } from './demo-data'
 import PhoneFrame from './PhoneFrame'
 import CoachFeed from './screens/CoachFeed'
@@ -35,17 +35,37 @@ export default function DemoPage() {
   const [activeRole, setActiveRole] = useState<RoleId>('coach')
   const [screenIdx, setScreenIdx] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   useEffect(() => { setScreenIdx(0) }, [activeRole])
 
   const screens = SCREENS[activeRole]
   const current = screens[screenIdx]
 
-  const goTo = (idx: number) => {
+  const goTo = useCallback((idx: number) => {
     if (idx === screenIdx || transitioning) return
     setTransitioning(true)
+    setHasInteracted(true)
     setTimeout(() => { setScreenIdx(idx); setTransitioning(false) }, 200)
-  }
+  }, [screenIdx, transitioning])
+
+  const touchStart = useRef<number | null>(null)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStart.current === null) return
+    const delta = e.changedTouches[0].clientX - touchStart.current
+    touchStart.current = null
+    const SWIPE_THRESHOLD = 50
+    if (delta > SWIPE_THRESHOLD) {
+      goTo(Math.max(0, screenIdx - 1))
+    } else if (delta < -SWIPE_THRESHOLD) {
+      goTo(Math.min(screens.length - 1, screenIdx + 1))
+    }
+  }, [screenIdx, screens.length, goTo])
 
   const CurrentComponent = current.component
 
@@ -107,11 +127,15 @@ export default function DemoPage() {
           }}
         >←</button>
 
-        <div style={{
-          opacity: transitioning ? 0.4 : 1,
-          transform: transitioning ? 'scale(0.97)' : 'scale(1)',
-          transition: 'all 0.2s ease',
-        }}>
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          style={{
+            opacity: transitioning ? 0.4 : 1,
+            transform: transitioning ? 'scale(0.97)' : 'scale(1)',
+            transition: 'all 0.2s ease',
+          }}
+        >
           <PhoneFrame>
             <CurrentComponent />
           </PhoneFrame>
@@ -144,6 +168,15 @@ export default function DemoPage() {
             }}
           />
         ))}
+      </div>
+
+      <div style={{
+        textAlign: 'center', marginTop: 8,
+        fontSize: 12, color: '#B4B2A9',
+        transition: 'opacity 0.3s',
+        opacity: hasInteracted ? 0 : 1,
+      }}>
+        {screenIdx + 1} of {screens.length} · Swipe to explore
       </div>
 
       <div style={{ textAlign: 'center', marginTop: 28 }}>
