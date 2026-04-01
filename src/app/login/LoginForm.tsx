@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { sendMagicLink } from './actions'
 import { verifyOtpAndRedirect } from './get-redirect-path'
+import KitaLogo from '@/components/ui/KitaLogo'
 
 type PageState = 'idle' | 'loading' | 'success' | 'error' | 'rate_limited' | 'not_found'
 type OtpState = 'idle' | 'verifying' | 'error'
@@ -174,42 +175,18 @@ export default function LoginForm({ clubName, tagline }: { clubName: string; tag
             This invitation link is invalid. Please contact your administrator.
           </div>
         )}
-        {/* Running icon — matches PWA splash screen */}
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 rounded-full bg-teal-50 dark:bg-teal-900/10 flex items-center justify-center">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 512 512"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <g fill="#0D9488" stroke="#0D9488" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="312" cy="135" r="32" stroke="none" />
-                <line x1="298" y1="167" x2="252" y2="280" strokeWidth="42" />
-                <circle cx="290" cy="193" r="16" stroke="none" />
-                <circle cx="255" cy="276" r="15" stroke="none" />
-                <line x1="290" y1="193" x2="342" y2="208" strokeWidth="22" />
-                <circle cx="342" cy="208" r="9" stroke="none" />
-                <line x1="342" y1="208" x2="354" y2="178" strokeWidth="18" />
-                <line x1="290" y1="193" x2="243" y2="174" strokeWidth="22" />
-                <circle cx="243" cy="174" r="9" stroke="none" />
-                <line x1="243" y1="174" x2="218" y2="190" strokeWidth="18" />
-                <line x1="255" y1="276" x2="318" y2="338" strokeWidth="28" />
-                <circle cx="318" cy="338" r="11" stroke="none" />
-                <line x1="318" y1="338" x2="354" y2="320" strokeWidth="23" />
-                <line x1="255" y1="276" x2="198" y2="342" strokeWidth="28" />
-                <circle cx="198" cy="342" r="11" stroke="none" />
-                <line x1="198" y1="342" x2="166" y2="365" strokeWidth="23" />
-              </g>
-            </svg>
+        {/* Kita brand */}
+        <div className="flex flex-col items-center mb-4">
+          <KitaLogo size={56} />
+          <div className="mt-3 flex items-baseline gap-0.5" aria-label={clubName}>
+            <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 800, fontSize: '24px', color: 'white' }}>
+              kita
+            </span>
+            <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 300, fontSize: '24px', color: 'rgba(255,255,255,0.6)' }}>
+              run
+            </span>
           </div>
         </div>
-
-        <h1 className="text-2xl font-bold text-center text-text-primary mb-1">
-          {clubName}
-        </h1>
         <p className="text-sm text-teal-600 dark:text-teal-300 text-center font-medium mb-6">
           {tagline}, one run at a time
         </p>
