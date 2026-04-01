@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
@@ -89,6 +90,7 @@ function wasDismissedRecently(): boolean {
 export default function InstallBanner({ clubName }: { clubName?: string }) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [visible, setVisible] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     // Mark that PWA is installed (for uninstall detection later)
@@ -139,7 +141,7 @@ export default function InstallBanner({ clubName }: { clubName?: string }) {
     setDeferredPrompt(null)
   }, [deferredPrompt])
 
-  if (!visible) return null
+  if (!visible || pathname === '/' || pathname === '/demo') return null
 
   return (
     <div
