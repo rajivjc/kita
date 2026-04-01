@@ -41,9 +41,9 @@ describe('login page redesign', () => {
       expect(content).not.toContain('text-4xl text-center mb-2')
     })
 
-    it('has SVG running icon with teal fill', () => {
-      expect(content).toContain('viewBox="0 0 512 512"')
-      expect(content).toContain('#0D9488')
+    it('uses shared KitaLogo component', () => {
+      expect(content).toContain("import KitaLogo from '@/components/ui/KitaLogo'")
+      expect(content).toContain('<KitaLogo')
     })
 
     it('has branded tagline', () => {
