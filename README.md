@@ -4,11 +4,18 @@ Free, open-source running club management app for Special Olympics and inclusive
 
 [kitarun.com](https://kitarun.com)
 
-> **Why I Built This** — *It started with a moment I almost missed. An athlete finished a 5km run and looked around to see if anyone was watching. We were. I could have built something defined by disability. I built something defined by the sport.*
+> **Why I Built This** — *An athlete finished a 5km run and looked around to see if anyone was watching.
+We were. But by next week, the only proof lived in a coach's memory and a group chat that had already moved on. These weren't casual jogs. These were hard-won kilometres by people who'd been told, in a hundred small ways, that sport wasn't really for them.
+
+Then a caregiver asked: “How's she doing at running?” Not therapy. Not behaviour. Just running — the way any parent asks about their kid's sport.
+
+I didn't have a good answer. Not because I didn't know. Because nothing I had could show her.
+
+So I built it.*
 
 ## What is Kita?
 
-Kita was built by the head coach of a Special Olympics running club in Singapore. It replaces the WhatsApp groups and spreadsheets that many clubs rely on with a purpose-built tool for coordinating coaches, caregivers, and athletes.
+Kita was built by a volunteer coach of a Special Olympics running club in Singapore. It replaces the WhatsApp groups and spreadsheets that many clubs rely on with a purpose-built tool for coordinating coaches, caregivers, and athletes.
 
 Coaches log runs (manually or via Strava sync), track athlete progress through milestones, record coaching cues, and celebrate achievements. Caregivers get read-only access to their linked athlete's journey — they can send cheers and view milestone celebrations. Athletes have their own PIN-protected personal page where they can check in with their mood, pick goals, choose an avatar, favourite their best runs, and message their coach.
 
