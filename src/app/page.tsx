@@ -371,6 +371,7 @@ export default async function Home() {
             <Link href="/privacy" className={styles.footerLink}>Privacy</Link>
             <Link href="/terms" className={styles.footerLink}>Terms</Link>
             <a href="mailto:hello@kitarun.com" className={styles.footerLink}>Contact</a>
+            <a href="https://github.com/rajivjc/kita" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>GitHub</a>
           </div>
           <p className={styles.footerTagline}>
             Built with care in Singapore. Kita means &ldquo;we&rdquo; — the kind that includes you.
