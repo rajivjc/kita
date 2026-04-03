@@ -306,7 +306,7 @@ export default async function Home() {
                 <div className={styles.faqItem}>
                   <h3 className={styles.faqQuestion}>Is Kita free?</h3>
                   <p className={styles.faqAnswer}>
-                    Yes. Kita is free for any inclusive running club and always will be. The code is open source on GitHub.
+                    Yes. Kita is free for any inclusive running club and always will be. The code is <a href="https://github.com/rajivjc/kita" target="_blank" rel="noopener noreferrer" className={styles.faqLink}>open source on GitHub</a>.
                   </p>
                 </div>
 
@@ -334,7 +334,7 @@ export default async function Home() {
                 <div className={styles.faqItem}>
                   <h3 className={styles.faqQuestion}>Who built this?</h3>
                   <p className={styles.faqAnswer}>
-                    One person &mdash; a volunteer running coach in Singapore who needed a better way to track sessions and share progress with caregivers. The code is open source and the full story is in the essay above.
+                    One person &mdash; a volunteer running coach in Singapore who needed a better way to track sessions and share progress with caregivers. The code is <a href="https://github.com/rajivjc/kita" target="_blank" rel="noopener noreferrer" className={styles.faqLink}>open source</a> and the full story is in the essay above.
                   </p>
                 </div>
 

@@ -730,6 +730,17 @@
   margin: 0;
 }
 
+.faqLink {
+  color: #0F766E;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.faqLink:hover {
+  opacity: 0.75;
+}
+
 @media (max-width: 640px) {
   .faqItem {
     padding: 20px 0;
