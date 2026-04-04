@@ -11,10 +11,10 @@ import styles from './landing.module.css'
 export const metadata: Metadata = {
   metadataBase: new URL('https://kitarun.com'),
   title: 'Kita — The running app where every athlete belongs',
-  description: 'Coaches spend less time on admin. Caregivers finally see what\'s happening. Athletes get the recognition they\'ve earned. One app that keeps your whole club connected.',
+  description: 'Coaches replace WhatsApp and paper logs with one dashboard. Caregivers get weekly progress updates. Athletes celebrate milestones on their own Journey page — no account needed.',
   openGraph: {
     title: 'Kita — The running app where every athlete belongs',
-    description: 'Coaches spend less time on admin. Caregivers finally see what\'s happening. Athletes get the recognition they\'ve earned. One app that keeps your whole club connected.',
+    description: 'Coaches replace WhatsApp and paper logs with one dashboard. Caregivers get weekly progress updates. Athletes celebrate milestones on their own Journey page — no account needed.',
     url: 'https://kitarun.com',
     siteName: 'Kita',
     type: 'website',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Kita — The running app where every athlete belongs',
-    description: 'Coaches spend less time on admin. Caregivers finally see what\'s happening. Athletes get the recognition they\'ve earned. One app that keeps your whole club connected.',
+    description: 'Coaches replace WhatsApp and paper logs with one dashboard. Caregivers get weekly progress updates. Athletes celebrate milestones on their own Journey page — no account needed.',
   },
 }
 
@@ -59,7 +59,7 @@ export default async function Home() {
             <a href="#story" className={styles.navLink}>Our story</a>
             <a href="#features" className={styles.navLink}>Features</a>
             <a href="#inclusive" className={styles.navLink}>Accessibility</a>
-            <Link href="/demo" className={styles.navDemo}>See the app</Link>
+            <Link href="/demo" className={styles.navDemo}>Watch the demo</Link>
             <a
               href="https://github.com/rajivjc/kita"
               target="_blank"
@@ -83,23 +83,23 @@ export default async function Home() {
             The running app where <span className={styles.heroTitleAccent}>every athlete</span> belongs
           </h1>
           <p className={styles.heroProblem}>
-            Stop losing your athletes&apos; progress to group chats and coach memory.
+            Your athletes&apos; progress shouldn&apos;t live in a WhatsApp thread that scrolls away by Monday.
           </p>
           <p className={styles.heroSubtitle}>
-            Coaches spend less time on admin. Caregivers finally see what&apos;s happening. Athletes get the recognition they&apos;ve earned. One app that keeps your whole club connected.
+            Coaches replace WhatsApp coordination and paper logs with one dashboard. Caregivers get weekly progress updates without being at every session. Athletes celebrate milestones on their own Journey page — no app download, no account needed.
           </p>
           <p className={styles.heroDifferentiator}>
-            The only running app designed from the ground up for inclusive and adaptive sports.
+            Built for inclusive sports from day one — with sensory-safe celebrations, cognitive accessibility, QR code access that needs no account, and caregiver visibility built in. No other running app does this.
           </p>
           <p className={styles.heroAudience}>
             For Special Olympics clubs, community running groups, and adaptive programmes.
           </p>
           <div className={styles.heroCtas}>
             <Link href="/demo" className={styles.ctaPrimary}>
-              See the app &rarr;
+              Watch the demo &rarr;
             </Link>
             <a href="#contact" className={styles.ctaSecondary}>
-              Ask me anything &rarr;
+              Get your club running — free &rarr;
             </a>
           </div>
         </div>
