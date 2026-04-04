@@ -6,6 +6,7 @@ import ScrollReveal from '@/components/landing/ScrollReveal'
 import ScreenshotGallery from '@/components/landing/ScreenshotGallery'
 import ClubInquiryForm from '@/components/landing/ClubInquiryForm'
 import KitaLogo from '@/components/ui/KitaLogo'
+import MobileNav from '@/components/landing/MobileNav'
 import styles from './landing.module.css'
 
 export const metadata: Metadata = {
@@ -73,6 +74,7 @@ export default async function Home() {
             </a>
             <Link href="/login" className={styles.navSignIn}>Sign in</Link>
           </div>
+          <MobileNav />
         </div>
       </nav>
 
@@ -83,10 +85,10 @@ export default async function Home() {
             The running app where <span className={styles.heroTitleAccent}>every athlete</span> belongs
           </h1>
           <p className={styles.heroProblem}>
-            Your athletes&apos; progress shouldn&apos;t disappear into a group chat.
+            Every hard-won kilometre deserves more than a message that scrolls away by Monday.
           </p>
           <p className={styles.heroSubtitle}>
-            One dashboard replaces WhatsApp coordination and paper logs. Caregivers see weekly progress without attending every session. Athletes celebrate milestones on their own page — no account needed.
+            Coaches log sessions and the app handles the rest — milestones detected, caregivers updated, progress remembered. Athletes celebrate on their own Journey page. No app download, no account, no fuss.
           </p>
           <div className={styles.heroCtas}>
             <Link href="/demo" className={styles.ctaPrimary}>
@@ -98,7 +100,7 @@ export default async function Home() {
           </div>
           <div className={styles.heroFooter}>
             <p className={styles.heroDifferentiator}>
-              Built for inclusive sports from day one — sensory-safe, cognitively accessible, private by design.
+              Designed so every celebration is safe, every word is clear, and every athlete is treated like an athlete.
             </p>
             <p className={styles.heroAudience}>
               For Special Olympics clubs, community running groups, and adaptive programmes.
@@ -184,7 +186,7 @@ export default async function Home() {
                     'Automatic milestone detection and coaching alerts',
                     'Weekly narrative digests — not just numbers',
                   ].map((item) => (
-                    <li key={item} className={styles.personaItem}>
+                    <li key={item} className={`${styles.personaItem} ${item === 'Weekly narrative digests — not just numbers' ? styles.personaItemHighlight : ''}`}>
                       <CheckIcon className={`${styles.personaCheck} ${styles.personaCheckCoach}`} />
                       <span>{item}</span>
                     </li>
@@ -204,7 +206,7 @@ export default async function Home() {
                     'Weekly email digests with progress summaries',
                     'Peace of mind without being at every session',
                   ].map((item) => (
-                    <li key={item} className={styles.personaItem}>
+                    <li key={item} className={`${styles.personaItem} ${item === 'Control what gets shared publicly — with veto power' ? styles.personaItemHighlight : ''}`}>
                       <CheckIcon className={`${styles.personaCheck} ${styles.personaCheckCaregiver}`} />
                       <span>{item}</span>
                     </li>
@@ -224,7 +226,7 @@ export default async function Home() {
                     'Send preset messages to your coach',
                     'No email needed. No account needed. Just run.',
                   ].map((item) => (
-                    <li key={item} className={styles.personaItem}>
+                    <li key={item} className={`${styles.personaItem} ${item === 'No email needed. No account needed. Just run.' ? styles.personaItemHighlight : ''}`}>
                       <CheckIcon className={`${styles.personaCheck} ${styles.personaCheckAthlete}`} />
                       <span>{item}</span>
                     </li>
@@ -254,7 +256,7 @@ export default async function Home() {
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>WCAG 2.2 AAA</p>
                 <p className={styles.inclusiveCardTitle}>7:1 contrast everywhere</p>
-                <p className={styles.inclusiveCardDesc}>Not AA. AAA. 56px+ touch targets on athlete pages. Semantic HTML. Live-region announcements for screen readers.</p>
+                <p className={styles.inclusiveCardDesc}>Text is easy to read in any lighting. Buttons are large enough for everyone. Screen readers work on every page.</p>
               </div>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Cognitive (W3C COGA)</p>
@@ -264,7 +266,7 @@ export default async function Home() {
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Sensory safety</p>
                 <p className={styles.inclusiveCardTitle}>Celebrations that don&apos;t overwhelm</p>
-                <p className={styles.inclusiveCardDesc}>No seizure-risk animations. Soft coral instead of saturated red. Reduced-motion users still get their celebration — just a quieter version.</p>
+                <p className={styles.inclusiveCardDesc}>Celebrations use gentle colours and calm animations. Athletes who are sensitive to motion or bright visuals still get their moment — just a quieter version.</p>
               </div>
               <div className={styles.inclusiveCard}>
                 <p className={styles.inclusiveCardLabel}>Privacy by design</p>
