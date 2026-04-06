@@ -36,7 +36,7 @@ export default function StravaStatus({ connection }: { connection: Connection })
             alt="Connect with Strava"
             width={193}
             height={48}
-            className="block max-h-[48px] w-auto"
+            className="block max-h-[40px] w-auto"
           />
         </a>
       </div>
