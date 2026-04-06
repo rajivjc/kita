@@ -27,9 +27,17 @@ export default function StravaStatus({ connection }: { connection: Connection })
         </p>
         <a
           href="/strava/consent"
-          className="inline-block bg-orange-500 hover:bg-orange-600 active:scale-[0.97] text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-all duration-150"
+          className="inline-block active:scale-[0.97] transition-transform duration-150"
         >
-          Connect Strava
+          {/* eslint-disable-next-line @next/next/no-img-element -- Strava brand asset must not be altered */}
+          <img
+            src="/assets/strava/btn_strava_connect_with_orange.png"
+            srcSet="/assets/strava/btn_strava_connect_with_orange.png 1x, /assets/strava/btn_strava_connect_with_orange_x2.png 2x"
+            alt="Connect with Strava"
+            width={193}
+            height={48}
+            className="block max-h-[48px] w-auto"
+          />
         </a>
       </div>
     )
