@@ -18,7 +18,7 @@ export default function StravaConnectBanner() {
           alt="Connect with Strava"
           width={193}
           height={48}
-          className="block max-h-[48px] w-auto"
+          className="block max-h-[36px] w-auto"
         />
       </a>
     </div>
