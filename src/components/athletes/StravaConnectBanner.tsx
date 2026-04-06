@@ -9,9 +9,17 @@ export default function StravaConnectBanner() {
       </div>
       <a
         href="/strava/consent"
-        className="shrink-0 rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-orange-600 transition-colors"
+        className="shrink-0 active:scale-[0.97] transition-transform duration-150"
       >
-        Connect
+        {/* eslint-disable-next-line @next/next/no-img-element -- Strava brand asset must not be altered */}
+        <img
+          src="/assets/strava/btn_strava_connect_with_orange.png"
+          srcSet="/assets/strava/btn_strava_connect_with_orange.png 1x, /assets/strava/btn_strava_connect_with_orange_x2.png 2x"
+          alt="Connect with Strava"
+          width={193}
+          height={48}
+          className="block max-h-[48px] w-auto"
+        />
       </a>
     </div>
   )
